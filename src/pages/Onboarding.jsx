@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, Activity, Target, AlertTriangle, MapPin } from 'lucide-react';
 import { calculateIMC, getIMCCategory, calculateMetabolismeBase } from '../utils/calculations';
+import { generateProgramSessions } from '../utils/programGenerator';
 
 const STEPS = 6;
 
@@ -57,7 +58,6 @@ export default function Onboarding() {
       const { data: allEx, error: errEx } = await supabase.from('exercises').select('*');
       if (errEx || !allEx || allEx.length === 0) throw new Error('Impossible de charger les exercices');
 
-      const { generateProgramSessions } = await import('../utils/programGenerator.js');
       const { sessionsData, sessionExercisesData, programType } = generateProgramSessions(formData, allEx);
 
       const { data: prog, error: errProg } = await supabase.from('programs').insert({
