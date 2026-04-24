@@ -42,13 +42,22 @@ export function AuthProvider({ children }) {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         if (!isMounted) return;
+        
+        console.log('[Auth] onAuthStateChange event:', event);
         setUser(session?.user ?? null);
+        
         if (session?.user) {
-          setLoading(true);
-          await fetchProfile(session.user.id);
-        } else {
+          // On ne déclenche un rechargement complet de la base de données 
+          // QUE lors d'une vraie connexion.
+          // Quand l'utilisateur change d'onglet, Supabase émet un "TOKEN_REFRESHED" ou "USER_UPDATED",
+          // il ne faut surtout pas geler l'application avec un écran de chargement à ce moment-là !
+          if (event === 'SIGNED_IN') {
+            setLoading(true);
+            await fetchProfile(session.user.id);
+          }
+        } else if (event === 'SIGNED_OUT') {
           setProfile(null);
           setProgram(null);
           setSessions([]);
