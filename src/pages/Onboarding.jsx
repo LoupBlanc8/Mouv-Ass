@@ -9,7 +9,7 @@ import { calculateIMC, getIMCCategory, calculateMetabolismeBase } from '../utils
 const STEPS = 6;
 
 export default function Onboarding() {
-  const { user, updateProfile, refreshProfile } = useAuth();
+  const { user, updateProfile, refreshProfile, refreshProgram } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);

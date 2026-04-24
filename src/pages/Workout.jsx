@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,9 +7,7 @@ import { Play, Pause, RotateCcw, Check, ChevronRight, Timer, Dumbbell, ChevronDo
 const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
 export default function Workout() {
-  const { profile, user } = useAuth();
-  const [program, setProgram] = useState(null);
-  const [sessions, setSessions] = useState([]);
+  const { profile, user, program, sessions } = useAuth();
   const [selectedDay, setSelectedDay] = useState(new Date().getDay());
   const [activeWorkout, setActiveWorkout] = useState(null);
   const [currentExIdx, setCurrentExIdx] = useState(0);
@@ -20,16 +18,6 @@ export default function Workout() {
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');
   const timerRef = useRef(null);
-
-  useEffect(() => { if (user) loadProgram(); }, [user]);
-
-  async function loadProgram() {
-    const { data: prog } = await supabase.from('programs').select('*').eq('user_id', user.id).eq('actif', true).maybeSingle();
-    if (!prog) return;
-    setProgram(prog);
-    const { data: sess } = await supabase.from('sessions').select('*, session_exercises(*, exercises(*))').eq('program_id', prog.id).order('jour_semaine');
-    setSessions(sess || []);
-  }
 
   const todaySession = sessions.find(s => s.jour_semaine === selectedDay);
 

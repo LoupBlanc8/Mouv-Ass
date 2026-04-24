@@ -24,14 +24,15 @@ function ProgressRing({ size = 80, stroke = 6, progress = 0, color = 'var(--prim
 }
 
 export default function Dashboard() {
-  const { profile, user } = useAuth();
+  const { profile, user, sessions } = useAuth();
   const [hydration, setHydration] = useState({ eau_ml: 0, objectif_ml: 2500 });
-  const [todaySession, setTodaySession] = useState(null);
   const [workoutCount, setWorkoutCount] = useState(0);
 
   const today = new Date();
   const jourSemaine = today.getDay();
   const prenom = profile?.prenom || 'Athlète';
+
+  const todaySession = sessions.find(s => s.jour_semaine === jourSemaine) || null;
 
   useEffect(() => {
     if (!user) return;
@@ -46,12 +47,6 @@ export default function Dashboard() {
     else {
       const obj = profile ? calculateHydratation(Number(profile.poids_kg) || 70) : 2500;
       setHydration({ eau_ml: 0, objectif_ml: obj });
-    }
-    // Today session
-    const { data: prog } = await supabase.from('programs').select('id').eq('user_id', user.id).eq('actif', true).maybeSingle();
-    if (prog) {
-      const { data: sess } = await supabase.from('sessions').select('*, session_exercises(*, exercises(*))').eq('program_id', prog.id).eq('jour_semaine', jourSemaine).maybeSingle();
-      setTodaySession(sess);
     }
     // Workout count this week
     const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - jourSemaine);

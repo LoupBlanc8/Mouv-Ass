@@ -7,6 +7,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [program, setProgram] = useState(null);
+  const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -21,6 +23,8 @@ export function AuthProvider({ children }) {
         if (session?.user) await fetchProfile(session.user.id);
         else {
           setProfile(null);
+          setProgram(null);
+          setSessions([]);
           setLoading(false);
         }
       }
@@ -51,10 +55,45 @@ export function AuthProvider({ children }) {
         .eq('user_id', userId);
 
       setProfile(data ? { ...data, pathologies, conditions } : null);
+
+      // Auto-load program if onboarding is complete
+      if (data?.onboarding_complete) {
+        await loadProgram(userId);
+      }
     } catch (err) {
       console.error('Error fetching profile:', err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadProgram(userId) {
+    try {
+      const uid = userId || user?.id;
+      if (!uid) return;
+      const { data: prog } = await supabase
+        .from('programs')
+        .select('*')
+        .eq('user_id', uid)
+        .eq('actif', true)
+        .maybeSingle();
+
+      if (!prog) {
+        setProgram(null);
+        setSessions([]);
+        return;
+      }
+      setProgram(prog);
+
+      const { data: sess } = await supabase
+        .from('sessions')
+        .select('*, session_exercises(*, exercises(*))')
+        .eq('program_id', prog.id)
+        .order('jour_semaine');
+
+      setSessions(sess || []);
+    } catch (err) {
+      console.error('Error loading program:', err);
     }
   }
 
@@ -96,17 +135,22 @@ export function AuthProvider({ children }) {
     if (error) throw error;
     setUser(null);
     setProfile(null);
+    setProgram(null);
+    setSessions([]);
   }
 
   const value = {
     user,
     profile,
     loading,
+    program,
+    sessions,
     signUp,
     signIn,
     signOut,
     updateProfile,
     refreshProfile: () => user && fetchProfile(user.id),
+    refreshProgram: () => loadProgram(),
   };
 
   return (
