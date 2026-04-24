@@ -11,25 +11,44 @@ export function AuthProvider({ children }) {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
+    let isMounted = true;
+    
+    // Absolute failsafe: force loading to false after 5 seconds no matter what
+    const failsafeTimer = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 5000);
+
     supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (!isMounted) return;
       if (error) {
         console.error('Session error:', error);
         setLoading(false);
+        clearTimeout(failsafeTimer);
       } else {
         setUser(session?.user ?? null);
-        if (session?.user) fetchProfile(session.user.id);
-        else setLoading(false);
+        if (session?.user) {
+          fetchProfile(session.user.id).then(() => {
+            if (isMounted) clearTimeout(failsafeTimer);
+          });
+        } else {
+          setLoading(false);
+          clearTimeout(failsafeTimer);
+        }
       }
     }).catch(err => {
       console.error('GetSession crash:', err);
-      setLoading(false);
+      if (isMounted) setLoading(false);
+      clearTimeout(failsafeTimer);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (!isMounted) return;
         setUser(session?.user ?? null);
-        if (session?.user) await fetchProfile(session.user.id);
-        else {
+        if (session?.user) {
+          setLoading(true);
+          await fetchProfile(session.user.id);
+        } else {
           setProfile(null);
           setProgram(null);
           setSessions([]);
@@ -38,7 +57,11 @@ export function AuthProvider({ children }) {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      clearTimeout(failsafeTimer);
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function fetchProfile(userId) {
