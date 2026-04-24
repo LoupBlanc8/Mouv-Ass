@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AppShell from './components/layout/AppShell';
@@ -24,6 +25,13 @@ function OnboardingGate({ children }) {
 }
 
 function LoadingScreen() {
+  const [showDebug, setShowDebug] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowDebug(true), 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="app-shell" style={{
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -37,6 +45,15 @@ function LoadingScreen() {
       }} />
       <span className="body-sm" style={{ color: 'var(--on-surface-variant)' }}>Chargement...</span>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      
+      {showDebug && (
+        <div style={{ marginTop: 'var(--space-6)', textAlign: 'center' }}>
+          <p className="body-sm text-muted" style={{ marginBottom: 'var(--space-3)' }}>Le chargement est inhabituellement long.</p>
+          <button className="btn btn--secondary btn--sm" onClick={() => window.location.reload()}>
+            Recharger la page
+          </button>
+        </div>
+      )}
     </div>
   );
 }
