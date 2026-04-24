@@ -29,10 +29,11 @@ export default function Onboarding() {
   async function handleComplete() {
     setLoading(true);
     try {
-      console.log("Démarrage de la création du profil...");
+      console.log('[Onboarding] Démarrage...');
       const metabolisme_base = calculateMetabolismeBase(formData.poids_kg, formData.taille_cm, formData.age, formData.sexe);
-      
-      console.log("1. Mise à jour du profil...");
+
+      // ── Étape 1 : Mise à jour du profil ──
+      console.log('[Onboarding] 1/5 Mise à jour profil...');
       await updateProfile({
         prenom: formData.prenom, nom: formData.nom, sexe: formData.sexe, age: formData.age,
         taille_cm: formData.taille_cm, poids_kg: formData.poids_kg, morphotype: formData.morphotype,
@@ -40,56 +41,82 @@ export default function Onboarding() {
         duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement,
         metabolisme_base, onboarding_complete: true
       });
-      console.log("Profil mis à jour avec succès.");
+      console.log('[Onboarding] ✓ Profil OK');
 
+      // ── Étape 2 : Pathologies (optionnel) ──
       if (formData.pathologies.length > 0) {
-        console.log("2. Insertion des pathologies...", formData.pathologies);
+        console.log('[Onboarding] 2/5 Pathologies...');
         const paths = formData.pathologies.map(p => ({ user_id: user.id, zone: p }));
         const { error: errPatho } = await supabase.from('user_pathologies').insert(paths);
-        if (errPatho) console.error("Erreur pathologies:", errPatho);
+        if (errPatho) console.warn('[Onboarding] ⚠ Pathologies:', errPatho.message);
+        else console.log('[Onboarding] ✓ Pathologies OK');
       }
 
-      console.log("3. Génération du programme...");
+      // ── Étape 3 : Création du programme ──
+      console.log('[Onboarding] 3/5 Programme...');
       const { data: prog, error: errProg } = await supabase.from('programs').insert({
         user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: 'full_body'
       }).select().single();
 
-      if (errProg) console.error("Erreur création programme:", errProg);
+      if (errProg) {
+        console.error('[Onboarding] ✗ Programme:', errProg.message);
+      } else if (prog) {
+        console.log('[Onboarding] ✓ Programme créé:', prog.id);
 
-      if (prog) {
-        console.log("Programme créé, ID:", prog.id);
+        // ── Étape 4 : Séances ──
+        console.log('[Onboarding] 4/5 Séances...');
         const sessionsToInsert = formData.jours_semaine.map((jour, i) => ({
-          program_id: prog.id, jour_semaine: jour, nom: `Séance ${i+1}`, type_session: 'full_body', duree_estimee: formData.duree_seance
+          program_id: prog.id, jour_semaine: jour, nom: `Séance ${i + 1}`,
+          type_session: 'full_body', duree_estimee: formData.duree_seance
         }));
-        
-        console.log("4. Insertion des séances...", sessionsToInsert);
-        const { data: insertedSessions, error: errSess } = await supabase.from('sessions').insert(sessionsToInsert).select();
-        if (errSess) console.error("Erreur création séances:", errSess);
-        
-        console.log("5. Récupération des exercices...");
-        const { data: allEx, error: errEx } = await supabase.from('exercises').limit(5);
-        if (errEx) console.error("Erreur récupération exercices:", errEx);
+        const { data: insertedSessions, error: errSess } = await supabase
+          .from('sessions').insert(sessionsToInsert).select();
 
-        if (insertedSessions && insertedSessions.length > 0 && allEx && allEx.length > 0) {
-          console.log("6. Association exercices-séances...");
-          const sExs = [];
-          insertedSessions.forEach(s => {
-            allEx.forEach((ex, i) => {
-              sExs.push({ session_id: s.id, exercise_id: ex.id, ordre: i, series: 3, reps_min: 8, reps_max: 12 });
+        if (errSess) {
+          console.error('[Onboarding] ✗ Séances:', errSess.message);
+        } else {
+          console.log('[Onboarding] ✓ Séances OK:', insertedSessions?.length);
+
+          // ── Étape 5 : Exercices → Séances ──
+          console.log('[Onboarding] 5/5 Exercices...');
+          const { data: allEx, error: errEx } = await supabase
+            .from('exercises').select('*').limit(5);
+
+          if (errEx) {
+            console.warn('[Onboarding] ⚠ Exercices:', errEx.message);
+          } else if (insertedSessions?.length > 0 && allEx?.length > 0) {
+            const sExs = [];
+            insertedSessions.forEach(s => {
+              allEx.forEach((ex, i) => {
+                sExs.push({
+                  session_id: s.id, exercise_id: ex.id,
+                  ordre: i, series: 3, reps_min: 8, reps_max: 12
+                });
+              });
             });
-          });
-          const { error: errSExs } = await supabase.from('session_exercises').insert(sExs);
-          if (errSExs) console.error("Erreur session_exercises:", errSExs);
+            const { error: errSExs } = await supabase
+              .from('session_exercises').insert(sExs);
+            if (errSExs) console.warn('[Onboarding] ⚠ session_exercises:', errSExs.message);
+            else console.log('[Onboarding] ✓ Exercices assignés');
+          }
         }
       }
 
-      console.log("7. Rafraîchissement profil en contexte...");
+      // ── Finalisation ──
+      console.log('[Onboarding] Rafraîchissement profil...');
       await refreshProfile();
-      console.log("Terminé, redirection !");
+      console.log('[Onboarding] ✓ Terminé ! Redirection...');
       navigate('/');
     } catch (err) {
-      console.error("ERREUR FATALE ONBOARDING:", err);
-      alert("Erreur lors de l'enregistrement du profil. Vérifie la console (F12).");
+      console.error('[Onboarding] ERREUR FATALE:', err);
+      // Même en cas d'erreur, si le profil a été marqué onboarding_complete,
+      // on tente la redirection pour ne pas bloquer l'utilisateur
+      try {
+        await refreshProfile();
+        navigate('/');
+      } catch (_) {
+        alert("Erreur lors de la création du programme. Recharge la page et réessaie.");
+      }
     } finally {
       setLoading(false);
     }
