@@ -28,6 +28,21 @@ export function generateProgramSessions(formData, allExercises) {
   // In a real app we'd map pathologies to muscle groups. For now we use all.
   const safeExercises = allExercises;
 
+  // Muscle mapping helper
+  const isMuscleMatch = (exMuscles, targetGroup) => {
+    if (!exMuscles || !Array.isArray(exMuscles)) return false;
+    const tg = targetGroup.toLowerCase();
+    return exMuscles.some(m => {
+      const ml = m.toLowerCase();
+      if (tg === 'jambes') return ml.includes('jambe') || ml.includes('quadriceps') || ml.includes('ischio') || ml.includes('mollet') || ml.includes('fessier');
+      if (tg === 'epaules') return ml.includes('epaule') || ml.includes('deltoïde') || ml.includes('deltoide');
+      if (tg === 'bras') return ml.includes('bras') || ml.includes('biceps') || ml.includes('triceps');
+      if (tg === 'dos') return ml.includes('dos') || ml.includes('dorsaux') || ml.includes('lombaire') || ml.includes('trapèze');
+      if (tg === 'abdos') return ml.includes('abdo') || ml.includes('oblique') || ml.includes('core');
+      return ml.includes(tg) || tg.includes(ml);
+    });
+  };
+
   // Helper to pick a random exercise from a group
   const pickExercise = (group, maxLevel = 100) => {
     // Map string levels to numbers for comparison
@@ -35,13 +50,13 @@ export function generateProgramSessions(formData, allExercises) {
     const userLevelNum = levelMap[formData.niveau] || 1;
     
     let options = safeExercises.filter(ex => {
-      const exLevel = levelMap[ex.niveau] || 1;
-      return ex.groupe_musculaire.toLowerCase() === group.toLowerCase() && exLevel <= userLevelNum;
+      const exLevel = levelMap[ex.niveau_min] || 1;
+      return isMuscleMatch(ex.muscles_principaux, group) && exLevel <= userLevelNum;
     });
     
     // Fallback if no matching level
     if (options.length === 0) {
-      options = safeExercises.filter(ex => ex.groupe_musculaire.toLowerCase() === group.toLowerCase());
+      options = safeExercises.filter(ex => isMuscleMatch(ex.muscles_principaux, group));
     }
     
     // Fallback if no matching group
