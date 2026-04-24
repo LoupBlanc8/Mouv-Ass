@@ -66,6 +66,7 @@ export function AuthProvider({ children }) {
 
   async function fetchProfile(userId) {
     try {
+      console.log('[Auth] Fetching profile for:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -73,27 +74,32 @@ export function AuthProvider({ children }) {
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
+      console.log('[Auth] Profiles query OK', data);
       
-      // Fetch pathologies too
+      console.log('[Auth] Fetching user_pathologies...');
       const { data: pathologies } = await supabase
         .from('user_pathologies')
         .select('*')
         .eq('user_id', userId);
+      console.log('[Auth] Pathologies query OK');
 
+      console.log('[Auth] Fetching user_conditions...');
       const { data: conditions } = await supabase
         .from('user_conditions')
         .select('*')
         .eq('user_id', userId);
+      console.log('[Auth] Conditions query OK');
 
       setProfile(data ? { ...data, pathologies, conditions } : null);
 
-      // Auto-load program if onboarding is complete
       if (data?.onboarding_complete) {
+        console.log('[Auth] Onboarding complete, loading program...');
         await loadProgram(userId);
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
     } finally {
+      console.log('[Auth] fetchProfile finished.');
       setLoading(false);
     }
   }
@@ -102,6 +108,7 @@ export function AuthProvider({ children }) {
     try {
       const uid = userId || user?.id;
       if (!uid) return;
+      console.log('[Auth] Fetching program for:', uid);
       const { data: prog } = await supabase
         .from('programs')
         .select('*')
@@ -109,6 +116,7 @@ export function AuthProvider({ children }) {
         .eq('actif', true)
         .maybeSingle();
 
+      console.log('[Auth] Programs query OK', prog);
       if (!prog) {
         setProgram(null);
         setSessions([]);
@@ -116,12 +124,14 @@ export function AuthProvider({ children }) {
       }
       setProgram(prog);
 
+      console.log('[Auth] Fetching sessions & exercises...');
       const { data: sess } = await supabase
         .from('sessions')
         .select('*, session_exercises(*, exercises(*))')
         .eq('program_id', prog.id)
         .order('jour_semaine');
 
+      console.log('[Auth] Sessions query OK', sess?.length);
       setSessions(sess || []);
     } catch (err) {
       console.error('Error loading program:', err);
