@@ -29,9 +29,10 @@ export default function Onboarding() {
   async function handleComplete() {
     setLoading(true);
     try {
+      console.log("Démarrage de la création du profil...");
       const metabolisme_base = calculateMetabolismeBase(formData.poids_kg, formData.taille_cm, formData.age, formData.sexe);
       
-      // Update profile
+      console.log("1. Mise à jour du profil...");
       await updateProfile({
         prenom: formData.prenom, nom: formData.nom, sexe: formData.sexe, age: formData.age,
         taille_cm: formData.taille_cm, poids_kg: formData.poids_kg, morphotype: formData.morphotype,
@@ -39,43 +40,56 @@ export default function Onboarding() {
         duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement,
         metabolisme_base, onboarding_complete: true
       });
+      console.log("Profil mis à jour avec succès.");
 
-      // Insert pathologies
       if (formData.pathologies.length > 0) {
+        console.log("2. Insertion des pathologies...", formData.pathologies);
         const paths = formData.pathologies.map(p => ({ user_id: user.id, zone: p }));
-        await supabase.from('user_pathologies').insert(paths);
+        const { error: errPatho } = await supabase.from('user_pathologies').insert(paths);
+        if (errPatho) console.error("Erreur pathologies:", errPatho);
       }
 
-      // Generate a basic program
-      const { data: prog } = await supabase.from('programs').insert({
+      console.log("3. Génération du programme...");
+      const { data: prog, error: errProg } = await supabase.from('programs').insert({
         user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: 'full_body'
       }).select().single();
 
+      if (errProg) console.error("Erreur création programme:", errProg);
+
       if (prog) {
-        // Create basic sessions
+        console.log("Programme créé, ID:", prog.id);
         const sessionsToInsert = formData.jours_semaine.map((jour, i) => ({
           program_id: prog.id, jour_semaine: jour, nom: `Séance ${i+1}`, type_session: 'full_body', duree_estimee: formData.duree_seance
         }));
-        const { data: insertedSessions } = await supabase.from('sessions').insert(sessionsToInsert).select();
         
-        // Fetch some exercises to assign
-        const { data: allEx } = await supabase.from('exercises').limit(5);
-        if (insertedSessions && allEx) {
+        console.log("4. Insertion des séances...", sessionsToInsert);
+        const { data: insertedSessions, error: errSess } = await supabase.from('sessions').insert(sessionsToInsert).select();
+        if (errSess) console.error("Erreur création séances:", errSess);
+        
+        console.log("5. Récupération des exercices...");
+        const { data: allEx, error: errEx } = await supabase.from('exercises').limit(5);
+        if (errEx) console.error("Erreur récupération exercices:", errEx);
+
+        if (insertedSessions && insertedSessions.length > 0 && allEx && allEx.length > 0) {
+          console.log("6. Association exercices-séances...");
           const sExs = [];
           insertedSessions.forEach(s => {
             allEx.forEach((ex, i) => {
               sExs.push({ session_id: s.id, exercise_id: ex.id, ordre: i, series: 3, reps_min: 8, reps_max: 12 });
             });
           });
-          await supabase.from('session_exercises').insert(sExs);
+          const { error: errSExs } = await supabase.from('session_exercises').insert(sExs);
+          if (errSExs) console.error("Erreur session_exercises:", errSExs);
         }
       }
 
+      console.log("7. Rafraîchissement profil en contexte...");
       await refreshProfile();
+      console.log("Terminé, redirection !");
       navigate('/');
     } catch (err) {
-      console.error(err);
-      alert("Erreur lors de l'enregistrement du profil.");
+      console.error("ERREUR FATALE ONBOARDING:", err);
+      alert("Erreur lors de l'enregistrement du profil. Vérifie la console (F12).");
     } finally {
       setLoading(false);
     }
