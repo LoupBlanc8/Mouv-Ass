@@ -40,17 +40,16 @@ export default function Onboarding() {
         taille_cm: formData.taille_cm, poids_kg: formData.poids_kg, morphotype: formData.morphotype,
         objectif: formData.objectif, niveau: formData.niveau, jours_semaine: formData.jours_semaine,
         duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement,
-        metabolisme_base, onboarding_complete: true
+        metabolisme_base
       });
       console.log('[Onboarding] ✓ Profil OK');
 
-      // ── Étape 2 : Pathologies (optionnel) ──
+      // ── Étape 2 : Pathologies & Conditions ──
+      console.log('[Onboarding] 2/5 Santé...');
       if (formData.pathologies.length > 0) {
-        console.log('[Onboarding] 2/5 Pathologies...');
         const paths = formData.pathologies.map(p => ({ user_id: user.id, zone: p }));
         const { error: errPatho } = await supabase.from('user_pathologies').insert(paths);
-        if (errPatho) console.warn('[Onboarding] ⚠ Pathologies:', errPatho.message);
-        else console.log('[Onboarding] ✓ Pathologies OK');
+        if (errPatho) throw errPatho;
       }
 
       // ── Étape 3 : Création du programme ──
@@ -64,47 +63,47 @@ export default function Onboarding() {
         user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: programType
       }).select().single();
 
-      if (errProg) {
-        console.error('[Onboarding] ✗ Programme:', errProg.message);
-      } else if (prog) {
-        console.log('[Onboarding] ✓ Programme créé:', prog.id);
+      if (errProg) throw errProg;
 
-        // ── Étape 4 : Séances ──
-        console.log('[Onboarding] 4/5 Séances...');
-        const sessionsToInsert = sessionsData.map(s => ({ ...s, program_id: prog.id }));
-        
-        const { data: insertedSessions, error: errSess } = await supabase
-          .from('sessions').insert(sessionsToInsert).select();
+      console.log('[Onboarding] ✓ Programme créé:', prog.id);
 
-        if (errSess) {
-          console.error('[Onboarding] ✗ Séances:', errSess.message);
-        } else {
-          console.log('[Onboarding] ✓ Séances OK:', insertedSessions?.length);
+      // ── Étape 4 : Séances ──
+      console.log('[Onboarding] 4/5 Séances...');
+      const sessionsToInsert = sessionsData.map(s => ({ ...s, program_id: prog.id }));
+      
+      const { data: insertedSessions, error: errSess } = await supabase
+        .from('sessions').insert(sessionsToInsert).select();
 
-          // ── Étape 5 : Exercices → Séances ──
-          console.log('[Onboarding] 5/5 Exercices...');
-          if (insertedSessions?.length > 0) {
-            const sExs = [];
-            // Match the inserted session ID with our generated session exercises by index (order is preserved by Supabase typically, but let's be careful: we'll match by jour_semaine)
-            insertedSessions.forEach((s) => {
-              // Find the index in our original data
-              const originalIndex = sessionsData.findIndex(sd => sd.jour_semaine === s.jour_semaine);
-              if (originalIndex !== -1 && sessionExercisesData[originalIndex]) {
-                sessionExercisesData[originalIndex].forEach(ex => {
-                  sExs.push({
-                    session_id: s.id,
-                    ...ex
-                  });
-                });
-              }
+      if (errSess) throw errSess;
+
+      console.log('[Onboarding] ✓ Séances OK:', insertedSessions?.length);
+
+      // ── Étape 5 : Exercices → Séances ──
+      console.log('[Onboarding] 5/5 Exercices...');
+      if (insertedSessions?.length > 0) {
+        const sExs = [];
+        insertedSessions.forEach((s) => {
+          const originalIndex = sessionsData.findIndex(sd => sd.jour_semaine === s.jour_semaine);
+          if (originalIndex !== -1 && sessionExercisesData[originalIndex]) {
+            sessionExercisesData[originalIndex].forEach(ex => {
+              sExs.push({
+                session_id: s.id,
+                ...ex
+              });
             });
-            const { error: errSExs } = await supabase
-              .from('session_exercises').insert(sExs);
-            if (errSExs) console.warn('[Onboarding] ⚠ session_exercises:', errSExs.message);
-            else console.log('[Onboarding] ✓ Exercices assignés');
           }
-        }
+        });
+        const { error: errSExs } = await supabase
+          .from('session_exercises').insert(sExs);
+        if (errSExs) throw errSExs;
       }
+
+      // ── Étape 6 : Validation finale ──
+      console.log('[Onboarding] 6/6 Validation finale...');
+      const { error: errFinal } = await supabase.from('profiles')
+        .update({ onboarding_complete: true })
+        .eq('user_id', user.id);
+      if (errFinal) throw errFinal;
 
       // ── Finalisation ──
       console.log('[Onboarding] Rafraîchissement profil...');
@@ -113,14 +112,8 @@ export default function Onboarding() {
       navigate('/');
     } catch (err) {
       console.error('[Onboarding] ERREUR FATALE:', err);
-      // Même en cas d'erreur, si le profil a été marqué onboarding_complete,
-      // on tente la redirection pour ne pas bloquer l'utilisateur
-      try {
-        await refreshProfile();
-        navigate('/');
-      } catch (_) {
-        alert("Erreur lors de la création du programme. Recharge la page et réessaie.");
-      }
+      alert(`Erreur lors de la création du programme : ${err.message || 'Erreur inconnue'}`);
+      setStep(1); // Return to first step to retry
     } finally {
       setLoading(false);
     }
