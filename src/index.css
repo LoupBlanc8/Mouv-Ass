@@ -826,3 +826,67 @@ a:hover {
 .animate-slide-up {
   animation: slide-up 0.5s var(--ease-kinetic) both;
 }
+
+/* ============================================
+   RESPONSIVE DESIGN (TABLET & DESKTOP)
+   ============================================ */
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.dashboard-content {
+  flex: 1;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    max-width: 100%;
+  }
+
+  .dashboard-layout {
+    flex-direction: row;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .bottom-nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    transform: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    padding: var(--space-8);
+    background: transparent;
+    border-right: 1px solid var(--surface-container-highest);
+  }
+
+  .bottom-nav__item {
+    flex-direction: row;
+    padding: var(--space-4) var(--space-6);
+    font-size: 1rem;
+    justify-content: flex-start;
+  }
+
+  .dashboard-content {
+    flex: 1;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .page {
+    padding: var(--space-10) var(--space-8) !important;
+  }
+
+  /* Constrain form widths on large screens */
+  .page > form, .page > .text-center {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+}
