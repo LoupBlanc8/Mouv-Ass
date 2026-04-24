@@ -9,69 +9,76 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [program, setProgram] = useState(null);
   const [sessions, setSessions] = useState([]);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
+  // 1. Gérer UNIQUEMENT la session utilisateur (Auth)
   useEffect(() => {
     let isMounted = true;
-    
-    // Absolute failsafe: force loading to false after 5 seconds no matter what
-    const failsafeTimer = setTimeout(() => {
-      if (isMounted) setLoading(false);
-    }, 5000);
 
+    // Récupérer la session existante au chargement
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (!isMounted) return;
       if (error) {
         console.error('Session error:', error);
         setLoading(false);
-        clearTimeout(failsafeTimer);
       } else {
         setUser(session?.user ?? null);
-        if (session?.user) {
-          fetchProfile(session.user.id).then(() => {
-            if (isMounted) clearTimeout(failsafeTimer);
-          });
-        } else {
-          setLoading(false);
-          clearTimeout(failsafeTimer);
-        }
       }
+      setInitialLoadDone(true);
     }).catch(err => {
       console.error('GetSession crash:', err);
-      if (isMounted) setLoading(false);
-      clearTimeout(failsafeTimer);
+      if (isMounted) {
+        setLoading(false);
+        setInitialLoadDone(true);
+      }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!isMounted) return;
-        
-        console.log('[Auth] onAuthStateChange event:', event);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // On ne déclenche un rechargement complet de la base de données 
-          // QUE lors d'une vraie connexion.
-          // Quand l'utilisateur change d'onglet, Supabase émet un "TOKEN_REFRESHED" ou "USER_UPDATED",
-          // il ne faut surtout pas geler l'application avec un écran de chargement à ce moment-là !
-          if (event === 'SIGNED_IN') {
-            setLoading(true);
-            await fetchProfile(session.user.id);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          setProfile(null);
-          setProgram(null);
-          setSessions([]);
-          setLoading(false);
-        }
+    // Écouter les changements (login, logout, tab switch) sans RIEN bloquer
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!isMounted) return;
+      console.log('[Auth] Event:', event);
+      setUser(session?.user ?? null);
+      
+      if (!session?.user) {
+        setProfile(null);
+        setProgram(null);
+        setSessions([]);
+        setLoading(false);
       }
-    );
+    });
 
     return () => {
       isMounted = false;
-      clearTimeout(failsafeTimer);
       subscription.unsubscribe();
     };
   }, []);
+
+  // 2. Gérer le chargement des données (Profil + Programme)
+  useEffect(() => {
+    if (!initialLoadDone) return;
+    
+    if (user && !profile) {
+      // Si on a un user mais pas encore de profil, on le charge
+      setLoading(true);
+      
+      const failsafeTimer = setTimeout(() => {
+        setLoading(false);
+      }, 5000);
+
+      fetchProfile(user.id).then(() => {
+        clearTimeout(failsafeTimer);
+      }).catch(() => {
+        clearTimeout(failsafeTimer);
+        setLoading(false);
+      });
+    } else if (user && profile) {
+      // S'il est chargé, on arrête de bloquer
+      setLoading(false);
+    } else if (!user) {
+      // S'il n'y a pas d'utilisateur, pas besoin de charger
+      setLoading(false);
+    }
+  }, [user, profile, initialLoadDone]);
 
   async function fetchProfile(userId) {
     try {
