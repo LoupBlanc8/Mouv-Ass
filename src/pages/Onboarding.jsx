@@ -54,8 +54,14 @@ export default function Onboarding() {
 
       // ── Étape 3 : Création du programme ──
       console.log('[Onboarding] 3/5 Programme...');
+      const { data: allEx, error: errEx } = await supabase.from('exercises').select('*');
+      if (errEx || !allEx || allEx.length === 0) throw new Error('Impossible de charger les exercices');
+
+      const { generateProgramSessions } = await import('../utils/programGenerator.js');
+      const { sessionsData, sessionExercisesData, programType } = generateProgramSessions(formData, allEx);
+
       const { data: prog, error: errProg } = await supabase.from('programs').insert({
-        user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: 'full_body'
+        user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: programType
       }).select().single();
 
       if (errProg) {
@@ -65,10 +71,8 @@ export default function Onboarding() {
 
         // ── Étape 4 : Séances ──
         console.log('[Onboarding] 4/5 Séances...');
-        const sessionsToInsert = formData.jours_semaine.map((jour, i) => ({
-          program_id: prog.id, jour_semaine: jour, nom: `Séance ${i + 1}`,
-          type_session: 'full_body', duree_estimee: formData.duree_seance
-        }));
+        const sessionsToInsert = sessionsData.map(s => ({ ...s, program_id: prog.id }));
+        
         const { data: insertedSessions, error: errSess } = await supabase
           .from('sessions').insert(sessionsToInsert).select();
 
@@ -79,20 +83,20 @@ export default function Onboarding() {
 
           // ── Étape 5 : Exercices → Séances ──
           console.log('[Onboarding] 5/5 Exercices...');
-          const { data: allEx, error: errEx } = await supabase
-            .from('exercises').select('*').limit(5);
-
-          if (errEx) {
-            console.warn('[Onboarding] ⚠ Exercices:', errEx.message);
-          } else if (insertedSessions?.length > 0 && allEx?.length > 0) {
+          if (insertedSessions?.length > 0) {
             const sExs = [];
-            insertedSessions.forEach(s => {
-              allEx.forEach((ex, i) => {
-                sExs.push({
-                  session_id: s.id, exercise_id: ex.id,
-                  ordre: i, series: 3, reps_min: 8, reps_max: 12
+            // Match the inserted session ID with our generated session exercises by index (order is preserved by Supabase typically, but let's be careful: we'll match by jour_semaine)
+            insertedSessions.forEach((s) => {
+              // Find the index in our original data
+              const originalIndex = sessionsData.findIndex(sd => sd.jour_semaine === s.jour_semaine);
+              if (originalIndex !== -1 && sessionExercisesData[originalIndex]) {
+                sessionExercisesData[originalIndex].forEach(ex => {
+                  sExs.push({
+                    session_id: s.id,
+                    ...ex
+                  });
                 });
-              });
+              }
             });
             const { error: errSExs } = await supabase
               .from('session_exercises').insert(sExs);

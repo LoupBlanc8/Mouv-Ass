@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
@@ -24,6 +25,7 @@ function ProgressRing({ size = 80, stroke = 6, progress = 0, color = 'var(--prim
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { profile, user, sessions } = useAuth();
   const [hydration, setHydration] = useState({ eau_ml: 0, objectif_ml: 2500 });
   const [workoutCount, setWorkoutCount] = useState(0);
@@ -131,7 +133,7 @@ export default function Dashboard() {
                 ))}
                 {(todaySession.session_exercises || []).length > 4 && <span className="chip chip--sm">+{todaySession.session_exercises.length - 4}</span>}
               </div>
-              <button className="btn btn--primary btn--full" style={{ marginTop: 'var(--space-5)' }}>
+              <button className="btn btn--primary btn--full" style={{ marginTop: 'var(--space-5)' }} onClick={() => navigate('/workout')}>
                 Commencer <ChevronRight size={16} />
               </button>
             </div>

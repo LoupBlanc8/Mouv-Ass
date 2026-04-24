@@ -1,0 +1,1622 @@
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+DOCUMENTATION COMPLÈTE 
+EXERCICES DE SALLE DE SPORT 
+Morphologies • IMC • Niveaux • Objectifs • Pathologies • Programmes 
+Guide de référence pour développeurs d’application fitness 
+Version 1.0 — 2025 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+SOMMAIRE 
+ 
+# 
+Section 
+Contenu principal 
+1 
+Évaluation & Classification 
+IMC, morphotypes, types corporels, âge, sexe 
+2 
+Muscles & Anatomie 
+Groupes musculaires, zones ciblées, antagonistes 
+3 
+Exercices par groupe musculaire 
+Catalogue complet avec descriptions techniques 
+4 
+Exercices selon la morphologie 
+Ectomorphe, Mésomorphe, Endomorphe 
+5 
+Exercices selon l'IMC 
+Insuffisance pondérale, Normal, Surpoids, Obésité 
+6 
+Exercices selon le niveau 
+Débutant, Intermédiaire, Avancé, Expert 
+7 
+Exercices selon l'objectif 
+Perte de poids, Prise de masse, Tonification, 
+Endurance 
+8 
+Exercices selon l'âge 
+Adolescents, 20-40 ans, 40-60 ans, Séniors 
+9 
+Exercices selon le sexe 
+Spécificités homme / femme 
+10 
+Contre-indications & Pathologies 
+Dos, genoux, épaules, maladies chroniques 
+11 
+Paramètres d'entraînement 
+Séries, répétitions, repos, fréquence, progression 
+12 
+Programmes types 
+Exemples de semaines complètes par profil 
+13 
+Nutrition & Récupération 
+Conseils alimentaires et récupération 
+14 
+Données structurées 
+Schémas JSON pour développeurs 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+1. ÉVALUATION & CLASSIFICATION DE L'UTILISATEUR 
+La première étape de toute application fitness est l’évaluation précise du profil de l’utilisateur. Cette 
+section définit toutes les variables nécessaires à la personnalisation du programme. 
+ 
+1.1 Calcul et interprétation de l'IMC 
+L’Indice de Masse Corporelle (IMC) est calculé selon la formule : IMC = poids(kg) / taille(m)² 
+ 
+Catégorie IMC 
+Valeur IMC 
+Caractéristiques 
+Priorité d'entraînement 
+Maigreur sévère 
+< 16 
+Risque de dénutrition, faiblesse 
+musculaire 
+Reconstruction, mobilité 
+douce 
+Maigreur modérée 
+16 – 16.9 
+Déficit énergétique, fragilité 
+osseuse 
+Renforcement progressif, 
+nutrition 
+Maigreur légère 
+17 – 18.4 
+Masse musculaire insuffisante 
+Prise de masse, 
+renforcement 
+Poids normal 
+18.5 – 24.9 
+Santé optimale, équilibre 
+Selon objectif personnel 
+Surpoids 
+25 – 29.9 
+Charge articulaire, potentiel 
+cardiaque 
+Cardio modéré, 
+renforcement 
+Obésité grade I 
+30 – 34.9 
+Risque cardiovasculaire modéré 
+Cardio basse intensité, 
+fonctionnel 
+Obésité grade II 
+35 – 39.9 
+Risques articulaires et 
+cardiaques 
+Aqua, marche, exercices 
+assis 
+Obésité grade III 
+≥ 40 
+Suivi médical obligatoire 
+Kinésithérapie, 
+programme médical 
+ 
+1.2 Morphotypes (Somatotypes de Sheldon) 
+Les trois morphotypes fondamentaux définissent la réponse naturelle du corps à l’entraînement et 
+à l’alimentation. En pratique, la majorité des individus sont des combinaisons. 
+ 
+ECTOMORPHE 
+MÉSOMORPHE 
+ENDOMORPHE 
+Morphologie : Mince, élancé, os 
+fins, peu de masse grasse et 
+musculaire 
+Métabolisme : Très rapide 
+(hyperactif) 
+Difficulté : Prendre du poids et 
+du muscle 
+Exemples : Marathoniens, 
+nageurs de fond 
+Morphologie : Athlétique naturel, 
+os moyens, épaules larges 
+Métabolisme : Équilibré, 
+adaptatif 
+Avantage : Résultats rapides en 
+force et masse 
+Exemples : Haltérophiles, 
+sprinters 
+Morphologie : Ossature large, 
+tendance à stocker les graisses 
+Métabolisme : Lent, stockage 
+facilité 
+Difficulté : Perdre de la graisse, 
+maintenir le poids 
+Exemples : Lutteurs, joueurs de 
+rugby 
+ 
+1.3 Autres facteurs de classification 
+Variable 
+Catégories 
+Impact sur le programme 
+Âge 
+< 18 / 18-30 / 30-45 / 45-60 / 
+60+ 
+Intensité, récupération, mobilité, risques 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+Variable 
+Catégories 
+Impact sur le programme 
+Sexe biologique 
+Homme / Femme / Non-binaire 
+Répartition graisseuse, hormones, zones 
+ciblées 
+Niveau sportif 
+Débutant / Intermédiaire / 
+Avancé / Expert 
+Volume, intensité, complexité des exercices 
+Objectif principal 
+Perte de poids / Masse / 
+Tonification / Endurance / Santé 
+Type de charge, cardio, nutrition 
+Disponibilité 
+1-2j / 3-4j / 5-6j / 7j par semaine 
+Fréquence des séances, récupération 
+Durée séance 
+20-30 min / 45-60 min / 60-90 
+min / 90+ min 
+Volume d'exercices, densité 
+Blessures / 
+Pathologies 
+Dos / Genoux / Épaules / 
+Maladies chroniques 
+Contre-indications, adaptations 
+Équipement dispo 
+Corpo libre / Haltères / 
+Machines / Cardio / Tout 
+Sélection des exercices 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+2. MUSCLES & ANATOMIE — RÉFÉRENCE COMPLÈTE 
+Cette section liste tous les groupes musculaires travaillés en salle, leurs fonctions, exercices 
+principaux et muscles antagonistes. 
+ 
+2.1 Torse supérieur 
+Groupe musculaire 
+Muscles 
+Fonction principale 
+Antagoniste 
+Pectoraux 
+Grand pectoral, petit 
+pectoral 
+Poussée horizontale, 
+adduction 
+Dorsaux 
+Épaules (deltoïdes) 
+Antérieur, médial, 
+postérieur 
+Élévation, rotation, 
+poussée verticale 
+Trapèzes inférieurs 
+Trapèzes 
+Trapèze sup/moy/inf 
+Élévation omoplate, 
+rétraction 
+Pectoraux 
+Dos large (Dorsaux) 
+Grand dorsal, teres major 
+Tirage vertical/horizontal 
+Pectoraux, épaules 
+ant. 
+Rhomboïdes 
+Rhomboïde mineur et 
+majeur 
+Rétraction des omoplates 
+Pectoraux 
+Triceps 
+Chef long, latéral, médial 
+Extension du coude 
+Biceps 
+Biceps 
+Chef long, chef court, 
+brachial 
+Flexion du coude, 
+supination 
+Triceps 
+Avant-bras 
+Brachioradial, 
+extenseurs, fléchisseurs 
+Préhension, poignet 
+— 
+ 
+2.2 Torse inférieur & Core 
+Groupe musculaire 
+Muscles 
+Fonction principale 
+Antagoniste 
+Abdominaux 
+Droit abdominal, obliques 
+int/ext 
+Flexion tronc, 
+stabilisation 
+Lombaires, 
+érecteurs 
+Core profond 
+Transverse, plancher 
+pelvien, multifides 
+Stabilité lombaire et 
+pelvienne 
+— 
+Lombaires 
+Érecteurs du rachis, carré 
+des lombes 
+Extension du rachis, 
+posture 
+Abdominaux 
+Fessiers 
+Grand fessier, moyen 
+fessier, petit fessier 
+Extension/abduction 
+hanche 
+Psoas, adducteurs 
+Quadriceps 
+Droit femoral, vastes 
+int/ext/med 
+Extension du genou 
+Ischio-jambiers 
+Ischio-jambiers 
+Biceps fémoral, semi-
+tendineux, semi-
+membraneux 
+Flexion genou, extension 
+hanche 
+Quadriceps 
+Adducteurs 
+Grand, moyen, petit 
+adducteur, pectiné 
+Adduction cuisse 
+Fessiers, 
+abducteurs 
+Mollets 
+Gastrocnémien, soléaire 
+Flexion plantaire (pointe) 
+Tibial antérieur 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+3. CATALOGUE COMPLET DES EXERCICES 
+Tous les exercices sont classés par groupe musculaire principal, avec muscles secondaires, 
+description technique, niveau requis et variantes. 
+ 
+3.1 Exercices Pectoraux 
+Exercice 
+Muscles 
+2ndaires 
+Niveau 
+Type 
+Description 
+technique 
+Développé couché 
+barre 
+Triceps, deltoïdes 
+ant. 
+Débutant+ 
+Force 
+Dos à plat, barre saisie 
+en pronation légèrement 
++ large que les épaules, 
+descendre à la poitrine, 
+pousser en arc 
+Développé couché 
+haltères 
+Triceps, 
+stabilisateurs 
+Débutant+ 
+Force 
+Permet amplitude + 
+grande, descendre les 
+coudes en dessous du 
+banc, contrôle total 
+Développé incliné 
+barre (30°) 
+Deltoïdes ant., 
+triceps 
+Intermédiaire 
+Force 
+Banc incliné 30-45°, 
+sollicite le haut du 
+pectoral davantage 
+Développé décliné 
+Triceps, bas 
+pectoraux 
+Intermédiaire 
+Force 
+Banc décliné, cible les 
+bas pectoraux, attention 
+aux cervicales 
+Pompes 
+Triceps, deltoïdes, 
+core 
+Débutant 
+Poids corps 
+Corps aligné tête-talons, 
+descendre jusqu'à 
+effleurer le sol, coudes à 
+45° 
+Pompes déclinées 
+(pieds surélevés) 
+Haut pectoral, 
+deltoïdes 
+Intermédiaire 
+Poids corps 
+Pieds sur banc, angle 
+vers le bas = sollicite 
+haut des pecs 
+Écarté couché 
+haltères (Fly) 
+Deltoïdes ant., 
+biceps 
+Intermédiaire 
+Isolation 
+Légère flexion coude 
+fixe, ouvrir en arc de 
+cercle, ressentir 
+étirement pectoral 
+Écarté à la poulie 
+basse 
+Deltoïdes ant., 
+biceps 
+Intermédiaire 
+Isolation 
+Câbles en bas, 
+mouvement de bas en 
+haut croisé = brûle le 
+haut des pecs 
+Chest press 
+machine 
+Triceps, deltoïdes 
+Débutant 
+Machine 
+Sécurisé, idéal pour 
+débutants et 
+rééducation 
+Dips lestés 
+Triceps, bas 
+pectoraux 
+Avancé 
+Poids corps 
+Corps légèrement 
+penché en avant pour 
+cibler les pecs, 
+amplitude complète 
+Pullover haltère 
+Dorsaux, serratus 
+ant. 
+Intermédiaire 
+Polyarticulaire 
+Couché en travers du 
+banc, descendre haltère 
+derrière la tête 
+Cable crossover 
+Isolation pectorale 
+Avancé 
+Isolation 
+Câbles en haut, croiser 
+les mains en bas = 
+contraction maximale 
+des pecs 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+ 
+3.2 Exercices Dos (Dorsaux & Trapèzes) 
+Exercice 
+Muscles 
+2ndaires 
+Niveau 
+Type 
+Description 
+technique 
+Tractions (Pull-ups) 
+Biceps, 
+rhomboïdes, core 
+Intermédiaire 
+Poids corps 
+Prise pronation, monter 
+jusqu'au menton, 
+descente contrôlée, 
+corps droit 
+Tractions supination 
+(Chin-ups) 
+Biceps, brachial 
+Intermédiaire 
+Poids corps 
+Prise supination + 
+étroite, sollicite 
+davantage les biceps et 
+bas des dorsaux 
+Tractions assistées 
+machine 
+Biceps, 
+rhomboïdes 
+Débutant 
+Machine 
+Même geste que pull-
+up, contrepoids réduit la 
+résistance 
+Tirage vertical poulie 
+haute 
+Biceps, 
+rhomboïdes 
+Débutant+ 
+Câble 
+Barre tirée vers la 
+poitrine (ou derrière la 
+nuque non 
+recommandé), coudes 
+vers le bas 
+Tirage horizontal 
+barre (Barbell row) 
+Biceps, 
+rhomboïdes, 
+trapèzes 
+Intermédiaire 
+Force 
+Dos droit à 45°, barre 
+tirée vers le bas de 
+l'abdomen, omoplates 
+serrées en fin 
+Tirage horizontal 
+haltère 1 bras 
+Biceps, trapèze 
+Intermédiaire 
+Unilatéral 
+Appui genou et main sur 
+banc, tirer coude vers le 
+plafond 
+Tirage horizontal 
+câble assis 
+Biceps, 
+rhomboïdes 
+Débutant 
+Câble 
+Dos droit, tirer la 
+poignée vers le nombril, 
+coudes contre le corps 
+Soulevé de terre 
+(Deadlift) 
+Fessiers, ischio, 
+quad, trapèzes 
+Avancé 
+Polyarticulaire 
+Barre sur le sol, dos 
+plat, poussée jambes 
+puis extension rachis, 
+barre contre le corps 
+Soulevé de terre 
+roumain 
+Ischio-jambiers, 
+fessiers 
+Intermédiaire 
+Polyarticulaire 
+Jambes semi-fléchies, 
+descendre en 
+maintenant dos plat, 
+ressentir étirement 
+ischio 
+Good morning 
+Lombaires, ischio 
+Avancé 
+Polyarticulaire 
+Barre sur trapèzes, 
+flexion tronc avec dos 
+plat, attention risque 
+lombaire 
+Tirage nuque 
+machine 
+Rhomboïdes, 
+biceps 
+Débutant 
+Machine 
+Machine sécurisée, 
+poignées tirées jusqu'à 
+hauteur des oreilles 
+Face pull (câble) 
+Deltoïdes post., 
+rhomboïdes 
+Tous 
+niveaux 
+Câble 
+Câble à hauteur des 
+yeux, tirer vers le visage 
+en ouvrant les coudes = 
+santé épaule 
+Shrugs 
+(haussements 
+épaules) 
+Trapèzes 
+supérieurs 
+Tous 
+niveaux 
+Isolation 
+Haltères ou barre, 
+monter les épaules vers 
+les oreilles, pause 
+haute, descente lente 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+ 
+3.3 Exercices Épaules (Deltoïdes) 
+Exercice 
+Muscles 
+2ndaires 
+Niveau 
+Type 
+Description 
+technique 
+Développé militaire 
+barre (OHP) 
+Triceps, trapèzes, 
+core 
+Intermédiaire 
+Force 
+Debout ou assis, barre 
+au menton, pousser 
+verticalement, 
+verrouiller sans 
+hyperextension 
+lombaire 
+Développé militaire 
+haltères 
+Triceps, 
+stabilisateurs 
+Débutant+ 
+Force 
+Bonne option 
+unilatérale, coudes à 
+90° au départ, pousser 
+en V 
+Arnold press 
+Tout le deltoïde 
+Intermédiaire 
+Force 
+Prise supination en bas, 
+rotation en poussant = 
+travaille les 3 chefs 
+Élévations latérales 
+haltères 
+Deltoïde médial, 
+trapèzes sup. 
+Tous 
+niveaux 
+Isolation 
+Bras légèrement fléchis, 
+monter à hauteur des 
+épaules, ne pas 
+balancer le buste 
+Élévations frontales 
+haltères 
+Deltoïde antérieur 
+Tous 
+niveaux 
+Isolation 
+Un bras ou deux, 
+montée jusqu'à hauteur 
+des épaules en 
+pronation 
+Oiseau / Reverse fly 
+haltères 
+Deltoïde 
+postérieur, 
+rhomboïdes 
+Tous 
+niveaux 
+Isolation 
+Penché à 45°, bras 
+ouverts vers les côtés, 
+coudes légèrement 
+fléchis 
+Oiseau à la poulie 
+(face pull variante) 
+Deltoïde post. 
+Tous 
+niveaux 
+Câble 
+Poulie basse, lever 
+latéralement vers le 
+haut 
+Upright row 
+Deltoïdes, 
+trapèzes, biceps 
+Intermédiaire 
+Polyarticulaire 
+Barre ou câble, tirer 
+vers le menton, coudes 
+au-dessus des mains — 
+attention impingement 
+Lateral raises à la 
+machine 
+Deltoïde médial 
+Débutant 
+Machine 
+Contrôlé et sécurisé, 
+bon pour débutants et 
+rééducation légère 
+Rotation externe 
+(élastique/câble) 
+Coiffe des 
+rotateurs 
+Tous 
+niveaux 
+Prévention 
+Coude à 90°, rotation 
+externe, essentiel pour 
+la santé de l'épaule 
+ 
+3.4 Exercices Bras (Biceps & Triceps) 
+Exercice 
+Chef ciblé 
+Niveau 
+Type 
+Description technique 
+Curl barre droite 
+Biceps long & 
+court 
+Débutant+ 
+Isolation 
+Prise supination, garder 
+coudes fixes contre le 
+buste, monter jusqu'au 
+menton 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+Exercice 
+Chef ciblé 
+Niveau 
+Type 
+Description technique 
+Curl haltères 
+alternés 
+Biceps, 
+brachioradial 
+Débutant+ 
+Isolation 
+Rotation du poignet en 
+montant (supination), 
+meilleur développement 
+Curl marteau 
+(Hammer curl) 
+Brachioradial, 
+brachial 
+Débutant+ 
+Isolation 
+Prise neutre (pouce vers 
+le haut), développe les 
+avant-bras 
+Curl concentré 
+Pic du biceps 
+Intermédiaire 
+Isolation 
+Assis, coude sur la cuisse, 
+contraction maximale en 
+haut 
+Curl à la poulie 
+basse 
+Biceps 
+Débutant 
+Câble 
+Tension constante tout au 
+long du mouvement — 
+idéal pour l'isolation 
+Curl incliné haltères 
+Chef long du 
+biceps 
+Intermédiaire 
+Isolation 
+Banc incliné, amplitude 
+maximale pour étirer le 
+chef long 
+Dips au banc 
+(triceps) 
+Triceps, 
+deltoïdes ant. 
+Débutant 
+Poids corps 
+Mains sur banc derrière le 
+dos, descendre les 
+fesses, coudes vers 
+l'arrière 
+Extension triceps 
+poulie haute 
+Chef long, 
+médial, latéral 
+Débutant+ 
+Câble 
+Coudes fixes, étendre les 
+bras vers le bas, variantes 
+: corde, barre droite, V-bar 
+Kickback haltère 
+Chef latéral, 
+médial 
+Débutant+ 
+Isolation 
+Appui sur banc, coude à 
+90°, étendre le bras vers 
+l'arrière 
+Développé couché 
+prise serrée 
+Triceps, 
+pectoraux 
+Intermédiaire 
+Force/Isolation 
+Prise serrée (30-40 cm), 
+descendre à la poitrine, 
+pousser en contractant les 
+triceps 
+Skull crushers 
+(Extension couché) 
+Chef long triceps 
+Intermédiaire 
+Isolation 
+Couché, barre/haltères 
+vers le front, coudes fixes 
+et dirigés vers le plafond 
+Pushdown 
+barre/corde 
+Tout le triceps 
+Débutant 
+Câble 
+Coudes contre le corps, 
+étendre vers le bas, 
+variante corde = écarter 
+en fin de mouvement 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+3.5 Exercices Jambes 
+Exercice 
+Muscles 
+2ndaires 
+Niveau 
+Type 
+Description 
+technique 
+Squat barre (Back 
+squat) 
+Fessiers, ischio, 
+core, lombaires 
+Intermédiaire 
+Force 
+Barre sur trapèzes, 
+pieds largeur épaules, 
+descente genoux 
+dans l'axe des orteils, 
+dos droit 
+Squat avant (Front 
+squat) 
+Quadriceps, core, 
+dorsaux 
+Avancé 
+Force 
+Barre en position 
+avant (deltoïdes), 
+charge plus sur les 
+quads, exige bonne 
+mobilité 
+Goblet squat 
+(haltère ou 
+kettlebell) 
+Fessiers, 
+adducteurs, core 
+Débutant 
+Fonctionnel 
+Haltère tenu devant la 
+poitrine, descente 
+profonde facilitée 
+Squat bulgare (1 
+pied surélevé) 
+Quadriceps, 
+fessiers, ischio 
+Intermédiaire 
+Unilatéral 
+Pied arrière sur banc, 
+descente genou avant 
+en direction des 
+orteils 
+Fentes avant 
+(lunges) 
+Fessiers, 
+quadriceps 
+Débutant+ 
+Unilatéral 
+Grand pas en avant, 
+genou avant à 90°, ne 
+pas dépasser les 
+orteils 
+Fentes marchées 
+Fessiers, 
+quadriceps, 
+équilibre 
+Intermédiaire 
+Unilatéral 
+Enchaînement de 
+fentes en avançant, 
+excellent pour le 
+gabarit fonctionnel 
+Fentes latérales 
+Adducteurs, 
+fessiers, 
+quadriceps 
+Intermédiaire 
+Unilatéral 
+Pas latéral, poids sur 
+le pied qui fléchit, 
+jambe opposée 
+tendue 
+Leg press machine 
+Quadriceps, 
+fessiers, ischio 
+Débutant 
+Machine 
+Pieds sur la 
+plateforme, angle 45°, 
+ne pas verrouiller les 
+genoux en haut 
+Extension jambes 
+(Leg extension) 
+Quadriceps 
+(isolation) 
+Débutant 
+Machine/Isolation 
+Assis, étendre les 
+jambes, contraction 
+en haut, descente 
+contrôlée — attention 
+aux genoux 
+Curl jambes couché 
+(Leg curl) 
+Ischio-jambiers 
+(isolation) 
+Débutant 
+Machine/Isolation 
+Couché ventre, fléchir 
+les jambes, 
+contraction en haut, 
+descente lente 
+Hip thrust (poussée 
+des hanches) 
+Fessiers, ischio, 
+core 
+Intermédiaire 
+Fessiers 
+Dos sur banc, barre 
+sur hanches, 
+extension des 
+hanches, squeeze 
+fessiers en haut 
+Romanian deadlift 
+(RDL) 
+Fessiers, 
+lombaires, mollets 
+Intermédiaire 
+Polyarticulaire 
+Jambes presque 
+tendues, descendre la 
+barre le long des 
+jambes, étirement 
+ischio 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+Exercice 
+Muscles 
+2ndaires 
+Niveau 
+Type 
+Description 
+technique 
+Glute bridge (pont 
+fessier) 
+Core, lombaires 
+Débutant 
+Fessiers 
+Couché sur le dos, 
+pieds à plat, monter le 
+bassin, excellent pour 
+débutants et post-
+partum 
+Mollets debout 
+(machine ou barre) 
+Gastrocnémien 
+(isolation) 
+Tous 
+niveaux 
+Isolation 
+Monter sur la pointe 
+des pieds, pause 
+haute, descente 
+complète 
+Mollets assis 
+(machine) 
+Soléaire (isolation) 
+Tous 
+niveaux 
+Isolation 
+Genou fléchi = isole 
+le soléaire, sous-
+estimé mais important 
+Step-up sur banc 
+Fessiers, 
+quadriceps, 
+équilibre 
+Débutant+ 
+Fonctionnel 
+Monter sur un banc 
+avec alternance 
+jambe motrice, 
+excellent pour les 
+genoux 
+Presse à mollets 
+Gastrocnémien, 
+soléaire 
+Tous 
+niveaux 
+Machine 
+Sur la leg press, 
+pousser avec l'avant 
+du pied uniquement 
+ 
+3.6 Exercices Core & Abdominaux 
+Exercice 
+Zone ciblée 
+Niveau 
+Type 
+Description technique 
+Planche frontale 
+(Plank) 
+Core profond, 
+épaules, fessiers 
+Débutant 
+Gainage 
+Sur coudes ou mains, 
+corps aligné, contracter 
+core et fessiers, 
+respiration 
+Planche latérale 
+Obliques, core 
+latéral 
+Débutant+ 
+Gainage 
+Sur le côté, appui coude 
+et pied, bassin en l'air, 
+ligne droite corps 
+Crunch classique 
+Droit abdominal 
+(haut) 
+Débutant 
+Abdominaux 
+Couché, pieds au sol, 
+monter épaules et 
+omoplates, NE PAS tirer 
+sur la nuque 
+Crunch inverse 
+Bas du droit 
+abdominal 
+Débutant+ 
+Abdominaux 
+Jambes levées, ramener 
+les genoux vers la 
+poitrine en contractant le 
+bas du ventre 
+Mountain climbers 
+Core, épaules, 
+cardio 
+Intermédiaire 
+Fonctionnel 
+Position pompe, alterner 
+genoux vers la poitrine 
+rapidement, dos plat 
+Russian twist 
+Obliques, 
+transverse 
+Intermédiaire 
+Rotation 
+Assis, pieds levés, 
+rotation du buste avec 
+poids ou sans, toucher le 
+sol de chaque côté 
+Dead bug 
+Core profond, 
+coordination 
+Débutant+ 
+Stabilisation 
+Couché, bras et jambes 
+opposés s'étendent 
+simultanément, dos 
+plaqué au sol 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+Exercice 
+Zone ciblée 
+Niveau 
+Type 
+Description technique 
+Leg raises (relevé de 
+jambes) 
+Bas du droit 
+abdominal, hip 
+flexors 
+Intermédiaire 
+Abdominaux 
+Couché, jambes 
+tendues, monter jusqu'à 
+90°, descendre sans 
+toucher le sol 
+Hanging leg raises 
+Abdominaux, hip 
+flexors 
+Avancé 
+Suspension 
+Accroché à une barre, 
+lever les genoux ou 
+jambes tendues vers la 
+poitrine 
+Ab wheel (roue 
+abdominale) 
+Core complet, 
+dorsaux, épaules 
+Avancé 
+Core 
+À genoux ou debout, 
+rouler en avant en 
+maintenant le core 
+contracté, revenir 
+contrôlé 
+Rotations au câble 
+(Woodchop) 
+Obliques, épaules, 
+hanches 
+Intermédiaire 
+Fonctionnel 
+Câble en haut, rotation 
+diagonale vers le bas, 
+imite geste athlétique 
+Gainage dynamique 
+(Bird dog) 
+Core profond, 
+équilibre 
+Débutant 
+Stabilisation 
+À 4 pattes, étendre bras 
+et jambe opposés, 
+maintenir le dos plat 
+Flutter kicks 
+Bas abdominaux, 
+hip flexors 
+Intermédiaire 
+Cardio/Abdo 
+Couché, jambes 
+légèrement levées, 
+battements verticaux 
+rapides 
+Sit-up complet 
+Droit abdominal, 
+hip flexors 
+Débutant+ 
+Abdominaux 
+Couché, monter jusqu'à 
+la position assise, 
+descente contrôlée 
+V-up 
+Abdominaux 
+complets 
+Avancé 
+Abdominaux 
+Simultanément monter 
+les bras et les jambes 
+pour toucher les pieds 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+4. EXERCICES SELON LA MORPHOLOGIE 
+ 
+4.1 Ectomorphe — Prise de masse 
+L’ectomorphe brûle les calories très rapidement. L’objectif est de maximiser la prise de masse 
+musculaire avec un entraînement en force à volume modéré et une récupération optimale. 
+ 
+✅ STRATÉGIE D'ENTRAÎNEMENT ECTOMORPHE 
+• Priorité aux exercices polyarticulaires lourds (squat, deadlift, développé couché, tractions) 
+• Volume modéré : 3-4 séries de 6-10 répétitions avec charges lourdes 
+• Temps de repos longs : 90-180 secondes entre les séries 
+• Fréquence : 3-4 séances par semaine, pas plus (récupération essentielle) 
+• Minimiser le cardio (max 1-2 sessions courtes de LISS par semaine) 
+• Supersets agoniste/antagoniste pour efficacité sans surcardio 
+• Privilégier la progression de charge (ajouter du poids régulièrement) 
+ 
+ 
+Exercice prioritaire 
+Séries 
+Reps 
+Repos 
+Objectif 
+Squat barre 
+4 
+6-8 
+2-3 
+min 
+Force membres inférieurs, hormone de 
+croissance 
+Soulevé de terre 
+4 
+5-6 
+3 min 
+Force totale, testostérone, épaisseur du dos 
+Développé couché barre 
+4 
+6-8 
+2-3 
+min 
+Masse pectorale et force poussée 
+Tractions lestées 
+4 
+6-8 
+2-3 
+min 
+Largeur dorsale, biceps 
+Développé militaire 
+3 
+8-10 
+2 min 
+Épaules, stabilité globale 
+Dips lestés 
+3 
+8-10 
+2 min 
+Triceps, bas des pecs, masse générale 
+Curl barre 
+3 
+8-12 
+90 sec 
+Biceps, complétion bras 
+Hip thrust 
+3 
+10-12 
+90 sec 
+Fessiers, force postérieure 
+ 
+4.2 Mésomorphe — Maintien & Performance 
+Le mésomorphe répond facilement à l’entraînement. Il peut viser aussi bien la prise de masse que 
+la sèche selon ses objectifs, avec une grande flexibilité dans les programmes. 
+ 
+✅ STRATÉGIE D'ENTRAÎNEMENT MÉSOMORPHE 
+• Polyvalence : peut faire prise de masse, sèche ou recomposition selon l'objectif 
+• Volume intermédiaire : 4 séries de 8-12 reps (hypertrophie) ou 3x5 (force) 
+• Cardio modéré : 2-3 sessions de HIIT ou cardio modéré pour maintenir la composition 
+corporelle 
+• Fréquence : 4-5 séances par semaine avec programme PPL (Push/Pull/Legs) ou 
+Upper/Lower 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+• Progresser en charge ET en volume pour éviter la stagnation rapide 
+• Varier les exercices régulièrement (chaque 4-8 semaines) 
+ 
+ 
+4.3 Endomorphe — Perte de graisse & Définition 
+L’endomorphe stocke facilement les graisses. L’objectif est de maximiser la dépense calorique tout 
+en préservant (ou développant) la masse musculaire. 
+ 
+✅ STRATÉGIE D'ENTRAÎNEMENT ENDOMORPHE 
+• Combiner entraînement en résistance ET cardio dans chaque séance 
+• Circuit training et supersets pour maintenir le rythme cardiaque élevé 
+• Volume élevé : 3-4 séries de 12-15 reps avec temps de repos courts (45-60 sec) 
+• HIIT 2-3 fois par semaine (excellent pour brûler les graisses post-séance) 
+• LISS (marche rapide, vélo léger) les jours de repos 
+• Exercices composés EN PRIORITÉ : brûlent plus de calories 
+• Fréquence : 5-6 séances par semaine (alternance force/cardio) 
+ 
+ 
+Exercice prioritaire 
+Séries 
+Reps 
+Repos 
+Objectif 
+Circuit squat + pompes + 
+rowing 
+4 
+15 
+chaque 
+30 sec 
+Dépense calorique maximale, cardio 
+intégré 
+Soulevé de terre roumain 
+4 
+12-15 
+60 sec 
+Ischio, fessiers, métabolisme 
+Tirage horizontal câble 
+3 
+15 
+45 sec 
+Dos, biceps, posture 
+Step-ups lestés 
+3 
+12-
+15/jambe 
+60 sec 
+Jambes, fessiers, brûleur calorique 
+Développé couché 
+haltères 
+3 
+12-15 
+60 sec 
+Pectoraux, maintien musculaire 
+Fentes marchées lestées 
+3 
+16 total 
+60 sec 
+Jambes complètes, fréquence 
+cardiaque 
+HIIT tapis : 20 sec sprint / 
+40 sec repos 
+8-10 
+cycles 
+— 
+Passif 
+40 sec 
+Brûle-graisses post-effort (EPOC) 
+Planche + mountain 
+climbers 
+3 
+30 
+sec+15 
+reps 
+45 sec 
+Core, cardio, stabilité 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+5. EXERCICES SELON L'IMC 
+ 
+5.1 IMC < 18.5 — Insuffisance pondérale 
+⚠️ PRÉCAUTIONS IMC < 18.5 
+• Consultation médicale recommandée avant de démarrer si IMC < 17 
+• Priorité absolue : ne pas créer un déficit calorique 
+• Éviter les exercices cardiovasculaires intenses au début 
+• Objectif : développer la masse musculaire et améliorer la posture 
+• Progression très douce en charge — risque de blessure sur os fragilisés 
+ 
+ 
+Exercice recommandé 
+Type 
+Précaution 
+Squat au poids du corps 
+Renforcement 
+Commencer sans charge, focaliser sur la 
+technique 
+Pompes adaptées (genoux au 
+sol) 
+Poids corps 
+Aucun impact, développe pectoraux et 
+triceps doucement 
+Tirage vertical machine 
+Machine 
+Charge contrôlée, dos protégé 
+Leg press machine 
+Machine 
+Sécurisé, pas de compression rachidienne 
+Hip thrust poids corps 
+Fessiers 
+Excellente intro aux exercices de hanche 
+Gainage planche (30 sec) 
+Core 
+Renforce le core sans charge externe 
+Curl haltères légers 
+Isolation 
+Développement bras, charges légères 2-5 
+kg 
+Marche rapide (20-30 min) 
+Cardio doux 
+Maximum 2x/semaine, ne pas épuiser 
+ 
+5.2 IMC 18.5 – 24.9 — Poids normal 
+Toute la panoplie des exercices est accessible. Le programme est guidé uniquement par les 
+objectifs personnels (masse, sèche, performance, santé). 
+ 
+✅ LIBERTÉ DE PROGRAMME — IMC NORMAL 
+• Tous les exercices des sections 3 et 4 sont accessibles 
+• Adapter selon le morphotype (ecto/méso/endo) et l'objectif 
+• Progresser en charge régulièrement (surcharge progressive) 
+• Mélanger renforcement musculaire et cardio selon les préférences 
+• Viser 3-5 séances par semaine selon la disponibilité 
+ 
+ 
+5.3 IMC 25 – 29.9 — Surpoids 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+⚠️ PRÉCAUTIONS IMC 25-29.9 
+• Attention aux articulations portantes (genoux, hanches, cheville, colonne) 
+• Privilégier les appareils qui déchargent les articulations au départ 
+• Le cardio doit être à faible impact pour protéger les articulations 
+• Priorité : renforcement musculaire + cardio modéré = meilleure composition corporelle 
+• La masse musculaire développée augmente le métabolisme de base 
+ 
+ 
+Exercice recommandé 
+Type 
+Avantage spécifique 
+Vélo elliptique / rameur 
+Cardio faible impact 
+Cardio sans compression articulaire 
+Natation / aquagym 
+Cardio eau 
+Résistance maximale, impact nul 
+Leg press machine 
+Force 
+Squats sécurisés sans charge axiale sur la 
+colonne 
+Tirage horizontal câble assis 
+Force 
+Dos et biceps sans contrainte posturale 
+Hip thrust (poids adapté) 
+Fessiers 
+Renforce les fessiers, protège le dos 
+Step-up sur banc bas (20 cm) 
+Fonctionnel 
+Genou progressivement chargé, fonctionnel 
+Développé couché machine 
+Force 
+Pectoraux sécurisés, guidage du 
+mouvement 
+Planche adaptée (genoux) 
+Core 
+Renforce le core, protège le dos 
+Marche rapide 30-45 min 
+Cardio 
+Idéal pour débuter la perte de poids 
+Circuit machines 12-15 reps 
+Circuit 
+Volume + cardio = combo efficace pour 
+perdre du poids 
+ 
+5.4 IMC 30 – 34.9 — Obésité Grade I 
+⚠️ PRÉCAUTIONS IMC 30-34.9 
+• Consultation médicale recommandée avant de démarrer 
+• Commencer par 2-3 séances par semaine, durée 20-30 min, augmenter progressivement 
+• Éviter tous les exercices avec impact (course à pied, sauts, burpees) 
+• Exercices assis ou allongés en priorité au début 
+• Surveillance du rythme cardiaque obligatoire (max 65-75% FCmax) 
+• Intégrer la marche quotidienne comme base de l'activité 
+ 
+ 
+Exercice recommandé 
+Position 
+Type 
+Notes 
+Vélo couché (semi-allongé) 
+Assis 
+Cardio 
+Idéal pour obésité, aucun impact articulaire 
+Rameur (intensité faible) 
+Assis 
+Cardio 
+Corps entier, impact nul 
+Leg press (charge légère) 
+Assis 
+Force 
+Jambes sans compression vertébrale 
+Tirage vertical machine 
+Assis 
+Force 
+Dos, sans effort postural important 
+Chest press machine 
+Assis 
+Force 
+Pectoraux, guidé et sécurisé 
+Hip abduction/adduction 
+machine 
+Assis 
+Force 
+Hanches et fessiers, sans mise en charge 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+Exercice recommandé 
+Position 
+Type 
+Notes 
+Curl biceps machine 
+Assis 
+Force 
+Bras, aucun déséquilibre possible 
+Gainage genoux au sol 
+Sol 
+Core 
+Renforce le core doucement 
+Marche sur tapis (pente 
+légère) 
+Debout 
+Cardio 
+Progresser sur 20-40 min, rythme 
+confortable 
+Aquagym 
+Eau 
+Cardio+Force 
+Exercice complet, impact nul grâce à la 
+flottaison 
+ 
+5.5 IMC ≥ 35 — Obésité Grade II & III 
+⚠️ AVERTISSEMENT IMC ≥ 35 
+• Suivi médical OBLIGATOIRE avant tout programme d'entraînement 
+• L'application doit rediriger vers un professionnel de santé 
+• Programme uniquement en collaboration avec kinésithérapeute ou médecin du sport 
+• Priorité : mobilité, respiration, renforcement doux, confidence en soi 
+• Toute douleur articulaire ou thoracique = arrêt immédiat et consultation 
+ 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+6. EXERCICES SELON LE NIVEAU SPORTIF 
+ 
+6.1 Débutant (0 – 6 mois d'entraînement) 
+Le débutant doit avant tout apprendre les patterns de mouvement fondamentaux. La charge est 
+secondaire à la technique. 
+ 
+⚠️ PRINCIPES DÉBUTANT 
+• Séances 3x/semaine full body (lundi-mercredi-vendredi ou similaire) 
+• Se concentrer sur la forme plutôt que la charge 
+• Progression : ajouter du poids seulement quand la technique est parfaite 
+• Exercices guidés (machines) + quelques exercices libres basiques 
+• Séances de 45-60 minutes maximum 
+• Échauffement 10 min + retour au calme 5 min obligatoires 
+ 
+ 
+Pattern 
+Exercice recommandé 
+Exercice à éviter (débutant) 
+Poussée horizontale 
+Pompes genoux au sol, chest press 
+machine 
+Développé couché barre lourd 
+Tirage horizontal 
+Tirage câble assis, tirage machine 
+Rowing barre T (complexe 
+posturalement) 
+Tirage vertical 
+Lat pulldown machine 
+Tractions strictes (force insuffisante) 
+Poussée verticale 
+Développé haltères assis (guidé) 
+OHP barre debout lourd 
+Squat 
+Goblet squat, leg press machine 
+Squat barre lourde, front squat 
+Charnière de hanche 
+Glute bridge, RDL léger haltères 
+Soulevé de terre barre (complexe) 
+Core 
+Planche genoux, crunch contrôlé, 
+dead bug 
+Ab wheel, hanging leg raises 
+Cardio 
+Vélo, marche sur tapis, elliptique 
+HIIT intense, course longue distance 
+ 
+6.2 Intermédiaire (6 mois – 2 ans) 
+Le niveau intermédiaire maîtrise les exercices de base et peut aborder les mouvements libres 
+complexes et les splits d’entraînement. 
+ 
+⚠️ PRINCIPES INTERMÉDIAIRE 
+• Programme split : Upper/Lower (4j/sem) ou PPL (Push Pull Legs, 6j/sem) 
+• Surcharge progressive systématique : +2.5 kg ou +1 rep par semaine 
+• Introduction des exercices libres avec barres (squat, deadlift, OHP, bench) 
+• Variantes d'exercices pour varier les stimulus et éviter les plateaux 
+• Tempo contrôlé : ex. 3-1-1-0 (3 sec excentrique, 1 pause, 1 montée, 0 pause haut) 
+• Commencer à suivre les charges et les progrès dans un carnet ou une app 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+ 
+ 
+6.3 Avancé (2 ans et plus) 
+Le pratiquant avancé utilise des techniques d’intensification, une périodisation et peut s’approcher 
+des exercices olympiques. 
+ 
+⚠️ PRINCIPES AVANCÉ 
+• Périodisation : alterner blocs de force (5x5), hypertrophie (4x10), et décharge 
+(récupération) 
+• Techniques d'intensification : Drop sets, Rest-pause, Giant sets, Clusters 
+• Introduction des mouvements olympiques (clean, épaulé-jeté) si objectif athlétique 
+• Programme 4-6 jours/semaine avec focus spécifique par séance 
+• Utilisation de l'équipement spécialisé (belt, wraps, chalk) 
+• Suivi précis des macros nutritionnelles aligné avec les phases d'entraînement 
+ 
+ 
+6.4 Expert / Compétiteur 
+Ce niveau est hors du scope d’une application généraliste. Rediriger vers des coachs spécialisés 
+(powerlifting, haltérophilie, bodybuilding). 
+ 
+ 
+DOCUMENTATION SPORT & MORPHOLOGIE   |   Guide complet pour application de fitness 
+© Documentation Fitness App — Usage interne 
+7. EXERCICES SELON L'OBJECTIF 
+ 
+7.1 Objectif : Perte de poids / Sèche 
+Paramètre 
+Recommandation 
+Type de séance 
+Circuit training, HIIT, entraînement en résistance à volume élevé 
+Répétitions 
+12-20 reps par exercice 
+Temps de repos 
+30-60 secondes (maintenir FC élevée) 
+Fréquence 
+4-6 séances/semaine 
+Cardio 
+2-3 HIIT (20 min) + 2-3 LISS (40-60 min de marche/vélo) 
+Priorité exercices 
+Polyarticulaires (plus de calories brûlées par exercice) 
+Technique clé 
+Supersets agoniste/antagoniste, circuits 5-6 exercices enchaînés 
+À éviter 
+Repos trop longs, exercices d'isolation uniquement, séances < 30 
+min 
+ 
+7.2 Objectif : Prise de masse musculaire 
+Paramètre 
+Recommandation 
+Type de séance 
+Force-Hypertrophie, exercices libres polyarticulaires lourds 
+Répétitions 
+6-12 reps (hypertrophie) ou 1-5 reps (force pure) 
+Temps de repos 
+90 sec – 3 minutes 
+Fréquence 
+3-5 séances/semaine avec jours de repos planifiés 
+Cardio 
+Minimum (1-2 sessions courtes LISS) pour ne pas brûler les calories 
+de croissance 
+Priorité exercices 
+Squat, Deadlift, Bench, OHP, Tractions — les fondamentaux 
+Technique clé 
+Progression de charge (ajouter du poids régulièrement = stimuler la 
+croissance) 
+Nutrition clé 
+Surplus calorique de 200-400 kcal/jour, apport protéique 1.6-2.2g/kg 
+ 
+7.3 Objectif : Tonification / Remodelage 
+Paramètre 
+Recommandation 
+Type de séance 
+Résistance modérée à élevée, exercices ciblés par zone 
+Répétitions 
+12-20 reps avec charge modérée 
+Temps de repos 
+45-75 secondes 
+Fréquence 
+4-5 séances/semaine 
+Cardio 
+2-3 sessions modérées (cardio en zone 2, 30-45 min) 
+Priorité exercices 
+Exercices qui ciblent les zones souhaitées + compound pour 
+maintien masse 
+Technique clé 
+TUT (Time Under Tension) élevé, contractions isométriques en fin 
+de mouvement 
