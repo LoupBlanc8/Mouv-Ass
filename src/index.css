@@ -890,3 +890,18 @@ a:hover {
     margin: 0 auto;
   }
 }
+
+/* Ensure app-shell spans full width on desktop */
+@media (min-width: 768px) {
+  .app-shell {
+    max-width: 100% !important;
+    width: 100%;
+  }
+  
+  /* Make Login page more premium on desktop */
+  .page.login-page {
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}
