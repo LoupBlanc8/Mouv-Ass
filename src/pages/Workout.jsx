@@ -29,7 +29,7 @@ function getExerciseImage(nom) {
   
   // Shoulders / Triceps
   if (nomLower.includes('militaire') || nomLower.includes('épaule') || nomLower.includes('élévation') || nomLower.includes('arnold') || nomLower.includes('oiseau')) return '/exercises/presse-militaire.gif';
-  if (nomLower.includes('triceps') || nomLower.includes('front')) return '/exercises/dips.gif'; // Dips is the closest tricep exercise we have
+  if (nomLower.includes('triceps') || nomLower.includes('front')) return '/exercises/triceps-poulie.gif';
   
   // Core / Abdos
   if (nomLower.includes('gainage') || nomLower.includes('planche') || nomLower.includes('crunch') || nomLower.includes('ab') || nomLower.includes('twist')) return '/exercises/Gainage.gif';
