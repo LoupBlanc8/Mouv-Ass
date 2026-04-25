@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { STREET_WORKOUT_SKILLS } from '../data/streetWorkoutSkills';
-import { Trophy, Clock, CheckCircle2, ChevronDown, ChevronUp, Lock } from 'lucide-react';
+import { GYM_SKILLS } from '../data/gymSkills';
+import { Trophy, Clock, CheckCircle2, ChevronDown, ChevronUp, Lock, Dumbbell } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Academy() {
@@ -21,17 +22,49 @@ export default function Academy() {
   const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } };
   const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
+  const mode = profile?.mode_entrainement || 'salle';
+  
+  // Determine which skills to show based on user profile
+  let displayedSkills = [];
+  let pageTitle = 'Académie';
+  let pageDesc = 'Débloque de nouveaux paliers.';
+
+  if (mode === 'street_workout') {
+    displayedSkills = STREET_WORKOUT_SKILLS;
+    pageTitle = 'Académie Street Workout';
+    pageDesc = 'Maîtrise les skills au poids du corps et débloque de nouvelles figures.';
+  } else if (mode === 'salle') {
+    displayedSkills = GYM_SKILLS;
+    pageTitle = 'Paliers de Force';
+    pageDesc = 'Atteins tes objectifs de force pure en salle de sport.';
+  } else {
+    // Mixte
+    displayedSkills = [...GYM_SKILLS, ...STREET_WORKOUT_SKILLS];
+    pageTitle = 'Académie Mixte';
+    pageDesc = 'Paliers de force et figures au poids du corps.';
+  }
+
   return (
     <div className="page" style={{ paddingBottom: 'var(--space-8)' }}>
       <motion.div variants={container} initial="hidden" animate="show">
         <motion.div variants={item} className="page-header" style={{ marginBottom: 'var(--space-6)' }}>
-          <h1 className="headline-md">Académie</h1>
-          <p className="body-md text-muted mt-2">Maîtrise les skills au poids du corps et débloque de nouvelles figures.</p>
+          <div className="flex items-center gap-3">
+            {mode === 'street_workout' ? <Trophy className="text-primary" size={28} /> : <Dumbbell className="text-primary" size={28} />}
+            <h1 className="headline-md">{pageTitle}</h1>
+          </div>
+          <p className="body-md text-muted mt-2">{pageDesc}</p>
         </motion.div>
 
-        {STREET_WORKOUT_SKILLS.map((skill) => {
+        {displayedSkills.map((skill) => {
           const unlocked = isUnlocked(skill.difficulty);
           const isExpanded = expandedSkill === skill.id;
+          
+          // Calculate dynamic weight if applicable
+          let prereqText = skill.prereq;
+          if (skill.multiplier && profile?.poids_kg) {
+            const targetWeight = Math.round(skill.multiplier * profile.poids_kg);
+            prereqText = `${targetWeight} kg (${skill.multiplier}x PDC)`;
+          }
           
           return (
             <motion.div variants={item} key={skill.id} className={`card mb-4 ${unlocked ? 'card--interactive card--glow-primary' : 'card--recessed'}`} onClick={() => unlocked && setExpandedSkill(isExpanded ? null : skill.id)}>
@@ -70,11 +103,11 @@ export default function Academy() {
                     <div style={{ paddingTop: 'var(--space-4)', borderTop: '1px solid var(--surface-container-highest)' }}>
                       <div className="flex gap-4 mb-4">
                         <div className="flex-1">
-                          <span className="label-sm text-muted mb-1 block">Prérequis</span>
-                          <span className="body-sm text-on-surface flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> {skill.prereq}</span>
+                          <span className="label-sm text-muted mb-1 block">Objectif Requis</span>
+                          <span className="body-sm text-on-surface flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> {prereqText}</span>
                         </div>
                         <div className="flex-1">
-                          <span className="label-sm text-muted mb-1 block">Temps moyen</span>
+                          <span className="label-sm text-muted mb-1 block">Temps d'entraînement</span>
                           <span className="body-sm text-on-surface flex items-center gap-2"><Clock size={14} className="text-warning" /> {skill.time}</span>
                         </div>
                       </div>
