@@ -12,24 +12,35 @@ function getExerciseImage(nom) {
   
   // Specific Exact Matches
   if (nomLower.includes('incliné') || nomLower.includes('incline')) return '/exercises/developpe-incline-halteres.gif';
+  if (nomLower.includes('face pull')) return '/exercises/face-pull.gif';
+  if (nomLower.includes('élévation') || nomLower.includes('elevation') || nomLower.includes('oiseau') || nomLower.includes('latérale')) return '/exercises/elevations-laterales.gif';
+  
+  // Biceps
+  if (nomLower.includes('curl alterné') || nomLower.includes('assis') || nomLower.includes('incliné') || nomLower.includes('marteau')) return '/exercises/curl-biceps-alterne-assis.gif';
+  if (nomLower.includes('curl') || nomLower.includes('biceps')) return '/exercises/curl-biceps.gif';
+  
+  // Back / Dos
+  if (nomLower.includes('rowing')) return '/exercises/rowing-haltere.gif';
+  if (nomLower.includes('traction') || nomLower.includes('pull') || nomLower.includes('muscle-up')) return '/exercises/traction.gif';
+  if (nomLower.includes('tirage')) return '/exercises/traction.gif'; // Fallback
+  
+  // Legs / Jambes
+  if (nomLower.includes('hip thrust')) return '/exercises/hips-thrust.gif';
+  if (nomLower.includes('leg curl')) return '/exercises/leg-curl.gif';
+  if (nomLower.includes('leg press') || nomLower.includes('presse')) return '/exercises/leg-presse.gif';
+  if (nomLower.includes('mollet')) return '/exercises/mollet-debout.gif';
+  if (nomLower.includes('goblet')) return '/exercises/squat-goblet.gif';
+  if (nomLower.includes('squat') || nomLower.includes('fente') || nomLower.includes('leg')) return '/exercises/squat.gif';
+  if (nomLower.includes('terre') || nomLower.includes('deadlift')) return '/exercises/souleve-de-terre.gif';
   
   // Push / Pectoraux
   if (nomLower.includes('développé couché') || nomLower.includes('bench press') || nomLower.includes('écarté')) return '/exercises/developpe-couche.gif';
   if (nomLower.includes('pompe') || nomLower.includes('push-up')) return '/exercises/pompe.gif';
   if (nomLower.includes('dips')) return '/exercises/dips.gif';
   
-  // Pull / Dos / Biceps
-  if (nomLower.includes('traction') || nomLower.includes('pull') || nomLower.includes('muscle-up')) return '/exercises/traction.gif';
-  if (nomLower.includes('rowing') || nomLower.includes('tirage')) return '/exercises/traction.gif'; // Better than deadlift
-  if (nomLower.includes('curl')) return '/exercises/traction.gif'; // Fallback for biceps: pulling motion
-  
-  // Legs / Jambes
-  if (nomLower.includes('squat') || nomLower.includes('fente') || nomLower.includes('leg') || nomLower.includes('mollet')) return '/exercises/squat.gif';
-  if (nomLower.includes('terre') || nomLower.includes('deadlift') || nomLower.includes('hip thrust')) return '/exercises/souleve-de-terre.gif';
-  
   // Shoulders / Triceps
-  if (nomLower.includes('militaire') || nomLower.includes('épaule') || nomLower.includes('élévation') || nomLower.includes('arnold') || nomLower.includes('oiseau')) return '/exercises/presse-militaire.gif';
-  if (nomLower.includes('triceps') || nomLower.includes('front')) return '/exercises/triceps-poulie.gif';
+  if (nomLower.includes('militaire') || nomLower.includes('épaule') || nomLower.includes('arnold')) return '/exercises/presse-militaire.gif';
+  if (nomLower.includes('triceps') || nomLower.includes('front') || nomLower.includes('kickback')) return '/exercises/triceps-poulie.gif';
   
   // Core / Abdos
   if (nomLower.includes('gainage') || nomLower.includes('planche') || nomLower.includes('crunch') || nomLower.includes('ab') || nomLower.includes('twist')) return '/exercises/Gainage.gif';
