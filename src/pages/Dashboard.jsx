@@ -29,6 +29,7 @@ export default function Dashboard() {
   const { profile, user, sessions } = useAuth();
   const [hydration, setHydration] = useState({ eau_ml: 0, objectif_ml: 2500 });
   const [workoutCount, setWorkoutCount] = useState(0);
+  const [nutritionLogs, setNutritionLogs] = useState([]);
 
   const today = new Date();
   const jourSemaine = today.getDay();
@@ -42,14 +43,20 @@ export default function Dashboard() {
   }, [user]);
 
   async function loadDashboardData() {
-    // Hydration
     const todayStr = today.toISOString().split('T')[0];
+    
+    // Hydration
     const { data: hyd } = await supabase.from('hydration_logs').select('*').eq('user_id', user.id).eq('date', todayStr).maybeSingle();
     if (hyd) setHydration(hyd);
     else {
       const obj = profile ? calculateHydratation(Number(profile.poids_kg) || 70) : 2500;
       setHydration({ eau_ml: 0, objectif_ml: obj });
     }
+    
+    // Nutrition
+    const { data: nLogs } = await supabase.from('nutrition_logs').select('*').eq('user_id', user.id).eq('date', todayStr);
+    setNutritionLogs(nLogs || []);
+
     // Workout count this week
     const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - jourSemaine);
     const { count } = await supabase.from('workout_logs').select('*', { count: 'exact', head: true }).eq('user_id', user.id).gte('date', startOfWeek.toISOString().split('T')[0]);
@@ -70,6 +77,29 @@ export default function Dashboard() {
         Number(profile.poids_kg), profile.objectif, profile.morphotype, !!todaySession
       )
     : null;
+
+  let consumedCals = 0;
+  let consumedPro = 0;
+  let consumedGlu = 0;
+  let consumedLip = 0;
+
+  if (macros) {
+    const meals = !!todaySession ? [
+      { id: 'm1', ratio: 0.20 }, { id: 'm2', ratio: 0.30 }, { id: 'm3', ratio: 0.10 }, { id: 'm4', ratio: 0.15 }, { id: 'm5', ratio: 0.25 }
+    ] : [
+      { id: 'm1', ratio: 0.25 }, { id: 'm2', ratio: 0.10 }, { id: 'm3', ratio: 0.35 }, { id: 'm4', ratio: 0.30 }
+    ];
+
+    meals.forEach(meal => {
+      const isConsumed = nutritionLogs.some(l => l.meal_id === meal.id && l.consomme);
+      if (isConsumed) {
+        consumedCals += Math.round(macros.calories * meal.ratio);
+        consumedPro += Math.round(macros.proteines * meal.ratio);
+        consumedGlu += Math.round(macros.glucides * meal.ratio);
+        consumedLip += Math.round(macros.lipides * meal.ratio);
+      }
+    });
+  }
 
   const hour = today.getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
@@ -152,25 +182,25 @@ export default function Dashboard() {
             <p className="section-label">Nutrition du jour</p>
             <div className="card" style={{ marginBottom: 'var(--space-6)' }}>
               <div className="flex items-center justify-between">
-                <ProgressRing size={90} stroke={7} progress={0}>
-                  <div style={{ textAlign: 'center' }}>
-                    <span className="headline-sm text-primary">{macros.calories}</span>
-                    <span className="label-sm text-muted" style={{ display: 'block' }}>kcal</span>
+                <ProgressRing size={90} stroke={7} progress={(consumedCals / macros.calories) * 100}>
+                  <div style={{ textAlign: 'center', marginTop: -4 }}>
+                    <span className="title-lg text-primary">{consumedCals}</span>
+                    <span className="label-sm text-muted" style={{ display: 'block' }}>/ {macros.calories}</span>
                   </div>
                 </ProgressRing>
                 <div className="flex flex-col gap-3" style={{ flex: 1, marginLeft: 'var(--space-6)' }}>
                   {[
-                    { label: 'Protéines', val: macros.proteines, unit: 'g', color: 'var(--primary)' },
-                    { label: 'Glucides', val: macros.glucides, unit: 'g', color: 'var(--secondary)' },
-                    { label: 'Lipides', val: macros.lipides, unit: 'g', color: 'var(--tertiary)' },
+                    { label: 'Protéines', consumed: consumedPro, val: macros.proteines, unit: 'g', color: 'var(--primary)' },
+                    { label: 'Glucides', consumed: consumedGlu, val: macros.glucides, unit: 'g', color: 'var(--secondary)' },
+                    { label: 'Lipides', consumed: consumedLip, val: macros.lipides, unit: 'g', color: 'var(--tertiary)' },
                   ].map(m => (
                     <div key={m.label}>
                       <div className="flex items-center justify-between mb-1">
                         <span className="label-sm text-muted">{m.label}</span>
-                        <span className="body-sm" style={{ color: m.color, fontWeight: 600 }}>{m.val}{m.unit}</span>
+                        <span className="body-sm" style={{ color: m.color, fontWeight: 600 }}>{m.consumed}/{m.val}{m.unit}</span>
                       </div>
                       <div className="progress-bar" style={{ height: 3 }}>
-                        <div className="progress-bar__fill" style={{ width: '0%', background: m.color }} />
+                        <div className="progress-bar__fill" style={{ width: `${Math.min(100, (m.consumed / m.val) * 100)}%`, background: m.color }} />
                       </div>
                     </div>
                   ))}
