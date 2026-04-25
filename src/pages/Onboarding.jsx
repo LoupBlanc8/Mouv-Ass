@@ -3,11 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowLeft, Check, Activity, Target, AlertTriangle, MapPin } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Activity, Target, AlertTriangle, MapPin, Beaker } from 'lucide-react';
 import { calculateIMC, getIMCCategory, calculateMetabolismeBase } from '../utils/calculations';
 import { generateProgramSessions } from '../utils/programGenerator';
 
-const STEPS = 6;
+const STEPS = 7;
 
 export default function Onboarding() {
   const { user, updateProfile, refreshProfile, refreshProgram } = useAuth();
@@ -19,7 +19,8 @@ export default function Onboarding() {
   const [formData, setFormData] = useState({
     prenom: '', nom: '', sexe: 'homme', age: 25, taille_cm: 175, poids_kg: 70,
     morphotype: '', objectif: '', niveau: 'debutant', jours_semaine: [1, 3, 5],
-    duree_seance: 60, mode_entrainement: 'salle', pathologies: []
+    duree_seance: 60, mode_entrainement: 'salle', pathologies: [],
+    use_whey: true, use_creatine: false
   });
 
   const updateForm = (key, val) => setFormData(prev => ({ ...prev, [key]: val }));
@@ -40,7 +41,7 @@ export default function Onboarding() {
         taille_cm: formData.taille_cm, poids_kg: formData.poids_kg, morphotype: formData.morphotype,
         objectif: formData.objectif, niveau: formData.niveau, jours_semaine: formData.jours_semaine,
         duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement,
-        metabolisme_base
+        metabolisme_base, use_whey: formData.use_whey, use_creatine: formData.use_creatine
       });
       console.log('[Onboarding] ✓ Profil OK');
 
@@ -269,6 +270,34 @@ export default function Onboarding() {
         </motion.div>
       );
       case 6: return (
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+          <h2 className="headline-md mb-2">Nutrition & Suppléments</h2>
+          <p className="body-md text-muted mb-6">Afin d'adapter tes recommandations de repas, utilises-tu ces compléments ?</p>
+          
+          <div className="flex flex-col gap-4">
+            <div className={`card card--interactive ${formData.use_whey ? 'card--selected' : ''}`} onClick={() => updateForm('use_whey', !formData.use_whey)}>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="title-md text-primary mb-1">Protéine en poudre (Whey)</h3>
+                  <p className="body-sm text-muted">Facilite l'atteinte du quota protéique</p>
+                </div>
+                {formData.use_whey ? <Check className="text-primary" /> : <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--outline)' }} />}
+              </div>
+            </div>
+
+            <div className={`card card--interactive ${formData.use_creatine ? 'card--selected' : ''}`} onClick={() => updateForm('use_creatine', !formData.use_creatine)}>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="title-md text-primary mb-1">Créatine</h3>
+                  <p className="body-sm text-muted">Améliore la force et la récupération</p>
+                </div>
+                {formData.use_creatine ? <Check className="text-primary" /> : <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--outline)' }} />}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      );
+      case 7: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="text-center">
           <div className="orb orb--primary" style={{ width: 300, height: 300, top: '10%', left: '50%', transform: 'translateX(-50%)' }} />
           
@@ -281,7 +310,7 @@ export default function Onboarding() {
             <ul className="body-sm text-muted" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
               <li>• Objectif : <span className="text-on-surface">{formData.objectif.replace('_', ' ')}</span></li>
               <li>• Entraînements : <span className="text-on-surface">{formData.jours_semaine.length}x / semaine</span></li>
-              <li>• Mode : <span className="text-on-surface">{formData.mode_entrainement.replace('_', ' ')}</span></li>
+              <li>• Nutrition : <span className="text-on-surface">{formData.use_whey ? 'Avec Whey' : 'Aliments complets'} {formData.use_creatine ? '+ Créatine' : ''}</span></li>
               {formData.pathologies.length > 0 && <li>• Adaptations : <span className="text-secondary">{formData.pathologies.join(', ')}</span></li>}
             </ul>
           </div>

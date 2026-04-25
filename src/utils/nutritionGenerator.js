@@ -17,13 +17,13 @@ const repasPertePoids = {
     focus: "Protéines lentes, IG bas, antioxydants"
   },
   pre_workout: {
-    nom: "Whey & Datte",
-    description: "1 dose de whey dans l'eau + 1 ou 2 dattes.",
+    nom: "WHEY_PLACEHOLDER & Datte",
+    description: "WHEY_DESC_PLACEHOLDER + 1 ou 2 dattes.",
     focus: "Énergie rapide, prévention du catabolisme"
   },
   post_workout: {
-    nom: "Riz Blanc & Poulet",
-    description: "Riz blanc, blanc de poulet, haricots verts.",
+    nom: "Riz Blanc & Poulet CREATINE_PLACEHOLDER",
+    description: "Riz blanc, blanc de poulet, haricots verts. CREATINE_DESC_PLACEHOLDER",
     focus: "Recharge glycogénique rapide, réparation"
   },
   diner: {
@@ -40,8 +40,8 @@ const repasPertePoids = {
 
 const repasPriseMasse = {
   petit_dejeuner: {
-    nom: "Bowl Avoine & Œufs",
-    description: "Flocons d'avoine, lait entier, 3 œufs (ou 1 scoop whey), 1 banane, poignée d'amandes.",
+    nom: "Bowl Avoine & WHEY_PLACEHOLDER",
+    description: "Flocons d'avoine, lait entier, WHEY_DESC_PLACEHOLDER, 1 banane, poignée d'amandes.",
     focus: "Densité calorique, glucides complexes"
   },
   dejeuner: {
@@ -60,8 +60,8 @@ const repasPriseMasse = {
     focus: "Énergie soutenue, pompe musculaire"
   },
   post_workout: {
-    nom: "Gainer Maison",
-    description: "Whey, lait, flocons d'avoine mixés, miel.",
+    nom: "Gainer Maison CREATINE_PLACEHOLDER",
+    description: "WHEY_PLACEHOLDER, lait, flocons d'avoine mixés, miel. CREATINE_DESC_PLACEHOLDER",
     focus: "Insuline spike, recharge glycogène massive"
   },
   diner: {
@@ -79,7 +79,7 @@ const repasPriseMasse = {
 const repasMaintien = {
   petit_dejeuner: {
     nom: "Porridge Protéiné",
-    description: "Flocons d'avoine, lait végétal ou écrémé, 1 scoop de whey ou 2 œufs à côté, fruits de saison.",
+    description: "Flocons d'avoine, lait végétal ou écrémé, WHEY_DESC_PLACEHOLDER, fruits de saison.",
     focus: "Équilibre parfait"
   },
   dejeuner: {
@@ -98,8 +98,8 @@ const repasMaintien = {
     focus: "Glucides de préparation"
   },
   post_workout: {
-    nom: "Whey & Fruit",
-    description: "Un shaker de protéine et un fruit (pomme, banane).",
+    nom: "WHEY_PLACEHOLDER & Fruit CREATINE_PLACEHOLDER",
+    description: "WHEY_DESC_PLACEHOLDER et un fruit (pomme, banane). CREATINE_DESC_PLACEHOLDER",
     focus: "Récupération immédiate"
   },
   diner: {
@@ -114,12 +114,45 @@ const repasMaintien = {
   }
 };
 
-export function getMealPlan(objectif) {
-  if (objectif === 'perte_poids' || objectif === 'seche') {
-    return repasPertePoids;
-  } else if (objectif === 'prise_masse' || objectif === 'masse') {
-    return repasPriseMasse;
-  } else {
-    return repasMaintien;
+function adaptPlanToPreferences(plan, prefs) {
+  const newPlan = JSON.parse(JSON.stringify(plan));
+  
+  for (const key in newPlan) {
+    if (newPlan[key]) {
+      // ── WHEY ADAPTATION ──
+      if (prefs.use_whey) {
+        newPlan[key].nom = newPlan[key].nom.replace('WHEY_PLACEHOLDER', 'Whey');
+        newPlan[key].description = newPlan[key].description.replace('WHEY_DESC_PLACEHOLDER', '1 dose de whey');
+        newPlan[key].description = newPlan[key].description.replace('WHEY_PLACEHOLDER', 'Whey');
+      } else {
+        newPlan[key].nom = newPlan[key].nom.replace('WHEY_PLACEHOLDER', 'Skyr / Œufs');
+        newPlan[key].description = newPlan[key].description.replace('WHEY_DESC_PLACEHOLDER', '150g de Skyr ou 3 blancs d\'œufs');
+        newPlan[key].description = newPlan[key].description.replace('WHEY_PLACEHOLDER', 'Skyr');
+      }
+      
+      // ── CREATINE ADAPTATION ──
+      if (prefs.use_creatine) {
+        newPlan[key].nom = newPlan[key].nom.replace('CREATINE_PLACEHOLDER', '+ Créatine');
+        newPlan[key].description = newPlan[key].description.replace('CREATINE_DESC_PLACEHOLDER', 'Mélange 5g de Créatine monohydrate à ton repas/shaker.');
+      } else {
+        newPlan[key].nom = newPlan[key].nom.replace(' CREATINE_PLACEHOLDER', '');
+        newPlan[key].description = newPlan[key].description.replace(' CREATINE_DESC_PLACEHOLDER', '');
+      }
+    }
   }
+  
+  return newPlan;
+}
+
+export function getMealPlan(objectif, prefs = { use_whey: true, use_creatine: false }) {
+  let basePlan;
+  if (objectif === 'perte_poids' || objectif === 'seche') {
+    basePlan = repasPertePoids;
+  } else if (objectif === 'prise_masse' || objectif === 'masse') {
+    basePlan = repasPriseMasse;
+  } else {
+    basePlan = repasMaintien;
+  }
+
+  return adaptPlanToPreferences(basePlan, prefs);
 }

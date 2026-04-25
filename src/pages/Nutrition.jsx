@@ -53,7 +53,10 @@ export default function Nutrition() {
       )
     : { calories: 0, proteines: 0, glucides: 0, lipides: 0 };
 
-  const mealPlan = getMealPlan(profile?.objectif || 'maintien');
+  const mealPlan = getMealPlan(profile?.objectif || 'maintien', {
+    use_whey: profile?.use_whey !== false,
+    use_creatine: profile?.use_creatine === true
+  });
   let meals = [];
   if (isTrainingDay) {
     meals = [
