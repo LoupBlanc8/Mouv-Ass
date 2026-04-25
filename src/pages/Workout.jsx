@@ -7,6 +7,20 @@ import { addXP } from '../utils/gamification';
 
 const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
+function getExerciseImage(nom) {
+  const nomLower = (nom || '').toLowerCase();
+  if (nomLower.includes('pompe') || nomLower.includes('push')) return 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('traction') || nomLower.includes('pull')) return 'https://images.unsplash.com/photo-1598971439933-f726715f57fc?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('squat')) return 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('développé') || nomLower.includes('bench')) return 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('curl') || nomLower.includes('biceps')) return 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('deadlift') || nomLower.includes('soulevé')) return 'https://images.unsplash.com/photo-1603287681836-b174ce5074c2?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('dips')) return 'https://images.unsplash.com/photo-1598971439933-f726715f57fc?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('gainage') || nomLower.includes('plank')) return 'https://images.unsplash.com/photo-1518611012118-69b121603611?auto=format&fit=crop&w=400&q=80';
+  if (nomLower.includes('rowing') || nomLower.includes('tirage')) return 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80';
+  return 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80'; // Default gym
+}
+
 export default function Workout() {
   const { profile, user, program, sessions } = useAuth();
   const [selectedDay, setSelectedDay] = useState(new Date().getDay());
@@ -172,11 +186,12 @@ export default function Workout() {
             backgroundColor: '#1a1919', borderRadius: '1.5rem', padding: 'var(--space-6)', marginBottom: 'var(--space-6)',
             position: 'relative', overflow: 'hidden'
           }}>
-          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(126, 81, 255, 0.15) 0%, rgba(0,0,0,0) 70%)', borderRadius: '50%' }}></div>
-          <h3 className="title-lg mb-2" style={{ fontFamily: 'Space Grotesk' }}>{exercise?.nom}</h3>
-          <p className="body-sm mb-6" style={{ color: '#adaaaa' }}>{exercise?.description_technique}</p>
+          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundImage: `url(${getExerciseImage(exercise?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15, zIndex: 0 }}></div>
+          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(126, 81, 255, 0.15) 0%, rgba(0,0,0,0) 70%)', borderRadius: '50%', zIndex: 0 }}></div>
+          <h3 className="title-lg mb-2" style={{ fontFamily: 'Space Grotesk', position: 'relative', zIndex: 1 }}>{exercise?.nom}</h3>
+          <p className="body-sm mb-6" style={{ color: '#adaaaa', position: 'relative', zIndex: 1 }}>{exercise?.description_technique}</p>
           
-          <div className="flex gap-4">
+          <div className="flex gap-4" style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ flex: 1, backgroundColor: '#131313', padding: 'var(--space-3)', borderRadius: '1rem' }}>
               <span className="label-sm" style={{ color: '#767575', display: 'block', marginBottom: '4px' }}>OBJECTIF</span>
               <div className="title-md" style={{ color: '#00E5FF' }}>{ex.series} × {ex.reps_min}-{ex.reps_max}</div>
@@ -315,13 +330,16 @@ export default function Workout() {
                   </div>
 
                   {(todaySession.session_exercises || []).map((se, i) => (
-                    <div key={se.id} className="card card--recessed" style={{ marginBottom: i < todaySession.session_exercises.length - 1 ? 'var(--space-3)' : 0, padding: 'var(--space-4)' }}>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="body-md" style={{ fontWeight: 600 }}>{se.exercises?.nom}</p>
-                          <p className="body-sm text-muted">{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes}s repos</p>
+                    <div key={se.id} className="card card--recessed" style={{ marginBottom: i < todaySession.session_exercises.length - 1 ? 'var(--space-3)' : 0, padding: 0, overflow: 'hidden' }}>
+                      <div className="flex" style={{ height: '70px' }}>
+                        <div style={{ width: '80px', flexShrink: 0, backgroundImage: `url(${getExerciseImage(se.exercises?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRight: '1px solid var(--surface)' }} />
+                        <div className="flex items-center justify-between" style={{ padding: 'var(--space-3)', flex: 1 }}>
+                          <div>
+                            <p className="body-md" style={{ fontWeight: 600 }}>{se.exercises?.nom}</p>
+                            <p className="body-sm text-muted">{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes}s repos</p>
+                          </div>
+                          <ChevronDown size={16} style={{ color: 'var(--outline)' }} />
                         </div>
-                        <ChevronDown size={16} style={{ color: 'var(--outline)' }} />
                       </div>
                     </div>
                   ))}

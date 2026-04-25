@@ -1,20 +1,20 @@
 // Logique de génération de repas basée sur la documentation nutritionnelle
 
-const imgPtDej1 = "https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=400&q=80";
+const imgPtDej1 = "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&w=400&q=80"; // Porridge
 const imgPtDej2 = "https://images.unsplash.com/photo-1525385133512-2f3bdd039054?auto=format&fit=crop&w=400&q=80"; // Pancakes
-const imgPtDej3 = "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=400&q=80"; // Oeufs
+const imgPtDej3 = "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=400&q=80"; // Oeufs/Omelette
 
 const imgDej1 = "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80"; // Salade
-const imgDej2 = "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=400&q=80"; // Poulet Riz
-const imgDej3 = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"; // Saumon
+const imgDej2 = "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=400&q=80"; // Poulet Riz Healthy
+const imgDej3 = "https://images.unsplash.com/photo-1467003909585-2f8aa72700d6?auto=format&fit=crop&w=400&q=80"; // Saumon
 
-const imgSnack1 = "https://images.unsplash.com/photo-1622597467836-f38240662c8b?auto=format&fit=crop&w=400&q=80"; // Yaourt/Skyr
-const imgSnack2 = "https://images.unsplash.com/photo-1550828520-4cb496926fc9?auto=format&fit=crop&w=400&q=80"; // Shaker/Whey
-const imgSnack3 = "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=400&q=80"; // Banane beurre cacahuète
+const imgSnack1 = "https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=400&q=80"; // Yaourt/Fruits
+const imgSnack2 = "https://images.unsplash.com/photo-1550828520-4cb496926fc9?auto=format&fit=crop&w=400&q=80"; // Shaker/Smoothie
+const imgSnack3 = "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=400&q=80"; // Banane
 
-const imgDiner1 = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80"; // Bowl healthy
-const imgDiner2 = "https://images.unsplash.com/photo-1504630083234-14187a9df0f5?auto=format&fit=crop&w=400&q=80"; // Viande légumes
-const imgDiner3 = "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=80"; // Poulet rôti
+const imgDiner1 = "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80"; // Wrap/Bowl
+const imgDiner2 = "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=400&q=80"; // Pâtes/Viande
+const imgDiner3 = "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=80"; // Poulet rôti/Viande
 
 const repasPertePoids = {
   petit_dejeuner: {
