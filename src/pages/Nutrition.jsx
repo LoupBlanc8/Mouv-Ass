@@ -29,16 +29,40 @@ export default function Nutrition() {
   }
 
   async function toggleMeal(e, mealId) {
-    e.stopPropagation(); // Empêcher l'expansion de la carte quand on clique sur le bouton check
+    e.stopPropagation();
     const todayStr = new Date().toISOString().split('T')[0];
     const existing = logs.find(l => l.meal_id === mealId);
     
     if (existing) {
-      await supabase.from('nutrition_logs').update({ consomme: !existing.consomme }).eq('id', existing.id);
-      setLogs(logs.map(l => l.id === existing.id ? { ...l, consomme: !existing.consomme } : l));
+      // Met à jour la BDD
+      const { data, error } = await supabase
+        .from('nutrition_logs')
+        .update({ consomme: !existing.consomme })
+        .eq('id', existing.id)
+        .select()
+        .single();
+        
+      if (!error && data) {
+        setLogs(logs.map(l => l.id === existing.id ? data : l));
+      }
     } else {
-      const newLog = { id: Math.random().toString(), meal_id: mealId, consomme: true, date: todayStr };
-      setLogs([...logs, newLog]);
+      // Insère dans la BDD
+      const { data, error } = await supabase
+        .from('nutrition_logs')
+        .insert({
+          user_id: user.id,
+          meal_id: mealId,
+          date: todayStr,
+          consomme: true
+        })
+        .select()
+        .single();
+        
+      if (!error && data) {
+        setLogs([...logs, data]);
+      } else {
+        console.error("Erreur lors de l'insertion du repas", error);
+      }
     }
   }
 
