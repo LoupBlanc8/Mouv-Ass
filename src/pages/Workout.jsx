@@ -9,18 +9,33 @@ const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi
 
 function getExerciseImage(nom) {
   const nomLower = (nom || '').toLowerCase();
+  
+  // Specific Exact Matches
   if (nomLower.includes('incliné') || nomLower.includes('incline')) return '/exercises/developpe-incline-halteres.gif';
-  if (nomLower.includes('développé') || nomLower.includes('bench') || nomLower.includes('pec')) return '/exercises/developpe-couche.gif';
-  if (nomLower.includes('pompe') || nomLower.includes('push')) return '/exercises/pompe.gif';
+  
+  // Push / Pectoraux
+  if (nomLower.includes('développé couché') || nomLower.includes('bench press') || nomLower.includes('écarté')) return '/exercises/developpe-couche.gif';
+  if (nomLower.includes('pompe') || nomLower.includes('push-up')) return '/exercises/pompe.gif';
+  if (nomLower.includes('dips')) return '/exercises/dips.gif';
+  
+  // Pull / Dos / Biceps
   if (nomLower.includes('traction') || nomLower.includes('pull') || nomLower.includes('muscle-up')) return '/exercises/traction.gif';
-  if (nomLower.includes('squat') || nomLower.includes('fente') || nomLower.includes('lunge') || nomLower.includes('leg')) return '/exercises/squat.gif';
-  if (nomLower.includes('deadlift') || nomLower.includes('soulevé') || nomLower.includes('rowing') || nomLower.includes('tirage')) return '/exercises/souleve-de-terre.gif';
-  if (nomLower.includes('dips') || nomLower.includes('dip')) return '/exercises/dips.gif';
-  if (nomLower.includes('gainage') || nomLower.includes('plank') || nomLower.includes('planche') || nomLower.includes('hollow') || nomLower.includes('core') || nomLower.includes('abdos') || nomLower.includes('crunch')) return '/exercises/Gainage.gif';
-  if (nomLower.includes('press') || nomLower.includes('épaule') || nomLower.includes('militaire') || nomLower.includes('élévation') || nomLower.includes('lateral') || nomLower.includes('ohp')) return '/exercises/presse-militaire.gif';
-  if (nomLower.includes('curl') || nomLower.includes('biceps')) return '/exercises/developpe-couche.gif';
-  if (nomLower.includes('triceps') || nomLower.includes('poulie') || nomLower.includes('extension')) return '/exercises/dips.gif';
-  return '/exercises/squat.gif'; // Default fallback
+  if (nomLower.includes('rowing') || nomLower.includes('tirage')) return '/exercises/traction.gif'; // Better than deadlift
+  if (nomLower.includes('curl')) return '/exercises/traction.gif'; // Fallback for biceps: pulling motion
+  
+  // Legs / Jambes
+  if (nomLower.includes('squat') || nomLower.includes('fente') || nomLower.includes('leg') || nomLower.includes('mollet')) return '/exercises/squat.gif';
+  if (nomLower.includes('terre') || nomLower.includes('deadlift') || nomLower.includes('hip thrust')) return '/exercises/souleve-de-terre.gif';
+  
+  // Shoulders / Triceps
+  if (nomLower.includes('militaire') || nomLower.includes('épaule') || nomLower.includes('élévation') || nomLower.includes('arnold') || nomLower.includes('oiseau')) return '/exercises/presse-militaire.gif';
+  if (nomLower.includes('triceps') || nomLower.includes('front')) return '/exercises/dips.gif'; // Dips is the closest tricep exercise we have
+  
+  // Core / Abdos
+  if (nomLower.includes('gainage') || nomLower.includes('planche') || nomLower.includes('crunch') || nomLower.includes('ab') || nomLower.includes('twist')) return '/exercises/Gainage.gif';
+
+  // Absolute fallback
+  return '/exercises/squat.gif';
 }
 
 export default function Workout() {
