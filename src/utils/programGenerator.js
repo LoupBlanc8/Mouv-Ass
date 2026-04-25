@@ -144,6 +144,24 @@ export function generateProgramSessions(formData, allExercises) {
       }
     }
 
+    // Inject points_faibles
+    if (formData.points_faibles && formData.points_faibles.length > 0) {
+      const isPush = dailySplit === 'push' || dailySplit === 'upper' || dailySplit === 'full_body';
+      const isPull = dailySplit === 'pull' || dailySplit === 'upper' || dailySplit === 'full_body';
+      const isLegs = dailySplit === 'legs' || dailySplit === 'lower' || dailySplit === 'full_body';
+
+      formData.points_faibles.forEach(pf => {
+        if (pf === 'Pectoraux' && isPush) targetGroups.unshift('Pectoraux');
+        if (pf === 'Epaules' && isPush) targetGroups.unshift('Epaules');
+        if (pf === 'Bras' && isPush) targetGroups.unshift('Bras'); // Triceps
+        if (pf === 'Bras' && isPull) targetGroups.unshift('Bras'); // Biceps
+        if (pf === 'Dos' && isPull) targetGroups.unshift('Dos');
+        if (pf === 'Jambes' && isLegs) targetGroups.unshift('Jambes');
+        if (pf === 'Mollets' && isLegs) targetGroups.unshift('Mollets');
+        if (pf === 'Abdos') targetGroups.unshift('Abdos');
+      });
+    }
+
     const sessionObj = {
       jour_semaine: jour,
       nom: nom,

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, RotateCcw, Check, ChevronRight, Timer, Dumbbell, ChevronDown, Zap } from 'lucide-react';
+import { Play, Pause, RotateCcw, Check, ChevronRight, Timer, Dumbbell, ChevronDown, Zap, Repeat, X } from 'lucide-react';
 import { addXP } from '../utils/gamification';
 
 const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
@@ -37,7 +37,46 @@ export default function Workout() {
   const [xpEarned, setXpEarned] = useState(null);
   const timerRef = useRef(null);
 
+  // Replace modal state
+  const [replaceModal, setReplaceModal] = useState({ open: false, sessionExercise: null, alternatives: [], loading: false });
+
   const todaySession = sessions.find(s => s.jour_semaine === selectedDay);
+
+  async function handleReplaceClick(se) {
+    setReplaceModal({ open: true, sessionExercise: se, alternatives: [], loading: true });
+    try {
+      const muscles = se.exercises?.muscles_principaux || [];
+      let query = supabase.from('exercises').select('*').neq('id', se.exercise_id);
+      
+      if (muscles.length > 0) {
+        query = query.contains('muscles_principaux', [muscles[0]]);
+      }
+      
+      const { data, error } = await query.limit(10);
+      if (error) throw error;
+      setReplaceModal(prev => ({ ...prev, alternatives: data, loading: false }));
+    } catch (err) {
+      console.error(err);
+      setReplaceModal(prev => ({ ...prev, loading: false }));
+    }
+  }
+
+  async function confirmReplace(newExerciseId) {
+    try {
+      const seId = replaceModal.sessionExercise.id;
+      const { error } = await supabase.from('session_exercises')
+        .update({ exercise_id: newExerciseId })
+        .eq('id', seId);
+      if (error) throw error;
+      
+      // We should ideally refresh the program/sessions here. 
+      // Assuming a page reload or state update is acceptable.
+      window.location.reload(); 
+    } catch (err) {
+      console.error(err);
+      alert('Erreur lors du remplacement');
+    }
+  }
 
   function startWorkout() {
     if (!todaySession) return;
@@ -339,7 +378,9 @@ export default function Workout() {
                             <p className="body-md" style={{ fontWeight: 600 }}>{se.exercises?.nom}</p>
                             <p className="body-sm text-muted">{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes}s repos</p>
                           </div>
-                          <ChevronDown size={16} style={{ color: 'var(--outline)' }} />
+                          <button onClick={() => handleReplaceClick(se)} className="btn btn--sm" style={{ padding: '8px', backgroundColor: 'transparent', border: '1px solid var(--outline)', color: 'var(--on-surface)' }}>
+                            <Repeat size={16} />
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -358,6 +399,40 @@ export default function Workout() {
           </>
         )}
       </motion.div>
+
+      {/* Replace Exercise Modal */}
+      {replaceModal.open && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-4)' }}>
+          <div className="card" style={{ width: '100%', maxWidth: 400, maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="title-md">Remplacer l'exercice</h3>
+              <button onClick={() => setReplaceModal({ open: false, sessionExercise: null, alternatives: [], loading: false })} style={{ background: 'none', border: 'none', color: '#fff' }}>
+                <X size={24} />
+              </button>
+            </div>
+            
+            <p className="body-sm text-muted mb-4">Exercice actuel : <strong style={{ color: '#fff' }}>{replaceModal.sessionExercise?.exercises?.nom}</strong></p>
+
+            {replaceModal.loading ? (
+              <p className="body-md text-center">Chargement des alternatives...</p>
+            ) : replaceModal.alternatives.length === 0 ? (
+              <p className="body-md text-center text-muted">Aucune alternative trouvée pour ce groupe musculaire.</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {replaceModal.alternatives.map(alt => (
+                  <button key={alt.id} onClick={() => confirmReplace(alt.id)} className="card card--interactive card--recessed flex items-center justify-between text-left" style={{ padding: '12px' }}>
+                    <div>
+                      <p className="body-md" style={{ fontWeight: 600, color: '#fff' }}>{alt.nom}</p>
+                      <p className="body-sm text-muted">{alt.muscles_principaux?.join(', ')}</p>
+                    </div>
+                    <ChevronRight size={16} className="text-muted" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

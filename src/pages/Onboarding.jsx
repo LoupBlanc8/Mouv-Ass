@@ -7,7 +7,7 @@ import { ArrowRight, ArrowLeft, Check, Activity, Target, AlertTriangle, MapPin, 
 import { calculateIMC, getIMCCategory, calculateMetabolismeBase } from '../utils/calculations';
 import { generateProgramSessions } from '../utils/programGenerator';
 
-const STEPS = 7;
+const STEPS = 8;
 
 export default function Onboarding() {
   const { user, updateProfile, refreshProfile, refreshProgram } = useAuth();
@@ -19,7 +19,7 @@ export default function Onboarding() {
   const [formData, setFormData] = useState({
     prenom: '', nom: '', sexe: 'homme', age: 25, taille_cm: 175, poids_kg: 70,
     morphotype: '', objectif: '', niveau: 'debutant', jours_semaine: [1, 3, 5],
-    duree_seance: 60, mode_entrainement: 'salle', pathologies: [],
+    duree_seance: 60, mode_entrainement: 'salle', pathologies: [], points_faibles: [],
     use_whey: true, use_creatine: false
   });
 
@@ -40,7 +40,7 @@ export default function Onboarding() {
         prenom: formData.prenom, nom: formData.nom, sexe: formData.sexe, age: formData.age,
         taille_cm: formData.taille_cm, poids_kg: formData.poids_kg, morphotype: formData.morphotype,
         objectif: formData.objectif, niveau: formData.niveau, jours_semaine: formData.jours_semaine,
-        duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement,
+        duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement, points_faibles: formData.points_faibles,
         metabolisme_base, use_whey: formData.use_whey, use_creatine: formData.use_creatine
       });
       console.log('[Onboarding] ✓ Profil OK');
@@ -272,6 +272,28 @@ export default function Onboarding() {
       );
       case 6: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+          <h2 className="headline-md mb-2">Points Faibles</h2>
+          <p className="body-md text-muted mb-6">Quels groupes musculaires souhaites-tu améliorer en priorité ? Le programme mettra plus l'accent sur ces zones.</p>
+          
+          <div className="flex flex-wrap gap-3">
+            {['Pectoraux', 'Dos', 'Epaules', 'Bras', 'Jambes', 'Abdos', 'Mollets'].map(muscle => {
+              const selected = formData.points_faibles.includes(muscle);
+              return (
+                <button key={muscle} className={`chip ${selected ? 'chip--primary' : ''}`} style={{ padding: 'var(--space-3) var(--space-4)', fontSize: '1rem' }}
+                  onClick={() => {
+                    if (selected) updateForm('points_faibles', formData.points_faibles.filter(m => m !== muscle));
+                    else if (formData.points_faibles.length < 3) updateForm('points_faibles', [...formData.points_faibles, muscle]);
+                  }}>
+                  {muscle} {selected && <Check size={16} />}
+                </button>
+              );
+            })}
+          </div>
+          <p className="body-sm text-muted mt-4">Sélectionne jusqu'à 3 points faibles.</p>
+        </motion.div>
+      );
+      case 7: return (
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
           <h2 className="headline-md mb-2">Nutrition & Suppléments</h2>
           <p className="body-md text-muted mb-6">Afin d'adapter tes recommandations de repas, utilises-tu ces compléments ?</p>
           
@@ -298,7 +320,7 @@ export default function Onboarding() {
           </div>
         </motion.div>
       );
-      case 7: return (
+      case 8: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="text-center">
           <div className="orb orb--primary" style={{ width: 300, height: 300, top: '10%', left: '50%', transform: 'translateX(-50%)' }} />
           
@@ -312,6 +334,7 @@ export default function Onboarding() {
               <li>• Objectif : <span className="text-on-surface">{formData.objectif.replace('_', ' ')}</span></li>
               <li>• Entraînements : <span className="text-on-surface">{formData.jours_semaine.length}x / semaine</span></li>
               <li>• Nutrition : <span className="text-on-surface">{formData.use_whey ? 'Avec Whey' : 'Aliments complets'} {formData.use_creatine ? '+ Créatine' : ''}</span></li>
+              {formData.points_faibles.length > 0 && <li>• Focus : <span className="text-primary">{formData.points_faibles.join(', ')}</span></li>}
               {formData.pathologies.length > 0 && <li>• Adaptations : <span className="text-secondary">{formData.pathologies.join(', ')}</span></li>}
             </ul>
           </div>
