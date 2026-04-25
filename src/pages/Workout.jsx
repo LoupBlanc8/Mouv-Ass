@@ -9,16 +9,17 @@ const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi
 
 function getExerciseImage(nom) {
   const nomLower = (nom || '').toLowerCase();
-  if (nomLower.includes('pompe') || nomLower.includes('push')) return 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('traction') || nomLower.includes('pull')) return 'https://images.unsplash.com/photo-1598971439933-f726715f57fc?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('squat')) return 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('développé') || nomLower.includes('bench')) return 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('curl') || nomLower.includes('biceps')) return 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('deadlift') || nomLower.includes('soulevé')) return 'https://images.unsplash.com/photo-1603287681836-b174ce5074c2?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('dips')) return 'https://images.unsplash.com/photo-1598971439933-f726715f57fc?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('gainage') || nomLower.includes('plank')) return 'https://images.unsplash.com/photo-1518611012118-69b121603611?auto=format&fit=crop&w=400&q=80';
-  if (nomLower.includes('rowing') || nomLower.includes('tirage')) return 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80';
-  return 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80'; // Default gym
+  if (nomLower.includes('développé') || nomLower.includes('bench') || nomLower.includes('pec')) return '/exercises/developpe-couche.gif';
+  if (nomLower.includes('pompe') || nomLower.includes('push')) return '/exercises/pompe.gif';
+  if (nomLower.includes('traction') || nomLower.includes('pull') || nomLower.includes('muscle-up')) return '/exercises/traction.gif';
+  if (nomLower.includes('squat') || nomLower.includes('fente') || nomLower.includes('lunge') || nomLower.includes('leg')) return '/exercises/squat.gif';
+  if (nomLower.includes('deadlift') || nomLower.includes('soulevé') || nomLower.includes('rowing') || nomLower.includes('tirage')) return '/exercises/souleve-de-terre.gif';
+  if (nomLower.includes('dips') || nomLower.includes('dip')) return '/exercises/dips.gif';
+  if (nomLower.includes('gainage') || nomLower.includes('plank') || nomLower.includes('planche') || nomLower.includes('hollow') || nomLower.includes('core') || nomLower.includes('abdos') || nomLower.includes('crunch')) return '/exercises/Gainage.gif';
+  if (nomLower.includes('press') || nomLower.includes('épaule') || nomLower.includes('militaire') || nomLower.includes('élévation') || nomLower.includes('lateral') || nomLower.includes('ohp')) return '/exercises/presse-militaire.gif';
+  if (nomLower.includes('curl') || nomLower.includes('biceps')) return '/exercises/developpe-couche.gif';
+  if (nomLower.includes('triceps') || nomLower.includes('poulie') || nomLower.includes('extension')) return '/exercises/dips.gif';
+  return '/exercises/squat.gif'; // Default fallback
 }
 
 export default function Workout() {
