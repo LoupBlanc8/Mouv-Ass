@@ -153,26 +153,54 @@ export function generateProgramSessions(formData, allExercises) {
     sessions.push(sessionObj);
 
     // Generate exercises for this session
-    // Make sure we pick unique exercises per session
-    const pickedIds = new Set();
+    // Track how many times each exercise is used (max 2 per session)
+    const MAX_SAME_EXERCISE = 2;
+    const exerciseCount = {}; // { exercise_id: count }
     const sessionExList = [];
     
     // Add 4 to 6 exercises per session depending on duration (assume 1 ex = 10 min)
     const nbExercices = Math.max(4, Math.min(8, Math.floor(formData.duree_seance / 10)));
+    
+    // Related groups for fallback when a group runs out of unique exercises
+    const relatedGroups = {
+      'Pectoraux': ['Epaules', 'Bras'],
+      'Dos': ['Bras', 'Epaules'],
+      'Epaules': ['Pectoraux', 'Dos'],
+      'Bras': ['Pectoraux', 'Dos'],
+      'Jambes': ['Abdos'],
+      'Abdos': ['Jambes', 'Dos']
+    };
     
     // Fill with target groups first
     for (let j = 0; j < nbExercices; j++) {
       const groupToPick = targetGroups[j % targetGroups.length];
       let ex = pickExercise(groupToPick);
       
-      // Try to avoid duplicates in the same session
+      // Try to find an exercise that hasn't exceeded the max count
       let attempts = 0;
-      while (pickedIds.has(ex.id) && attempts < 10) {
+      while ((exerciseCount[ex.id] || 0) >= MAX_SAME_EXERCISE && attempts < 15) {
         ex = pickExercise(groupToPick);
         attempts++;
       }
       
-      pickedIds.add(ex.id);
+      // If still at max, try related muscle groups
+      if ((exerciseCount[ex.id] || 0) >= MAX_SAME_EXERCISE) {
+        const fallbackGroups = relatedGroups[groupToPick] || [];
+        for (const fbGroup of fallbackGroups) {
+          let fbEx = pickExercise(fbGroup);
+          let fbAttempts = 0;
+          while ((exerciseCount[fbEx.id] || 0) >= MAX_SAME_EXERCISE && fbAttempts < 10) {
+            fbEx = pickExercise(fbGroup);
+            fbAttempts++;
+          }
+          if ((exerciseCount[fbEx.id] || 0) < MAX_SAME_EXERCISE) {
+            ex = fbEx;
+            break;
+          }
+        }
+      }
+      
+      exerciseCount[ex.id] = (exerciseCount[ex.id] || 0) + 1;
       
       sessionExList.push({
         // session_id will be filled later after insert
