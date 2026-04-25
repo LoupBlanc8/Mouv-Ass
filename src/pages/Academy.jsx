@@ -101,6 +101,11 @@ export default function Academy() {
                     style={{ overflow: 'hidden' }}
                   >
                     <div style={{ paddingTop: 'var(--space-4)', borderTop: '1px solid var(--surface-container-highest)' }}>
+                      {skill.image && (
+                        <div style={{ marginBottom: 'var(--space-4)', borderRadius: '8px', overflow: 'hidden', height: '140px' }}>
+                          <img src={skill.image} alt={skill.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      )}
                       <div className="flex gap-4 mb-4">
                         <div className="flex-1">
                           <span className="label-sm text-muted mb-1 block">Objectif Requis</span>

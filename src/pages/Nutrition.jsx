@@ -92,18 +92,18 @@ export default function Nutrition() {
   let meals = [];
   if (isTrainingDay) {
     meals = [
-      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, ratio: 0.20 },
-      { id: 'm2', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, ratio: 0.30 },
-      { id: 'm3', type: 'Pré-Workout', nom: mealPlan.pre_workout.nom, desc: mealPlan.pre_workout.description, ratio: 0.10 },
-      { id: 'm4', type: 'Post-Workout', nom: mealPlan.post_workout.nom, desc: mealPlan.post_workout.description, ratio: 0.15 },
-      { id: 'm5', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, ratio: 0.25 },
+      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, options: mealPlan.petit_dejeuner.options, ratio: 0.20 },
+      { id: 'm2', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, options: mealPlan.dejeuner.options, ratio: 0.30 },
+      { id: 'm3', type: 'Pré-Workout', nom: mealPlan.pre_workout.nom, desc: mealPlan.pre_workout.description, options: mealPlan.pre_workout.options, ratio: 0.10 },
+      { id: 'm4', type: 'Post-Workout', nom: mealPlan.post_workout.nom, desc: mealPlan.post_workout.description, options: mealPlan.post_workout.options, ratio: 0.15 },
+      { id: 'm5', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, options: mealPlan.diner.options, ratio: 0.25 },
     ];
   } else {
     meals = [
-      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, ratio: 0.25 },
-      { id: 'm2', type: 'Collation', nom: mealPlan.collation.nom, desc: mealPlan.collation.description, ratio: 0.10 },
-      { id: 'm3', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, ratio: 0.35 },
-      { id: 'm4', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, ratio: 0.30 },
+      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, options: mealPlan.petit_dejeuner.options, ratio: 0.25 },
+      { id: 'm2', type: 'Collation', nom: mealPlan.collation.nom, desc: mealPlan.collation.description, options: mealPlan.collation.options, ratio: 0.10 },
+      { id: 'm3', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, options: mealPlan.dejeuner.options, ratio: 0.35 },
+      { id: 'm4', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, options: mealPlan.diner.options, ratio: 0.30 },
     ];
   }
 
@@ -198,10 +198,26 @@ export default function Nutrition() {
                       style={{ overflow: 'hidden' }}
                     >
                       <div className="card card--glass" style={{ padding: 'var(--space-3)', background: 'rgba(255,255,255,0.03)' }}>
-                        <div className="flex items-start gap-2">
+                        <div className="flex items-start gap-2 mb-3">
                           <Info size={16} className="text-muted" style={{ marginTop: '2px', flexShrink: 0 }} />
                           <p className="body-sm text-muted">{meal.desc}</p>
                         </div>
+                        
+                        {meal.options && meal.options.length > 0 && (
+                          <div>
+                            <p className="label-sm text-muted mb-2">Alternatives ({mCals} kcal)</p>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
+                              {meal.options.map((opt, idx) => (
+                                <div key={idx} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', height: '100px' }}>
+                                  <img src={opt.image} alt={opt.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', padding: '24px 8px 8px 8px' }}>
+                                    <span className="label-sm text-white" style={{ display: 'block', textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: '10px' }}>{opt.nom}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   )}

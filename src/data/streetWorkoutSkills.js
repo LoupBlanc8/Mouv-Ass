@@ -1,12 +1,12 @@
 export const STREET_WORKOUT_SKILLS = [
-  { id: 'muscle_up_bar', name: 'Muscle-up (barre)', prereq: '10+ tractions, 15+ dips', time: '3-12 mois', difficulty: 4, focus: 'Pull/Push', type: 'dynamique' },
-  { id: 'muscle_up_rings', name: 'Muscle-up (anneaux)', prereq: 'Muscle-up barre maîtrisé', time: '6-18 mois', difficulty: 5, focus: 'Pull/Push', type: 'dynamique' },
-  { id: 'front_lever', name: 'Front lever', prereq: '10+ tractions, L-sit', time: '6-24 mois', difficulty: 5, focus: 'Pull/Core', type: 'isométrique' },
-  { id: 'back_lever', name: 'Back lever', prereq: 'Bonne mobilité épaule', time: '3-12 mois', difficulty: 4, focus: 'Pull/Core', type: 'isométrique' },
-  { id: 'human_flag', name: 'Human flag', prereq: 'Force latérale exceptionnelle', time: '12-36 mois', difficulty: 5, focus: 'Core/Push', type: 'isométrique' },
-  { id: 'planche', name: 'Planche', prereq: 'Handstand solide, force pectoraux', time: '24-60 mois', difficulty: 6, focus: 'Push/Core', type: 'isométrique' },
-  { id: 'handstand', name: 'Handstand (équilibre)', prereq: 'Force épaules, gainage', time: '3-12 mois', difficulty: 3, focus: 'Push/Equilibre', type: 'isométrique' },
-  { id: 'l_sit', name: 'L-sit', prereq: 'Abdominaux de base', time: '1-3 mois', difficulty: 2, focus: 'Core/Push', type: 'isométrique' }
+  { id: 'muscle_up_bar', name: 'Muscle-up (barre)', prereq: '10+ tractions, 15+ dips', time: '3-12 mois', difficulty: 4, focus: 'Pull/Push', type: 'dynamique', image: 'https://images.unsplash.com/photo-1598971439933-f726715f57fc?auto=format&fit=crop&w=400&q=80' },
+  { id: 'muscle_up_rings', name: 'Muscle-up (anneaux)', prereq: 'Muscle-up barre maîtrisé', time: '6-18 mois', difficulty: 5, focus: 'Pull/Push', type: 'dynamique', image: 'https://images.unsplash.com/photo-1598971439933-f726715f57fc?auto=format&fit=crop&w=400&q=80' },
+  { id: 'front_lever', name: 'Front lever', prereq: '10+ tractions, L-sit', time: '6-24 mois', difficulty: 5, focus: 'Pull/Core', type: 'isométrique', image: 'https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=400&q=80' },
+  { id: 'back_lever', name: 'Back lever', prereq: 'Bonne mobilité épaule', time: '3-12 mois', difficulty: 4, focus: 'Pull/Core', type: 'isométrique', image: 'https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=400&q=80' },
+  { id: 'human_flag', name: 'Human flag', prereq: 'Force latérale exceptionnelle', time: '12-36 mois', difficulty: 5, focus: 'Core/Push', type: 'isométrique', image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=400&q=80' },
+  { id: 'planche', name: 'Planche', prereq: 'Handstand solide, force pectoraux', time: '24-60 mois', difficulty: 6, focus: 'Push/Core', type: 'isométrique', image: 'https://images.unsplash.com/photo-1562771242-a02d9096c64a?auto=format&fit=crop&w=400&q=80' },
+  { id: 'handstand', name: 'Handstand (équilibre)', prereq: 'Force épaules, gainage', time: '3-12 mois', difficulty: 3, focus: 'Push/Equilibre', type: 'isométrique', image: 'https://images.unsplash.com/photo-1558235282-3cc1d58d92cb?auto=format&fit=crop&w=400&q=80' },
+  { id: 'l_sit', name: 'L-sit', prereq: 'Abdominaux de base', time: '1-3 mois', difficulty: 2, focus: 'Core/Push', type: 'isométrique', image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=400&q=80' }
 ];
 
 export const STREET_WORKOUT_PROGRAMS = {
