@@ -1,0 +1,2440 @@
+DOCUMENTATION COMPLÈTE
+ NUTRITION SPORTIVE
+ Morphologies  IMC  Objectifs  Macros  Timing  Suppléments  Pathologies
+ 
+ Guide de référence nutrition pour développeurs d'application fitness
+ Version 1.0 — 2025
+ 
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 2
+SOMMAIRE
+#
+ Section
+ Contenu principal
+ 1
+Fondamentaux de la nutrition sportive
+Macronutriments, micronutriments, eau, énergie
+2
+Calcul des besoins caloriques
+TDEE, BMR, formules selon profil
+3
+Macronutriments — Référence complète
+Protéines, glucides, lipides : rôles et sources
+4
+Nutrition selon la morphologie
+Ectomorphe, Mésomorphe, Endomorphe
+5
+Nutrition selon l'IMC
+Insuffisance pondérale, Normal, Surpoids, Obésité
+6
+Nutrition selon l'objectif
+Prise de masse, Perte de poids, Sèche, Recomposition
+7
+Nutrition selon le niveau sportif
+Débutant, Intermédiaire, Avancé, Expert
+8
+Nutrition selon l'âge
+Adolescents, 18-40 ans, 40-60 ans, Séniors
+9
+Nutrition selon le sexe
+Spécificités homme / femme / grossesse
+10
+Timing nutritionnel & Périodisation
+Pré/Post séance, fenêtre anabolique, repas
+11
+Suppléments & Compléments
+alimentaires
+Whey, créatine, BCAA, oméga-3, vitamines...
+12
+Hydratation
+Besoins, électrolytes, signes de déshydratation
+13
+Nutrition & Pathologies
+Diabète, hypertension, intolérances, végé...
+14
+Plans alimentaires types
+Exemples de journées complètes par profil
+15
+Aliments & Valeurs nutritionnelles
+Tables de référence par catégorie
+16
+Données structurées JSON
+Schémas pour développeurs
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 3
+1. FONDAMENTAUX DE LA NUTRITION SPORTIVE
+La nutrition sportive repose sur la compréhension précise des besoins énergétiques, de la composition des aliments et
+de leur impact sur la performance et la récupération. Cette section pose les bases indispensables pour tout programme
+nutritionnel personnalisé.
+1.1 Les macronutriments — Vue d'ensemble
+Macronutriment
+Calories/g
+Rôle principal
+Apport recommandé
+(sportif)
+ Sources principales
+ 
+Protéines
+4 kcal/g
+Construction et réparation
+musculaire, enzymes,
+hormones
+1.4 – 2.4 g/kg/jour
+Viandes, poissons, oeufs, légumineuses,
+produits laitiers
+Glucides
+4 kcal/g
+Carburant principal
+(glycogène musculaire et
+hépatique)
+3 – 7 g/kg/jour selon
+intensité
+Riz, pâtes, pain, patate douce, flocons
+d'avoine, fruits
+Lipides
+9 kcal/g
+Hormones, membranes
+cellulaires, vitamines
+liposolubles
+0.8 – 1.5 g/kg/jour
+Huiles végétales, avocats, noix, poissons
+gras, oeufs
+Alcool
+7 kcal/g
+Aucun rôle bénéfique —
+inhibe la synthèse protéique
+À éviter ou limiter
+Bière, vin, spiritueux
+1.2 Les micronutriments essentiels pour le sportif
+Micronutriment
+Rôle sport
+Signes de
+carence
+Sources alimentaires
+ Dose quotidienne
+ 
+Fer
+Transport O2,
+énergie cellulaire
+Fatigue, anémie,
+baisse perf.
+Viande rouge, lentilles,
+épinards
+Homme: 8 mg / Femme: 18 mg
+Magnésium
+Contraction
+musculaire,
+synthèse ATP
+Crampes, spasmes,
+fatigue
+Noix, légumes verts,
+chocolat noir
+300–400 mg/jour
+Calcium
+Contraction
+musculaire, os,
+caillots
+Crampes, fractures
+de stress
+Produits laitiers,
+sardines, amandes
+1000–1200 mg/jour
+Zinc
+Synthèse protéique,
+testostérone
+Récupération lente,
+immunité basse
+Huîtres, boeuf, noix de
+cajou
+8–11 mg/jour
+Vitamine D
+Absorption calcium,
+immunité, os
+Fatigue, blessures
+osseuses
+Soleil, poissons gras,
+oeufs
+1000–2000 UI/jour
+Vitamine C
+Collagène,
+antioxydant, fer
+non-hémique
+Récupération lente,
+immunité basse
+Agrumes, kiwi,
+poivrons, fraises
+75–200 mg/jour
+Vitamine B12
+Érythropoïèse,
+fonction nerveuse
+Anémie, fatigue
+extrême
+Viandes, poissons,
+oeufs, lait
+2.4 mcg/jour
+Oméga-3
+(EPA/DHA)
+Anti-inflammatoire,
+récupération
+Inflammation
+chronique,
+articulations
+Saumon, maquereau,
+huile de lin
+1–3 g EPA+DHA/jour
+Potassium
+Équilibre hydrique,
+contraction
+musculaire
+Crampes, fatigue
+musculaire
+Banane, avocat, patate
+douce
+3500–4700 mg/jour
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 4
+Micronutriment
+Rôle sport
+Signes de
+carence
+Sources alimentaires
+ Dose quotidienne
+ 
+Iode
+Métabolisme
+thyroïdien
+(métabolisme basal)
+Prise de poids,
+fatigue
+Sel iodé, algues,
+produits laitiers
+150 mcg/jour
+1.3 L'eau — Macronutriment oublié
+HYDRATATION : LES CHIFFRES CLÉS
+ Le corps est composé de 60-70% d'eau — les muscles à 75%
+ Une perte hydrique de 2% du poids corporel réduit les performances de 10-20%
+ Besoin de base : 35 ml/kg/jour (hors activité sportive)
+ Pendant l'effort : ajouter 500-750 ml par heure d'entraînement modéré
+ Indicateur simple : urine jaune pâle = bien hydraté | urine foncée = déshydraté
+1.4 Le bilan énergétique
+Le bilan énergétique est la clé de toute évolution corporelle. Il représente la différence entre les calories ingérées et les
+calories dépensées.
+Bilan
+Formule
+Résultat sur le corps
+ Utilisation
+ Surplus
+calorique
+Apport > Dépense
+Prise de poids (masse +
+potentiellement graisse)
+Prise de masse musculaire
+Équilibre
+calorique
+Apport = Dépense
+Maintien du poids et de la
+composition corporelle
+Maintien, recomposition lente
+Déficit calorique
+Apport < Dépense
+Perte de poids (graisse + risque
+perte musculaire)
+Perte de poids, sèche
+Déficit extrême
+(<1000 kcal)
+Apport << Dépense
+Perte musculaire, fatigue,
+carences, métabolisme ralenti
+À ÉVITER absolument
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 5
+2. CALCUL DES BESOINS CALORIQUES
+Le calcul précis des besoins énergétiques est la fondation de tout programme nutritionnel. Il nécessite de connaître le
+métabolisme de base (BMR) puis le total des dépenses journalières (TDEE).
+2.1 Métabolisme de base (BMR) — Formules
+Formule de Mifflin-St Jeor (la plus précise, recommandée)
+Homme : BMR = (10 × poids kg) + (6.25 × taille cm) − (5 × âge) + 5
+Femme : BMR = (10 × poids kg) + (6.25 × taille cm) − (5 × âge) − 161
+Formule de Harris-Benedict (classique, encore utilisée)
+Homme : BMR = 88.362 + (13.397 × poids) + (4.799 × taille) − (5.677 × âge)
+Femme : BMR = 447.593 + (9.247 × poids) + (3.098 × taille) − (4.330 × âge)
+2.2 Niveaux d'activité — Coefficient NAP
+Niveau d'activité
+Coefficient NAP
+ Description
+ Exemple
+ Sédentaire
+BMR × 1.2
+Peu ou pas d'exercice, travail de
+bureau
+Télétravail, aucune activité sportive
+Légèrement actif
+BMR × 1.375
+Exercice léger 1-3 jours/semaine
+Marche, yoga 2x/semaine
+Modérément actif
+BMR × 1.55
+Exercice modéré 3-5
+jours/semaine
+Salle 3x/semaine, sport régulier
+Très actif
+BMR × 1.725
+Exercice intense 6-7
+jours/semaine
+Entraînement quotidien, sport compétitif
+Extrêmement actif
+BMR × 1.9
+Exercice très intense + travail
+physique
+Athlète professionnel, double entraînement
+EXEMPLE DE CALCUL TDEE
+ Profil : Homme, 30 ans, 80 kg, 178 cm, modérément actif (3 séances/semaine)
+ BMR (Mifflin) = (10×80) + (6.25×178) − (5×30) + 5 = 800 + 1112.5 − 150 + 5 = 1767.5 kcal
+ TDEE = BMR × 1.55 = 1767.5 × 1.55 = 2739 kcal/jour
+ Pour perdre du poids : 2739 − 500 = 2239 kcal/jour (déficit raisonnable)
+ Pour prendre de la masse : 2739 + 300 = 3039 kcal/jour (surplus lean bulk)
+2.3 Ajustements selon l'objectif
+Objectif
+Ajustement calorique
+Perte/gain attendu
+ Durée recommandée
+ Perte de poids douce
+TDEE − 200 à 300 kcal
+~0.2-0.3 kg/semaine
+Long terme, durable
+Perte de poids modérée
+TDEE − 400 à 500 kcal
+~0.4-0.5 kg/semaine
+Recommandé pour la plupart
+Perte de poids rapide
+TDEE − 700 à 800 kcal
+~0.7-0.8 kg/semaine
+Max 8-12 semaines
+Perte agressive
+(déconseillée)
+TDEE − 1000 kcal
+~1 kg/semaine
+Max 4-6 semaines, supervision
+Maintien /
+Recomposition
+TDEE ± 100 kcal
+Neutre (change forme)
+Long terme
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 6
+Objectif
+Ajustement calorique
+Perte/gain attendu
+ Durée recommandée
+ Prise de masse lean
+TDEE + 200 à 300 kcal
+~0.2-0.3 kg/semaine
+Cycles de 8-16 semaines
+Prise de masse modérée
+TDEE + 400 à 500 kcal
+~0.4-0.5 kg/semaine
+Cycles de 8-12 semaines
+Prise de masse bulk
+TDEE + 700 à 1000 kcal
+~0.7-1 kg/semaine
+À éviter — trop de graisse
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 7
+3. MACRONUTRIMENTS — RÉFÉRENCE COMPLÈTE
+3.1 Protéines — Le macronutriment clé du sportif
+Les protéines sont composées d'acides aminés essentiels et non-essentiels. Elles sont indispensables à la synthèse
+musculaire, à la récupération, aux enzymes et à de nombreuses hormones.
+Source protéique
+Protéines/1
+00g
+Qualité
+biologiq.
+BV/DIAAS
+ Particularité
+ 
+Blanc d'oeuf (cuit)
+11 g
+Excellent
+100/1.13
+Protéine de référence absolue, très digestible
+Oeuf entier
+13 g
+Excellent
+100/1.0
+Profil complet d'acides aminés + lipides sains
+Blanc de poulet
+31 g
+Très bon
+79/1.08
+Faible en gras, économique, versatile
+Thon en boite (eau)
+26 g
+Très bon
+83/0.95
+Pratique, riche en oméga-3
+Saumon
+25 g
+Excellent
+82/1.0
+Oméga-3 EPA/DHA, anti-inflammatoire
+Boeuf maigre (5% MG)
+26 g
+Très bon
+80/1.02
+Riche en fer héminique, zinc, vitamine B12
+Fromage blanc 0%
+10 g
+Bon
+74/0.87
+Caséine + lactosérum, idéal pour la nuit
+Skyr nature
+11 g
+Bon
+74/0.90
+Dense, rassasiant, faible en sucre
+Tofu ferme
+8 g
+Bon
+65/0.84
+Option végétarienne complète + isoflavones
+Lentilles cuites
+9 g
+Moyen
+52/0.60
+Fibre + glucides + protéines végétales
+Pois chiches cuits
+9 g
+Moyen
+48/0.57
+Glucides complexes + protéines végétales
+Edamame
+11 g
+Bon
+68/0.82
+Soja complet, très bonne source végétale
+Whey (protéine poudre)
+80 g
+Excellent
+104/1.15
+Absorption rapide — idéale post-séance
+Caséine (poudre)
+80 g
+Excellent
+77/1.0
+Absorption lente — idéale avant le coucher
+Tempeh
+19 g
+Bon
+65/0.83
+Fermenté, meilleure biodisponibilité que tofu
+3.2 Les 9 acides aminés essentiels (AAE)
+Ces acides aminés ne peuvent pas être synthétisés par l'organisme et doivent être apportés par l'alimentation. Les
+sources animales les contiennent tous en proportions optimales.
+Acide aminé essentiel
+Rôle sport spécifique
+ Sources principales
+ Leucine (BCAA)
+Déclencheur principal de la MPS
+(synthèse protéique). Seuil : 2-3g/repas
+Whey, oeuf, viande, legumineuses
+Isoleucine (BCAA)
+Production d'énergie, régulation
+glycémique pendant l'effort
+Viande, poisson, oeufs, légumineuses
+Valine (BCAA)
+Énergie musculaire, réparation tissulaire
+Viande, produits laitiers, légumineuses
+Lysine
+Synthèse du collagène, absorption du
+calcium
+Viande, poisson, légumineuses
+Méthionine
+Synthèse créatine endogène,
+antioxydant (glutathion)
+Oeufs, viande, noix du Brésil
+Phénylalanine
+Précurseur dopamine et adrénaline
+(motivation, effort)
+Viande, poisson, oeufs, soja
+Thréonine
+Collagène, élastine, fonctions
+immunitaires
+Viande, produits laitiers, oeufs
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 8
+Acide aminé essentiel
+Rôle sport spécifique
+ Sources principales
+ Tryptophane
+Précurseur sérotonine et mélatonine
+(sommeil, récupération)
+Dindon, oeufs, produits laitiers, graines
+Histidine
+Précurseur carnosine (tampon acide
+musculaire)
+Viande, poisson, légumineuses
+3.3 Glucides — Carburant de la performance
+Les glucides sont la source d'énergie préférentielle pour les efforts intenses. Le glycogène musculaire et hépatique est
+limité : optimiser son stockage est crucial pour la performance.
+Catégorie
+IG (Index
+Glycémique)
+ Exemples
+ Utilisation sportive
+ 
+IG bas (< 55)
+Réponse glycémique
+lente
+Flocons d'avoine, lentilles, patate
+douce, riz brun
+Repas pré-séance éloigné (1.5-3h avant), repas
+quotidiens
+IG moyen
+(55-70)
+Réponse modérée
+Riz blanc, pain complet, banane,
+raisins secs
+Repas pré-séance rapproché (30-60 min avant)
+IG élevé (> 70)
+Réponse glycémique
+rapide
+Pain blanc, glucose, dattes, boissons
+sportives, bonbons
+Immédiatement post-séance pour refaire le
+glycogène rapidement
+Aliment
+Glucides/10
+0g
+Fibres/100g
+IG approx.
+ Recommandation
+ 
+Flocons d'avoine
+60 g
+10 g
+55
+Excellent pré-séance lointain, rassasiant
+Riz blanc cuit
+28 g
+0.4 g
+64
+Digestion facile, post-séance ou pré proche
+Riz complet cuit
+23 g
+1.8 g
+50
+Meilleur choix quotidien (fibres + micronutriments)
+Pâtes blanches cuites
+25 g
+1.8 g
+50
+Charge glycogène pré-compétition (pasta loading)
+Patate douce cuite
+17 g
+2.5 g
+44
+Idéal : fibres, vitamines, IG bas, goût neutre
+Pain complet
+41 g
+7 g
+51
+Pratique, fibres, mais attention gluten
+Banane mûre
+23 g
+2.6 g
+52
+Excellente pré/post séance + potassium
+Dattes
+75 g
+6.7 g
+42
+Sucre rapide naturel — idéal effort prolongé
+Riz de riz (galettes)
+80g
+2 g
+82
+IG élevé — utile seulement post-séance rapide
+Quinoa cuit
+21 g
+2.8 g
+53
+Protéines + glucides — excellente option végé
+3.4 Lipides — Essentiels et mal compris
+Les lipides sont souvent diabolisés à tort. Ils sont essentiels à la production hormonale (testostérone, estrogènes), à
+l'absorption des vitamines liposolubles (A, D, E, K) et à la santé des membranes cellulaires.
+Type de lipide
+ Rôle
+ Sources
+ Recommandation
+ Acides gras saturés
+Structure membranaire,
+précurseur hormones
+stéroïdes
+Viande, beurre, huile de
+coco, fromage
+≤ 10% des apports lipidiques totaux
+Acides gras
+mono-insaturés (AGMI)
+Cardioprotecteur,
+anti-inflammatoire léger
+Huile d'olive, avocat,
+amandes, noisettes
+40-50% des apports lipidiques
+Oméga-6 (AGPI n-6)
+Énergie, immunité
+(pro-inflammatoire à excès)
+Huile de tournesol, soja,
+maïs, noix
+Limiter excès — ratio O6/O3 idéal : 4:1
+Oméga-3 ALA (végétal)
+Précurseur EPA/DHA
+(conversion partielle
+~5-10%)
+Graines de lin, noix, huile de
+colza
+≥ 2g/jour si pas de poissons gras
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 9
+Type de lipide
+ Rôle
+ Sources
+ Recommandation
+ Oméga-3 EPA/DHA
+(marin)
+Anti-inflammatoire puissant,
+cerveau, articulations,
+récupération
+Saumon, maquereau,
+sardines, harengs
+1-3 g EPA+DHA/jour — supplémentation
+possible
+Acides gras trans
+AUCUN rôle bénéfique —
+toxique
+Graisses hydrogénées,
+produits ultra-transformés
+ÉVITER TOTALEMENT
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 10
+4. NUTRITION SELON LA MORPHOLOGIE
+4.1 Ectomorphe — Nutrition pour la prise de masse
+L'ectomorphe a un métabolisme très rapide et a du mal à prendre du poids. Sa priorité nutritionnelle est le surplus
+calorique combiné à un apport protéique optimal.
+STRATÉGIE NUTRITIONNELLE ECTOMORPHE
+ Surplus calorique de 400-600 kcal/jour (TDEE élevé à cause du métabolisme rapide)
+ Répartition macros recommandée : Protéines 25% | Glucides 55-60% | Lipides 15-20%
+ Fréquence alimentaire : 5-7 repas/collations par jour pour atteindre l'apport calorique
+ Protéines : 1.8-2.2 g/kg/jour — difficile d'en consommer trop pour un ectomorphe
+ Glucides : priorité aux sources denses et digestes (riz, pâtes, flocons d'avoine, pain)
+ Lipides sains en quantité : avocats, noix, huile d'olive pour augmenter la densité calorique
+ Shake de masse maison si difficulté à manger assez (lait entier, flocons, banane, whey)
+ Éviter les aliments à fort volume et faible densité calorique (légumes crus en excès)
+Repas
+ Exemple
+ Calories
+est.
+Protéine
+s
+Glucide
+s
+Lipides
+Petit-déjeuner
+150g flocons d'avoine + lait entier + 2 oeufs + 1
+banane + 30g amandes
+850 kcal
+38 g
+100 g
+30 g
+Collation matin
+Greek yogurt 200g + granola 50g + fruits secs 30g
+450 kcal
+18 g
+60 g
+14 g
+Déjeuner
+200g riz blanc + 200g poulet + 1 avocat + légumes +
+huile olive
+900 kcal
+52 g
+95 g
+30 g
+Pre-workout (1h
+avant)
+2 tranches pain complet + 30g beurre d'amande + 1
+banane
+450 kcal
+12 g
+65 g
+16 g
+Post-workout
+Shake : 40g whey + 300ml lait + 50g flocons + 1
+banane
+600 kcal
+48 g
+80 g
+8 g
+Dîner
+200g pâtes + 200g boeuf maigre + sauce tomate +
+parmesan
+950 kcal
+55 g
+110 g
+22 g
+Collation nuit
+300g fromage blanc + 2 cuillères confiture + 30g
+noix
+400 kcal
+28 g
+30 g
+18 g
+TOTAL
+JOURNALIER
+~4600 kcal
+4600 kcal
+251 g
+(22%)
+540 g
+(47%)
+138 g (27%)
+4.2 Mésomorphe — Nutrition équilibrée & performance
+Le mésomorphe répond bien aux stimuli nutritionnels. Il peut adapter son alimentation selon l'objectif du moment (masse
+ou sèche) avec des résultats relativement rapides.
+STRATÉGIE NUTRITIONNELLE MÉSOMORPHE
+ Besoins caloriques modérés : TDEE ± 200-400 kcal selon l'objectif
+ Répartition macros équilibrée : Protéines 30% | Glucides 40-45% | Lipides 25-30%
+ Cyclisation glucidique possible : plus de glucides les jours d'entraînement, moins les jours de repos
+ Protéines : 1.6-2.0 g/kg/jour — excellent point de départ
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 11
+ Variété alimentaire recommandée pour couvrir tous les micronutriments
+ Cheat meal 1x/semaine toléré sans impact significatif (adhérence long terme)
+4.3 Endomorphe — Nutrition pour la perte de graisse
+L'endomorphe stocke facilement les graisses et a un métabolisme plus lent. Sa nutrition doit favoriser la dépense
+énergétique, la satiété et le maintien de la masse musculaire.
+STRATÉGIE NUTRITIONNELLE ENDOMORPHE
+ Déficit calorique de 400-600 kcal/jour (calculé sur le TDEE réel)
+ Répartition macros : Protéines 35-40% | Glucides 25-35% | Lipides 25-30%
+ Protéines ÉLEVÉES : 2.0-2.4 g/kg/jour pour préserver la masse musculaire et maximiser la satiété
+ Glucides CYCLIQUES : réduire les jours de repos, augmenter les jours d'entraînement intense
+ Éviter les sucres rapides isolés, les boissons sucrées, les aliments ultra-transformés
+ Favoriser les aliments à fort volume et faible densité calorique (légumes, fruits entiers)
+ Limiter les graisses saturées, privilégier les oméga-3 et AGMI
+ Jeûne intermittent 16/8 optionnel : peut aider à contrôler l'apport calorique naturellement
+Repas
+ Exemple
+ Cal. est.
+Protéines
+Glucides
+Lipides
+Petit-déjeuner
+Omelette 3 oeufs + épinards + 1 tranche pain
+complet + café
+400 kcal
+28 g
+22 g
+20 g
+Collation matin
+200g skyr + 100g myrtilles + 15g amandes
+220 kcal
+18 g
+18 g
+7 g
+Déjeuner
+200g saumon + salade verte + 100g quinoa +
+vinaigrette légère
+550 kcal
+44 g
+28 g
+22 g
+Pre-workout
+1 banane + 25g whey dans eau
+250 kcal
+22 g
+30 g
+2 g
+Post-workout
+30g whey dans eau + 100g riz blanc + légumes
+vapeur
+400 kcal
+32 g
+50 g
+4 g
+Dîner
+200g poulet + légumes rôtis (courgettes, poivrons) +
+1 c. huile olive
+380 kcal
+42 g
+15 g
+14 g
+Collation nuit (si
+faim)
+300g fromage blanc 0% + 1 c. cannelle
+130 kcal
+20 g
+8 g
+1 g
+TOTAL
+JOURNALIER
+~2330 kcal
+2330 kcal
+206 g (35%)
+171 g (29%)
+70 g (27%)
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 12
+5. NUTRITION SELON L'IMC
+5.1 IMC < 18.5 — Insuffisance pondérale
+PRÉCAUTIONS & STRATÉGIE IMC < 18.5
+ Consultation médicale et diététique RECOMMANDÉE — risque de troubles alimentaires
+ Objectif : créer un surplus calorique sans stress gastro-intestinal
+ Augmenter les calories progressivement : +200-300 kcal/semaine
+ Privilégier la densité nutritionnelle plutôt que le volume alimentaire
+ Macros : Protéines 20-25% | Glucides 55-60% | Lipides 20-25%
+ Minimiser les fibres en excès (réduisent la densité calorique et causent satiété précoce)
+ 5-6 repas par jour avec des collations denses (noix, beurre d'amande, lait entier)
+Aliment dense recommandé
+Calories/portio
+n
+ Avantage
+ 
+Beurre d'amande (30g)
+190 kcal
+Lipides sains, protéines, très dense
+Avocat entier
+240 kcal
+AGMI, vitamine E, potassium
+Lait entier (500ml)
+320 kcal
+Protéines + glucides + lipides, calcium
+Noix mélangées (50g)
+300 kcal
+Lipides sains, oméga-3, minéraux
+Raisins secs (80g)
+240 kcal
+Glucides rapides, fer, énergie facile
+Flocons d'avoine (100g sec)
+380 kcal
+Glucides complexes, fibres, bêta-glucanes
+Oeuf entier (1)
+75 kcal
+Profil AA complet, vitamine D
+Huile d'olive (1 c. à soupe)
+120 kcal
+AGMI, antioxydants, goût neutre ajouté
+Banane (1 grosse)
+120 kcal
+Glucides, potassium, tryptophane
+Fromage à raclette (30g)
+105 kcal
+Calcium, lipides, protéines — ajout facile
+5.2 IMC 18.5–24.9 — Poids normal
+APPROCHE IMC NORMAL — SELON L'OBJECTIF
+ Toute la liberté nutritionnelle est accessible — se référer aux sections objectifs (Section 6)
+ Maintien : TDEE ± 100 kcal, répartition équilibrée des macros
+ La qualité des aliments est la priorité sur la quantité
+ 80/20 : 80% aliments nutritifs, 20% tolérance pour l'adhérence long terme
+ Micronutriments couverts via une alimentation variée et colorée
+5.3 IMC 25–29.9 — Surpoids
+STRATÉGIE NUTRITIONNELLE SURPOIDS (IMC 25-29.9)
+ Déficit calorique modéré : TDEE − 400 à 500 kcal (approche durable)
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 13
+ Macros : Protéines 30-35% | Glucides 30-40% | Lipides 25-30%
+ Protéines élevées (2.0-2.2 g/kg) pour préserver la masse musculaire et maximiser la satiété
+ Glucides principalement complexes (IG bas) — réduire les sucres raffinés et boissons sucrées
+ Ne pas éliminer les glucides complètement — risque de déficit glycogène musculaire
+ Favoriser les aliments à fort effet rassasiant : légumineuses, légumes, protéines maigres
+ Hydratation : boire 500 ml d'eau avant chaque repas (réduction appétit prouvée)
+ Éviter les diètes extrêmes — risque d'effet yo-yo et perte musculaire
+ Favoriser
+ Modérer
+ Éviter / Éliminer
+ Poulet, dinde, thon, blancs d'oeufs
+Riz blanc (post-séance OK)
+Boissons sucrées (sodas, jus industriels)
+Légumes verts (courgettes, haricots)
+Pain blanc, baguette
+Fast-food, plats ultra-transformés
+Légumineuses (lentilles, pois chiches)
+Fromages gras > 30% MG
+Biscuits, viennoiseries, confiseries
+Fruits entiers (pas de jus)
+Huile de coco, beurre
+Alcool (calories vides, inhibe lipolyse)
+Poissons maigres (cabillaud, sole)
+Noix (portion contrôlée)
+Sauces grasses (mayo, crème)
+Skyr, fromage blanc 0%
+Pâtes (portion adaptée)
+Chips, snacks industriels salés
+Flocons d'avoine, quinoa
+Pain complet (quantité)
+Céréales sucrées du petit-déjeuner
+5.4 IMC 30–34.9 — Obésité Grade I
+STRATÉGIE NUTRITIONNELLE OBÉSITÉ GRADE I
+ Consultation médicale et suivi par un diététicien-nutritionniste RECOMMANDÉS
+ Déficit de 500-700 kcal/jour — objectif 0.5-0.7 kg/semaine de perte
+ Ne JAMAIS descendre sous 1500 kcal/jour (homme) ou 1200 kcal/jour (femme) sans supervision
+ Macros : Protéines 35-40% | Glucides 25-35% | Lipides 25-30%
+ Éliminer d'abord les aliments à forte densité calorique / faible valeur nutritive
+ Priorité à la régulation de la glycémie : IG bas, fibres, réduire les sucres rapides
+ Fractionnement alimentaire : 3 repas + 1-2 collations pour éviter les fringales
+ Journal alimentaire recommandé (ou application de suivi) pour prendre conscience des apports
+5.5 IMC ≥ 35 — Obésité Grade II & III
+AVERTISSEMENT MÉDICAL IMC ≥ 35
+ Suivi médical et diététique OBLIGATOIRE — l'application doit rediriger vers des professionnels
+ Les conseils nutritionnels génériques ne sont PAS suffisants pour ce profil
+ Des pathologies associées (diabète T2, HTA, SAOS) modifient les recommandations nutritionnelles
+ Des interventions médicales peuvent être nécessaires (chirurgie bariatrique, médicaments)
+ L'application peut fournir des informations éducatives mais ne doit PAS générer de plan nutritionnel autonome
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 14
+6. NUTRITION SELON L'OBJECTIF
+6.1 Prise de masse musculaire (Bulk)
+La prise de masse musculaire nécessite un surplus calorique pour fournir les matériaux énergétiques à la synthèse
+protéique. La qualité du surplus détermine la proportion muscle/graisse gagnée.
+Paramètre
+ Recommandation détaillée
+ Calories
+TDEE + 200-400 kcal (lean bulk) | Éviter > +600 kcal (trop de graisse)
+Protéines
+1.8-2.2 g/kg/jour | Au moins 3-4 repas avec 30-40g de protéines
+Glucides
+4-6 g/kg/jour | Riz, flocons, pâtes, patate douce — privilégier peri-workout
+Lipides
+1.0-1.5 g/kg/jour | Focus oméga-3 anti-inflammatoires
+Timing
+Repas pré-séance : glucides complexes + protéines 1.5-2h avant
+Post-workout
+40g whey + 80-100g glucides rapides dans les 30-60 min
+Avant dormir
+30-40g caséine ou fromage blanc = anabolisme nocturne
+Fréquence alimentaire
+4-6 repas/jour pour maximiser la MPS (fenêtres de synthèse)
+Cheat meal
+1x/semaine toléré — maintient le métabolisme, adhérence long terme
+Alcool
+À éviter — inhibe la synthèse protéique et augmente le stockage graisseux
+Durée de phase
+8-16 semaines de surplus, puis mini-cut de 4-6 semaines si graisse > 15%
+6.2 Perte de poids / Sèche
+La sèche vise à réduire la masse grasse tout en préservant au maximum la masse musculaire. C'est la phase la plus
+délicate car le corps tend naturellement à cataboliser le muscle en déficit.
+Paramètre
+ Recommandation détaillée
+ Calories
+TDEE − 400-600 kcal | Ne jamais descendre sous 1400-1600 kcal (homme) / 1200-1400 kcal (femme)
+Protéines
+2.0-2.6 g/kg/jour (ÉLEVÉ) — protège la masse musculaire en déficit
+Glucides
+2-4 g/kg/jour — réduire les jours de repos, maintenir les jours d'entraînement
+Lipides
+0.8-1.2 g/kg/jour — ne pas descendre sous 0.5 g/kg (hormones)
+Timing
+Repas pré-séance maintenu avec glucides | Post-séance : protéines en priorité
+Satiété
+Légumes verts ad libitum | Fibres > 30g/jour | Eau avant repas
+HIIT & nutrition
+Ne pas supprimer les glucides le jour d'un HIIT — contre-productif
+Cardio natif (LISS)
+À jeun le matin optionnel — oxydation graisseuse légèrement supérieure
+Refeed day
+1x/semaine remonter à TDEE ou léger surplus — maintient leptine et métabolisme
+Cycle 2/1
+Option avancée : 2 jours déficit, 1 jour maintien, répéter
+Suppléments clés
+Whey + caséine (protéines) | Oméga-3 | Multi-vitamines | Créatine
+6.3 Recomposition corporelle
+La recomposition (perdre de la graisse ET gagner du muscle simultanément) est possible mais lente. Elle est plus
+efficace chez les débutants, les personnes en surpoids ou après une longue pause d'entraînement.
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 15
+RECOMPOSITION CORPORELLE — CONDITIONS & STRATÉGIE
+ Conditions idéales : débutant, retour après pause, surpoids (IMC > 25), personnes non entraînées
+ Calories : TDEE ± 0-100 kcal (maintenance) ou légère cyclisation
+ Protéines : 2.2-2.6 g/kg/jour — le levier nutritionnel le plus important
+ Timing : glucides concentrés autour de l'entraînement, protéines réparties toute la journée
+ Patience : résultats visibles après 8-12 semaines minimum — ne pas changer de stratégie trop vite
+ Progrès mesurés par photos + tour de taille, PAS uniquement par la balance (poids stable = normal)
+6.4 Endurance / Performance cardiovasculaire
+ Paramètre
+ Recommandation spécifique endurance
+ Calories
+TDEE × 1.6 à 2.0 selon volume d'entraînement (haute dépense)
+Glucides
+5-10 g/kg/jour selon intensité — CARBURANT PRINCIPAL
+Protéines
+1.4-1.7 g/kg/jour (moins besoin que force pure, mais important)
+Lipides
+1.0-1.5 g/kg/jour — source d'énergie secondaire à haute durée
+Avant effort long (> 60 min)
+200-300g glucides complexes 2-3h avant (pasta loading optimal veille)
+Pendant effort (> 60 min)
+30-60g glucides/heure (gels, bananes, boissons isotoniques)
+Pendant effort (> 90 min)
+Jusqu'à 90g glucides/heure avec combo glucose + fructose
+Post-effort
+Glucides rapides + protéines dans les 30 min — refaire le glycogène
+Sodium
+Important > 90 min de course — boissons isotoniques ou sel dans eau
+Bêta-alanine
+Tampon acide lactique — améliore les efforts de 1-4 min
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 16
+7. NUTRITION SELON LE NIVEAU SPORTIF
+7.1 Débutant (0–6 mois)
+PRIORITÉS NUTRITIONNELLES — DÉBUTANT
+ 1. Couvrir les besoins protéiques de base : 1.4-1.6 g/kg/jour (simple et accessible)
+ 2. Établir des habitudes alimentaires régulières (3 repas + 1-2 collations)
+ 3. S'hydrater correctement (objectif : 2L d'eau/jour minimum)
+ 4. Supprimer les aliments les plus délétères en premier (sodas, fast-food, alcool fréquent)
+ 5. Ne PAS se focaliser sur les suppléments avant d'avoir les bases en place
+ 6. Apprendre à lire les étiquettes nutritionnelles
+Pour un débutant, une alimentation simple et équilibrée suffit pour voir des résultats pendant les 3-6 premiers mois. Le
+simple fait d'ajouter une source de protéines à chaque repas et de s'hydrater correctement peut faire une différence
+majeure.
+7.2 Intermédiaire (6 mois–2 ans)
+PRIORITÉS NUTRITIONNELLES — INTERMÉDIAIRE
+ 1. Quantifier les apports : compter les calories et macros pendant au moins 4-8 semaines
+ 2. Optimiser le timing nutritionnel (repas pré/post séance définis)
+ 3. Ajuster les macros selon les résultats (photos, pesées, mesures)
+ 4. Introduire les suppléments de base : whey, créatine (si objectif force/masse)
+ 5. Cyclisation calorique possible : plus de calories les jours d'entraînement
+ 6. Qualité du sommeil et récupération = partie intégrante de la stratégie nutritionnelle
+7.3 Avancé (2 ans et plus)
+PRIORITÉS NUTRITIONNELLES — AVANCÉ
+ 1. Périodisation nutritionnelle alignée avec la périodisation de l'entraînement
+ 2. Phases de masse et de sèche planifiées (bulk/cut cycliques)
+ 3. Manipulation fine des macros : glucides cycliques, carb backloading optionnel
+ 4. Suppléments ciblés selon les carences identifiées (bilans sanguins annuels recommandés)
+ 5. Gestion du cortisol et du sommeil (horaires, qualité, durée) — impact sur la composition corporelle
+ 6. Possibilité de suivre un programme nutritionnel avec un diététicien du sport
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 17
+8. NUTRITION SELON L'ÂGE
+8.1 Adolescents (13–17 ans)
+NUTRITION ADOLESCENTS — PARTICULARITÉS
+ La croissance augmente les besoins énergétiques et protéiques
+ Calcium critique : 1200-1500 mg/jour (croissance osseuse maximale avant 20 ans)
+ Fer : besoins augmentés chez les adolescentes (menstruation) — 15-18 mg/jour
+ Protéines : 1.2-1.6 g/kg/jour (croissance + sport)
+ ÉVITER les compléments non adaptés aux ados (créatine déconseillée < 18 ans par prudence)
+ Petit-déjeuner obligatoire : impact sur la concentration et les performances sportives
+ Ne pas restreindre les calories — risque de déficit pour la croissance
+Besoin
+Quantité recommandée
+ Sources prioritaires
+ 
+Énergie
+2000-3000 kcal/jour (selon
+activité)
+Alimentation variée et équilibrée
+Protéines
+1.2-1.6 g/kg/jour
+Viandes maigres, oeufs, produits laitiers, légumineuses
+Calcium
+1200-1500 mg/jour
+Lait, yaourts, fromages, sardines, épinards
+Fer
+Garçon: 11 mg / Fille: 15-18
+mg
+Viande rouge, légumineuses, céréales enrichies + vitamine C
+Vitamine D
+600-1000 UI/jour
+Soleil, poissons gras, supplémentation en hiver
+Oméga-3
+1-2 g EPA+DHA/jour
+Poissons gras 2x/semaine, huile de lin
+Fibres
+25-30 g/jour
+Légumes, fruits, céréales complètes, légumineuses
+8.2 Adultes 18–40 ans
+C'est la période de performance maximale. La nutrition peut être optimisée de manière agressive selon les objectifs. La
+récupération est rapide et la tolérance aux ajustements est excellente.
+ADULTES 18-40 ANS — POINTS CLÉS
+ Tous les protocoles nutritionnels sont applicables (masse, sèche, endurance)
+ Protéines : 1.6-2.4 g/kg selon objectif et intensité
+ Priorité : performance, récupération et composition corporelle
+ Supplémentation ciblée selon les objectifs (voir Section 11)
+ Attention à l'alcool — impacte fortement la récupération, le sommeil et la composition corporelle
+ Qualité du sommeil = nutritionnel clé (GH nocturne, cortisol, appétit)
+8.3 Adultes 40–60 ans
+ADAPTATIONS NUTRITIONNELLES 40-60 ANS
+ Métabolisme basal diminue de ~1-2% par décennie après 30 ans — ajuster les apports en conséquence
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 18
+ Protéines AUGMENTÉES : 1.8-2.2 g/kg/jour pour combattre la sarcopénie (perte musculaire)
+ Réduire légèrement les glucides si activité réduite (métabolisme glucidique moins efficace)
+ Augmenter les oméga-3 (anti-inflammatoire, santé cardiovasculaire et articulaire)
+ Calcium et Vitamine D cruciaux pour la densité osseuse (prévention ostéoporose)
+ Réduire les aliments ultra-transformés et sucres ajoutés (sensibilité insulinique réduite)
+ Antioxydants importants : fruits et légumes colorés (stress oxydatif augmenté)
+ Collagène : 10-15 g/jour (contribue à la santé des tendons, ligaments, articulations)
+Nutriment
+Besoin spécifique
+40-60 ans
+ Sources recommandées
+ 
+Protéines
+1.8-2.2 g/kg/jour
+Poissons, volaille, oeufs, légumineuses
+Calcium
+1000-1200 mg/jour
+Produits laitiers, sardines, amandes, légumes verts
+Vitamine D
+1500-2000 UI/jour
+Soleil, supplémentation recommandée
+Oméga-3
+2-3 g EPA+DHA/jour
+Saumon, maquereau, supplémentation huile de poisson
+Magnésium
+350-420 mg/jour
+Amandes, graines de courge, épinards, chocolat noir
+Collagène
+10-15 g/jour
+Supplémentation hydrolysée ou bouillon d'os
+Antioxydants (C+E)
+Apport élevé
+Fruits rouges, agrumes, huile d'olive, noix
+Fibres
+> 35 g/jour
+Légumineuses, légumes, céréales complètes
+8.4 Séniors (60 ans et plus)
+NUTRITION SÉNIORS 60+ — PRIORITÉS
+ Sarcopénie : pertes de 3-8% de masse musculaire par décennie — protéines à CHAQUE repas
+ Protéines : 1.8-2.2 g/kg/jour — répartir sur 4 repas avec minimum 25-30g par repas
+ Risque de dénutrition : appétit réduit, goût altéré, problèmes dentaires, isolement social
+ Supplémentation systématique recommandée : Vitamine D (2000 UI), B12, Calcium
+ Hydratation critique : sensation de soif diminuée avec l'âge — boire sans avoir soif
+ Vitamine B12 : absorption réduite (moins de facteur intrinsèque) — supplémentation fréquente
+ Oméga-3 : importante pour la cognition, la prévention de la sarcopénie et du déclin cognitif
+ Fibres et probiotiques : transit ralenti, microbiote altéré chez les séniors
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 19
+9. NUTRITION SELON LE SEXE BIOLOGIQUE
+Note : Ces différences sont basées sur des moyennes physiologiques. Il existe une grande variabilité individuelle.
+9.1 Spécificités nutritionnelles féminines
+FEMME & NUTRITION SPORTIVE — PARTICULARITÉS
+ Besoins caloriques généralement 15-20% inférieurs à l'homme de même gabarit (masse musculaire moindre)
+ Métabolisme des lipides : les femmes oxydent davantage les graisses lors d'efforts modérés (avantage endurance)
+ Fer : besoins DOUBLES pendant les années de menstruation (15-18 mg/jour vs 8 mg homme)
+ Cycle menstruel : impact sur les performances, l'appétit et les besoins énergétiques
+ Calcium et Vitamine D : priorité absolue (risque d'ostéoporose post-ménopause)
+ La triade de l'athlète féminine : Déficit énergétique + Troubles menstruels + Ostéoporose — à prévenir
+ Grossesse et allaitement : besoins augmentés significativement (voir Section 9.3)
+Phase du cycle
+Jours
+Impact nutritionnel
+ Adaptations recommandées
+ Menstruation
+J1-J5
+Perte de fer, fatigue, crampes
+Augmenter le fer (viande rouge, épinards), magnésium,
+vitamine C
+Phase folliculaire
+J6-J13
+Énergie haute, sensibilité
+insuline optimale
+Glucides légèrement augmentés, séances intenses
+possibles
+Ovulation
+J14
+Pic d'énergie, performance
+maximale
+Nutrition normale, hydratation +++
+Phase lutéale
+J15-J28
+Rétention eau, fringales sucrées,
+fatigue
+Réduire sel, augmenter magnésium, glucides stables, éviter
+sucres simples
+9.2 Spécificités nutritionnelles masculines
+HOMME & NUTRITION SPORTIVE — PARTICULARITÉS
+ Besoins caloriques plus élevés (masse musculaire et taille supérieures en moyenne)
+ Testostérone : les lipides sains sont essentiels à sa production (ne pas descendre sous 0.8 g/kg)
+ Zinc : crucial pour la testostérone — 11 mg/jour (huîtres, boeuf, graines de courge)
+ Risque cardiovasculaire plus élevé : limiter graisses saturées et sel, favoriser oméga-3
+ Tendance à sous-estimer les calories ingérées (snacking, portions importantes)
+ Testostérone + surplus calorique = meilleure prise de masse que chez la femme
+ Attention à l'alcool : baisse la testostérone et augmente les oestrogènes
+9.3 Grossesse & Sport — Nutrition spécifique
+GROSSESSE & ACTIVITÉ PHYSIQUE — NUTRITION
+ Consulter OBLIGATOIREMENT un médecin et une sage-femme pour tout programme pendant la grossesse
+ Besoins caloriques augmentés : +300 kcal/jour au 2e trimestre, +450 kcal au 3e trimestre
+ Acide folique (B9) : 400-800 mcg/jour AVANT conception et pendant le 1er trimestre (prévention spina bifida)
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 20
+ Fer : besoins doublés (27 mg/jour) — supplémentation souvent nécessaire
+ DHA (oméga-3) : 200-300 mg/jour pour le développement cérébral du foetus
+ Calcium : 1000-1200 mg/jour pour la minéralisation osseuse du foetus
+ Protéines : augmenter de +10-15g/jour par rapport aux besoins habituels
+ ÉVITER : alcool, caféine > 200mg, poissons riches en mercure (thon albacore, requin, espadon)
+ Continuer le sport avec l'accord médical — les besoins caloriques s'ajustent en conséquence
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 21
+10. TIMING NUTRITIONNEL & PÉRIODISATION
+10.1 La fenêtre anabolique — Réalité et mythe
+La fenêtre anabolique est réelle mais moins étroite qu'on ne le pensait. Les recherches récentes montrent qu'elle dure
+4-5 heures après l'effort (pas 30 minutes). Cependant, optimiser le timing reste un avantage compétitif.
+Timing
+Objectif
+Macros recommandés
+ Exemples pratiques
+ 2-3h avant
+séance
+Remplir les stocks de
+glycogène, protéines
+dispos
+Glucides complexes +
+protéines + peu de
+lipides
+Riz + poulet + légumes | Flocons d'avoine + oeuf
+30-60 min avant
+Boost d'énergie rapide,
+éviter hypoglycémie
+Glucides simples à
+moyens + protéines
+légères
+Banane + whey | Pain + jambon | Fruit sec + yaourt
+Pendant (> 60
+min)
+Maintenir glycémie,
+éviter catabolisme
+30-60g glucides/h +
+électrolytes
+Banane, dattes, gel énergétique, boisson isotonique
+0-30 min
+post-séance
+Démarrer la
+récupération, resynthèse
+glycogène
+Protéines rapides +
+glucides rapides
+Whey + banane | Lait chocolaté | Riz blanc + thon
+1-2h
+post-séance
+Repas récupération
+complet
+Protéines + glucides +
+lipides (modérés)
+Riz + saumon + légumes | Pâtes + poulet + salade
+Avant dormir
+Anabolisme nocturne,
+anti-catabolisme nuit
+Protéines lentes
+(caséine)
+Fromage blanc + noix | Caséine shake | Skyr + amandes
+10.2 Répartition journalière des repas
+Modèle
+Fréquence
+Avantages
+Inconvénients
+ Profil idéal
+ 3 repas classiques
+3x/jour
+Simple, social, culturel
+Moins optimal pour MPS
+Débutants, vie sociale active
+4-5 repas
+4-5x/jour
+MPS maximisée, glycémie
+stable
+Organisation, préparation
+Sportifs intermédiaires/avancés
+6 repas
+6x/jour
+Anabolisme constant,
+ectomorphes
+Contraignant, organisation
+lourde
+Ectomorphes, prise de masse
+Jeûne 16/8
+2-3 repas/8h
+Compliance, perte de
+graisse
+Difficile pré/post séance
+Endomorphes, perte de poids
+Jeûne 18/6
+2 repas/6h
+Autophagie, insuline
+basse
+Difficile à soutenir
+Perte de poids avancée
+Alimentation intuitive
+Variable
+Psychologique, durable
+Sous/surestimation facile
+Athlètes expérimentés
+10.3 Carb Cycling (Cyclisation des glucides)
+La cyclisation des glucides consiste à varier l'apport glucidique selon les jours d'entraînement. C'est une stratégie
+avancée particulièrement efficace pour la recomposition corporelle.
+ Type de jour
+ Glucides
+recommandés
+Protéines
+Lipides
+ Application
+ 
+Jour d'entraînement intense
+4-6 g/kg
+2 g/kg
+0.8 g/kg
+Séances lourdes, HIIT
+Jour d'entraînement modéré
+2-4 g/kg
+2 g/kg
+1 g/kg
+Cardio modéré, séances légères
+Jour de repos
+0.5-2 g/kg
+2.2 g/kg
+1.2 g/kg
+Pas de sport ou marche
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 22
+ Type de jour
+ Glucides
+recommandés
+Protéines
+Lipides
+ Application
+ 
+Refeed day (1x/semaine)
+6-8 g/kg
+1.8 g/kg
+0.6 g/kg
+Relance leptine, mental
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 23
+11. SUPPLÉMENTS & COMPLÉMENTS ALIMENTAIRES
+Les suppléments ne remplacent JAMAIS une alimentation de base équilibrée. Ils sont des compléments marginaux.
+L'alimentation représente 90% des résultats, les suppléments les 10% restants.
+11.1 Suppléments de Niveau 1 — Bases scientifiquement validées
+Supplément
+Dosage
+Timing
+Bénéfice prouvé
+ Pour qui
+ Whey protéine
+(lactosérum)
+20-40 g
+Post-séance ou
+entre repas
+Augmente MPS, récupération,
+composition corporelle
+Tous — si difficile d'atteindre l'apport
+protéique alimentaire
+Caséine micellaire
+30-40 g
+Avant dormir
+Anabolisme nocturne,
+anti-catabolisme 7-8h
+Objectif masse ou sèche —
+récupération nocturne
+Créatine monohydrate
+3-5 g/jour
+N'importe quand
+(cohérence)
+Force +5-15%, masse maigre,
+puissance, récupération
+Sports de force, HIIT, prise de masse —
+sécurisé
+Oméga-3 (EPA+DHA)
+2-4 g/jour
+Avec repas gras
+Anti-inflammatoire, récupération,
+cardiovasculaire, cognition
+Tous — surtout si peu de poissons gras
+Vitamine D3
+1000-4000
+UI/jour
+Avec repas
+Force musculaire, immunité, os,
+testostérone
+Tous (surtout hiver, bureaux, peaux
+mates)
+Magnésium bisglycinate
+200-400
+mg/jour
+Soir
+Récupération, qualité du sommeil,
+crampes
+Sportifs intenses, stress élevé, crampes
+fréquentes
+11.2 Suppléments de Niveau 2 — Utiles dans contextes spécifiques
+Supplément
+Dosage
+Timing
+Bénéfice
+ Contexte d'utilisation
+ BCAA
+(leucine/isoleucine/valine)
+5-10 g
+Pendant ou
+post-séance
+Anti-catabolisme à jeun,
+MPS si manque protéines
+Utile si entraînement à jeun ou apport protéique
+insuffisant
+Bêta-alanine
+3.2-6.4
+g/jour
+Fractionnée
+(fourmillements)
+Augmente carnosine →
+endurance anaérobie 1-4
+min
+CrossFit, natation, cyclisme, efforts intenses
+répétés
+Caféine
+3-6 mg/kg
+30-60 min avant
+séance
+Force +3-5%, endurance,
+concentration, réduction
+douleur
+Tous — attention tolérance, ne pas dépasser
+17h
+Citrulline malate
+6-8 g
+60 min avant
+séance
+Pompe musculaire,
+réduction fatigue, NO2
+Hypertrophie, séances longues, endurance
+Zinc (ZMA)
+25-45 mg
+zinc
+Soir, à jeun
+Testostérone, immunité,
+récupération (si carence)
+Sportifs intenses, végétariens, hommes
+Collagène hydrolysé
+10-15 g
+30-60 min avant
+séance (avec Vit
+C)
+Santé tendons, ligaments,
+cartilages, articulations
+40+, blessures tendineuses, sports à impact
+L-glutamine
+5-10 g
+Post-séance / soir
+Immunité, intégrité
+intestinale (preuves
+limitées en sport)
+Périodes de stress intense, immunité faible
+Ashwagandha (KSM-66)
+300-600
+mg/jour
+Soir avec repas
+Réduction cortisol,
+testostérone légère,
+récupération
+Stress chronique, surentraînement, qualité du
+sommeil
+HMB (bêta-hydroxy-bêta-
+méthylbutyrate)
+3 g/jour
+Avec repas
+Préserve masse
+musculaire en déficit,
+récupération
+Sèche, séniors, sportifs en restriction calorique
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 24
+11.3 Suppléments à éviter ou très limités
+■ À ÉVITER / DOUTEUX
+■ SUPPLÉMENTS SÛRS ET EFFICACES
+ Brûle-graisses thermogéniques (souvent stims + effets
+secondaires)
+ Créatine monohydrate (consensus scientifique fort)
+ Booster de testostérone non naturels
+ Whey/caséine de qualité (< 5g sucres/portion)
+ SARMs (risque santé, dopant)
+ Vitamine D3 + K2 combinées
+ Hormone de croissance exogène (illégal + effets)
+ Oméga-3 certifiés IFOS (pureté)
+ Protéines en poudre ultra-chargées en sucres
+ Magnésium bisglycinate (meilleure biodisponibilité)
+ Super-shakes industriels ultra-caloriques
+ Caféine naturelle (café, guarana)
+ Diurétiques pour perdre du poids vite
+ Multivitamines de base (assurance micronutriments)
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 25
+12. HYDRATATION
+12.1 Besoins hydriques selon le profil
+ Profil
+ Besoin hydrique de
+base
+Ajout pour l'effort
+ Ajout chaleur/humidité
+ 
+Sédentaire (70 kg)
+~2.5 L/jour
++0
+Minime
+Sportif léger (70 kg)
+~3 L/jour
++500 ml/séance
++250-500 ml
+Sportif modéré (70 kg)
+~3.5 L/jour
++750 ml/séance
++500 ml
+Sportif intense (80 kg)
+~4 L/jour
++1-1.5 L/séance
++ 500-1000 ml
+Sportif extrême / athlète
+~4-5 L/jour
++1-2 L/séance
++1-1.5 L
+Femme enceinte
++300-500 ml vs
+norme
+Modérer sport
+++++
+Sénior (moins de soif)
+Forcer 2.5 L/jour
++adaptée
++Attention chaleur
+12.2 Électrolytes — Importance pour le sportif
+Les électrolytes sont des minéraux dissous dans les fluides corporels qui régulent l'hydratation, les contractions
+musculaires et les impulsions nerveuses. Leur équilibre est critique lors des efforts prolongés.
+Électrolyte
+Rôle sport
+Pertes effort
+(mg/L sueur)
+Sources
+alimentaires
+ Supplémentation?
+ 
+Sodium (Na+)
+Équilibre hydrique,
+contractions musculaires,
+absorption eau
+500-1500 mg/L
+Sel, charcuteries,
+fromages, olives
+Effort > 60-90 min ou chaleur intense
+Potassium (K+)
+Contraction musculaire,
+cœur, équilibre Na+
+150-500 mg/L
+Banane, avocat,
+patate douce,
+épinards
+Rarement nécessaire si alimentation variée
+Magnésium
+(Mg2+)
+Synthèse ATP,
+contraction, sommeil
+10-40 mg/L
+Noix, chocolat noir,
+épinards,
+légumineuses
+Fréquente chez sportifs (300-400 mg/jour)
+Calcium (Ca2+)
+Contraction musculaire,
+os, coagulation
+20-80 mg/L
+Produits laitiers,
+sardines, amandes,
+légumes verts
+Si alimentation pauvre en laitages
+Chlore (Cl-)
+Équilibre acido-basique,
+digestion
+700-1500 mg/L
+Sel de table (NaCl)
+Non — couvert avec le sodium
+Phosphore (P)
+ATP, ADP, 2,3-DPG
+(transport O2)
+Faible
+Produits animaux,
+légumineuses, noix
+Rarement nécessaire
+12.3 Signes et conséquences de la déshydratation
+Niveau de
+déshydratation
+% poids
+perdu
+ Symptômes
+ Impact performance
+ 
+Légère
+1%
+Légère soif, urine jaune
+- 5% performance
+Modérée
+2%
+Soif marquée, bouche sèche, baisse
+concentration
+- 10-20% performance
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 26
+Niveau de
+déshydratation
+% poids
+perdu
+ Symptômes
+ Impact performance
+ 
+Importante
+3-4%
+Maux de tête, crampes, diminution
+de la force
+- 20-40% performance
+Sévère
+5-6%
+Nausées, vertiges, crampes sévères,
+confusion
+Danger pour la santé
+Critique
+> 8%
+Choc hypovolémique, perte de
+connaissance possible
+Urgence médicale
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 27
+13. NUTRITION & PATHOLOGIES
+AVERTISSEMENT MÉDICAL
+ Cette section est informative uniquement. Toute pathologie nécessite un suivi médical
+ L'application doit TOUJOURS recommander de consulter un médecin ou diététicien-nutritionniste
+ Ces recommandations sont des orientations générales, non des prescriptions médicales
+13.1 Diabète de type 2
+Le sport et la nutrition sont des leviers thérapeutiques majeurs dans le diabète de type 2. Une prise en charge
+nutritionnelle adaptée peut réduire ou éliminer le besoin de médicaments.
+Principe
+ Recommandation
+ Glucides
+Privilégier IG bas (< 55) — lentilles, légumes, céréales complètes | Éviter les sucres rapides isolés
+Fibres
+35-40 g/jour minimum — ralentissent l'absorption glucidique et la glycémie postprandiale
+Protéines
+1.4-1.8 g/kg/jour — stabilisent la glycémie, rassasient, préservent la masse musculaire
+Lipides
+Privilégier AGMI et oméga-3 — améliore la sensibilité insulinique
+Répartition
+3 repas équilibrés avec glucides à chaque repas (éviter les gros repas glucidiques)
+Alcool
+À éviter ou très limiter — risque d'hypoglycémie nocturne
+Activité physique
+Excellent outil : améliore la sensibilité insulinique jusqu'à 48h post-séance
+Glycémie
+Surveiller avant/après les séances — avoir des glucides rapides disponibles
+Suppléments
+Magnésium (améliore sensibilité insuline) | Oméga-3 | Vitamine D | Berberine (sous supervision)
+13.2 Hypertension artérielle
+Principe
+ Recommandation
+ Sodium
+Limiter < 2300 mg/jour (6g de sel) — lire les étiquettes (pain, fromage, charcuteries)
+Potassium
+Augmenter > 4700 mg/jour — banane, avocat, légumineuses, patate douce
+Magnésium
+350-420 mg/jour — vasodilatateur naturel
+Oméga-3
+2-4 g EPA+DHA/jour — réduction modérée de la PA systolique prouvée
+Alcool
+Limiter < 1 verre/jour femme, < 2 verres/jour homme
+Caféine
+Modérer (< 200 mg/jour) — peut élever temporairement la PA
+Poids
+Chaque kg perdu = réduction de 1-2 mmHg de PA systolique
+Régime DASH
+Recommandé : riche en fruits, légumes, céréales complètes, produits laitiers allégés
+13.3 Intolérances alimentaires & Régimes spéciaux
+Régime / Intolérance
+Impact sur nutrition sportive
+ Solutions & Substitutions
+ Intolérance au lactose
+Difficultés à utiliser whey classique,
+produits laitiers
+Whey isolate, whey végétale, yaourt lactase-traité, calcium via
+sardines/amandes
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 28
+Régime / Intolérance
+Impact sur nutrition sportive
+ Solutions & Substitutions
+ Intolérance au gluten
+(Coeliaque)
+Éviter avoine sauf certifiée GF, blé,
+seigle, orge
+Riz, quinoa, sarrasin, patate douce, maïs, pâtes de riz/pois chiches
+Végétarien (ovolacto)
+Manque possible de fer héminique,
+zinc, oméga-3
+Oeufs + laitages + légumineuses + noix + algues (DHA végétal)
+Végétalien (vegan)
+Risque B12, D3, oméga-3, zinc,
+fer, calcium, iode, protéines
+complètes
+B12 supplémentation obligatoire, protéines végé combinées, algues DHA
+Diabète type 1
+Gestion insuline complexe autour
+de l'effort
+Suivi médical obligatoire, glucides précis avant/pendant effort, CGM
+recommandé
+SIBO / Dysbiose
+intestinale
+Certains glucides fermentescibles
+mal tolérés (FODMAPs)
+Régime Low-FODMAP temporaire avec suivi diététicien, probiotiques ciblés
+Trouble du comportement
+alimentaire
+Programme nutritionnel sportif
+potentiellement problématique
+Suivi médical et psychologique AVANT tout programme nutritionnel sportif
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 29
+14. PLANS ALIMENTAIRES TYPES — EXEMPLES
+COMPLETS
+Ces plans sont des exemples indicatifs. Ils doivent être ajustés selon le poids, la taille, le niveau d'activité et les
+préférences individuelles.
+14.1 Plan — Homme 80 kg, Intermédiaire, Prise de masse
+Cible : 3000-3200 kcal | Protéines : 160g | Glucides : 380g | Lipides : 95g
+Moment
+ Aliments
+ Qté
+P
+G
+L
+ kcal
+ Petit-déjeuner 7h
+Flocons d'avoine + lait demi-écrémé + 3 blancs + 1
+oeuf entier + banane + amandes
+130g+30
+0ml+4+1
++120g+2
+0g
+38g
+95g
+18g
+680
+Collation 10h
+Skyr + granola maison + myrtilles
+200g+50
+g+100g
+20g
+50g
+8g
+350
+Déjeuner 13h
+Riz blanc + poulet grillé + courgettes sautées + huile
+d'olive + fromage râpé
+180g cuit
++220g+2
+00g+1cs
++20g
+52g
+75g
+20g
+690
+Pre-workout
+15h30
+Banane + beurre d'amande + eau
+1 banane
++30g
+8g
+38g
+16g
+320
+Post-workout
+17h30
+Whey + lait demi-écrémé + flocons + miel
+40g+300
+ml+50g+
+1cs
+50g
+80g
+10g
+610
+Dîner 20h
+Saumon au four + quinoa + épinards + avocat +
+citron
+200g+15
+0g cuit+1
+00g+1/2
+48g
+42g
+22g
+550
+Collation nuit 22h
+Fromage blanc 0% + noix + cacao
+300g+25
+g+5g
+30g
+16g
+16g
+320
+TOTAL
+246
+g
+396
+g
+110
+g
+3520
+14.2 Plan — Femme 65 kg, Intermédiaire, Tonification / Sèche
+Cible : 1800-1950 kcal | Protéines : 145g | Glucides : 175g | Lipides : 70g
+Moment
+ Aliments
+ Qté
+P
+G
+L
+ kcal
+ Petit-déjeuner 7h
+Omelette + épinards + 1 tranche pain complet + café
+3 oeufs+
+100g+30
+g
+22g
+20g
+14g
+290
+Collation 10h
+Skyr + fruits rouges + graines de chia
+200g+10
+0g+10g
+18g
+20g
+5g
+195
+Déjeuner 12h30
+Salade quinoa + thon + avocat + tomates +
+vinaigrette légère
+100g cuit
++120g+1/
+4+100g+
+1cs
+38g
+30g
+18g
+430
+Pre-workout 16h
+Whey dans eau + 1 datte
+25g+1
+datte
+20g
+20g
+1g
+165
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 30
+Moment
+ Aliments
+ Qté
+P
+G
+L
+ kcal
+ Post-workout
+17h30
+Riz blanc + blanc de poulet + haricots verts
+100g cuit
++180g+1
+50g
+42g
+30g
+4g
+320
+Dîner 20h
+Cabillaud au four + brocolis + patate douce + huile
+olive
+200g+20
+0g+150g
++1cs
+38g
+40g
+14g
+430
+Collation nuit 22h
+Fromage blanc 0% + cannelle (si faim)
+200g
+14g
+8g
+0g
+90
+TOTAL
+192
+g
+168
+g
+56g
+1920
+14.3 Plan — Profil Végétalien (Vegan), 75 kg, Masse
+Cible : 2800 kcal | Protéines : 140g | Glucides : 380g | Lipides : 85g
+Moment
+ Aliments
+ Qté
+P
+G
+L
+ kcal
+ Petit-déjeuner
+Flocons d'avoine + lait soja + banane + beurre
+cacahuète + graine chia
+100g+30
+0ml+1+3
+0g+15g
+22g
+90g
+18g
+600
+Collation
+Protéine végétale (pois/riz) dans lait avoine +
+poignée noix
+40g+250
+ml+25g
+28g
+40g
+16g
+410
+Déjeuner
+Riz complet + pois chiches + tofu grillé + légumes +
+huile olive + tahini
+150g cuit
++150g+1
+00g+200
+g+1cs+1
+cs
+32g
+80g
+20g
+620
+Collation
+Pain de seigle + houmous + concombre
+60g+100
+g+100g
+12g
+45g
+14g
+350
+Dîner
+Tempeh sauté + nouilles soba + édamame + sauce
+tamari + sésame
+150g+15
+0g cuit+1
+00g+2cs
++1cs
+38g
+80g
+18g
+630
+Nuit
+Protéine de chanvre + lait coco (léger) + fruits secs
+30g+150
+ml+30g
+18g
+35g
+12g
+310
+TOTAL
+150
+g
+370
+g
+98g
+2920
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 31
+15. ALIMENTS & VALEURS NUTRITIONNELLES — TABLES
+DE RÉFÉRENCE
+15.1 Sources de protéines — Classement et valeurs
+Aliment (100g)
+Protéine
+s
+Glucide
+s
+Lipides
+kcal
+ Indice protéique
+ 
+Blanc de poulet
+31g
+0g
+3.6g
+165
+■■■■■
+Thon (boite eau)
+26g
+0g
+0.5g
+108
+■■■■■
+Crevettes cuites
+24g
+0g
+1.2g
+99
+■■■■■
+Oeuf entier (2 oeufs)
+13g
+0.7g
+11g
+155
+■■■■■
+Saumon grillé
+25g
+0g
+13g
+217
+■■■■
+Boeuf maigre (5%)
+26g
+0g
+5g
+149
+■■■■
+Sardines (boite)
+25g
+0g
+11g
+208
+■■■■
+Fromage blanc 0%
+10g
+3.4g
+0.2g
+55
+■■■■
+Skyr nature
+11g
+4g
+0.2g
+62
+■■■■
+Tofu ferme
+8g
+1.9g
+4.8g
+83
+■■■
+Lentilles cuites
+9g
+20g
+0.4g
+116
+■■■
+Pois chiches cuits
+9g
+27g
+2.6g
+164
+■■■
+Edamame cuit
+11g
+8.5g
+5.2g
+121
+■■■
+Tempeh
+19g
+9g
+11g
+193
+■■■■
+Quinoa cuit
+4.4g
+21g
+1.9g
+120
+■■
+15.2 Sources de glucides complexes — Valeurs nutritionnelles
+Aliment (100g cuit)
+Glucides
+Fibres
+IG
+Protéines
+ kcal
+ Riz blanc cuit
+28g
+0.4g
+64
+2.7g
+130
+Riz complet cuit
+23g
+1.8g
+50
+2.6g
+111
+Pâtes blanches cuites
+25g
+1.8g
+50
+5g
+131
+Pâtes complètes cuites
+19g
+3.5g
+40
+5g
+124
+Flocons d'avoine secs
+60g
+10g
+55
+13g
+370
+Patate douce cuite
+17g
+2.5g
+44
+1.6g
+86
+Pomme de terre bouillie
+17g
+1.8g
+78
+2g
+87
+Quinoa cuit
+21g
+2.8g
+53
+4.4g
+120
+Lentilles cuites
+20g
+8g
+32
+9g
+116
+Pain complet (30g)
+12g
+2.1g
+51
+3g
+74
+Banane mûre
+23g
+2.6g
+52
+1.1g
+89
+Dattes (30g = 3 dattes)
+22g
+2g
+42
+0.6g
+83
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 32
+15.3 Sources de lipides de qualité
+Aliment (portion)
+Lipides tot.
+Oméga-3
+Oméga-6
+Saturés
+ kcal
+ Huile d'olive (1 cs = 15ml)
+14g
+0.1g
+1.3g
+2g
+119
+Huile de lin (1 cs = 15ml)
+14g
+7.6g
+2.0g
+1.2g
+119
+Huile de colza (1 cs = 15ml)
+14g
+1.3g
+2.6g
+1g
+119
+Avocat entier (150g)
+22g
+0.2g
+2.7g
+3.2g
+240
+Amandes (30g)
+14g
+0g
+3.5g
+1.1g
+173
+Noix (30g)
+18g
+2.5g
+10.8g
+1.7g
+185
+Graines de chia (30g)
+9g
+5g
+1.6g
+1g
+138
+Graines de lin broyées (30g)
+9g
+6.4g
+1.7g
+0.8g
+150
+Saumon (150g)
+13g
+3.1g
+1.4g
+2.5g
+218
+Maquereau (150g)
+14g
+3.5g
+1.2g
+3.3g
+230
+Oeuf entier (1 = 60g)
+5.3g
+0.04g
+0.7g
+1.6g
+78
+Beurre de cacahuète (30g)
+16g
+0g
+4.8g
+3g
+190
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 33
+16. DONNÉES STRUCTURÉES — RÉFÉRENCE POUR
+DÉVELOPPEURS
+Structures JSON recommandées pour implémenter la logique nutritionnelle de l'application.
+16.1 Profil nutritionnel utilisateur
+{
+  "nutrition_profile": {
+    "user_id": "string",
+    "bmr": "number (kcal/jour)",
+    "tdee": "number (kcal/jour)",
+    "objectif_calorique": "number (kcal/jour)",
+    "surplus_deficit": "number (kcal/jour, positif=surplus, négatif=déficit)",
+    "macros_cible": {
+      "proteines_g": "number",
+      "glucides_g":  "number",
+      "lipides_g":   "number",
+      "calories":    "number"
+    },
+    "ratio_macros": {
+      "proteines_pct": "number",
+      "glucides_pct":  "number",
+      "lipides_pct":   "number"
+    },
+    "besoins_eau_ml": "number",
+    "nb_repas_recommandes": "number (3-6)",
+    "timing_actif": "boolean",
+    "supplements_recommandes": ["string"],
+    "restrictions_alimentaires": ["string"],
+    "allergies": ["string"]
+  }
+}
+16.2 Structure d'un aliment
+{
+  "aliment": {
+    "id": "string",
+    "nom": "string",
+    "nom_en": "string",
+    "categorie": "proteine | glucide | lipide | legume | fruit | boisson | supplement",
+    "sous_categorie": "string",
+    "pour_100g": {
+      "calories_kcal": "number",
+      "proteines_g":   "number",
+      "glucides_g":    "number",
+      "dont_sucres_g": "number",
+      "lipides_g":     "number",
+      "dont_satures_g":"number",
+      "fibres_g":      "number",
+      "sodium_mg":     "number"
+    },
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 34
+    "index_glycemique": "number | null",
+    "charge_glycemique": "number | null",
+    "score_qualite_proteique": "number (0-100, DIAAS)",
+    "allergenes": ["gluten","lait","oeufs","soja","fruits_a_coque"],
+    "convient_pour": ["vegan","vegetarien","sans_gluten","sans_lactose"],
+    "moment_optimal": ["petit_dejeuner","pre_workout","post_workout","repas","collation","nuit"],
+    "portion_standard_g": "number",
+    "disponibilite": "supermarche | magasin_bio | pharmacie | en_ligne"
+  }
+}
+16.3 Structure d'un repas / plan nutritionnel
+{
+  "plan_nutritionnel": {
+    "id": "string",
+    "user_id": "string",
+    "semaine": "number",
+    "jours": [
+      {
+        "jour": "lundi | mardi | ...",
+        "type_jour": "entrainement | repos | leger",
+        "cible_calories": "number",
+        "repas": [
+          {
+            "nom": "Petit-déjeuner",
+            "heure_recommandee": "07:30",
+            "aliments": [
+              {
+                "aliment_id": "string",
+                "quantite_g": "number",
+                "calories": "number",
+                "proteines_g": "number",
+                "glucides_g": "number",
+                "lipides_g": "number"
+              }
+            ],
+            "totaux": {
+              "calories": "number",
+              "proteines_g": "number",
+              "glucides_g": "number",
+              "lipides_g": "number"
+            },
+            "notes": "string"
+          }
+        ],
+        "totaux_journee": {
+          "calories": "number",
+          "proteines_g": "number",
+          "glucides_g": "number",
+          "lipides_g": "number",
+          "eau_ml": "number"
+        }
+      }
+    ]
+  }
+}
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 35
+16.4 Algorithme de génération du plan nutritionnel
+LOGIQUE DE RECOMMANDATION — 12 ÉTAPES
+ 1. Calculer le BMR (Mifflin-St Jeor selon âge, poids, taille, sexe)
+ 2. Appliquer le coefficient NAP selon le niveau d'activité déclaré → TDEE
+ 3. Ajuster selon l'objectif (surplus / déficit / maintenance)
+ 4. Calculer les macros selon morphotype, IMC et objectif
+ 5. Filtrer les aliments selon allergies, intolérances et restrictions (végé, vegan, etc.)
+ 6. Filtrer selon le budget (optionnel) et la disponibilité locale
+ 7. Construire les repas selon la fréquence recommandée et le timing d'entraînement
+ 8. Optimiser la répartition des protéines (min. 0.3-0.4g/kg par repas pour MPS)
+ 9. Appliquer le carb cycling si profil avancé ou objectif recomposition
+ 10. Intégrer les suppléments recommandés selon le profil
+ 11. Générer les alternatives pour chaque repas (diversité alimentaire)
+ 12. Réévaluer toutes les 2-4 semaines selon les résultats mesurés
+
+DOCUMENTATION NUTRITION SPORT
+Guide complet pour application de fitness
+© Documentation Nutrition Fitness App — Usage interne
+Page 36
+FIN DE LA DOCUMENTATION Documentation de référence nutrition pour application fitness
+ 16 sections  Macronutriments  Micronutriments  Timing  Suppléments  Pathologies  JSON
+ 

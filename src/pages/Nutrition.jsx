@@ -1,22 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { motion } from 'framer-motion';
-import { UtensilsCrossed, CheckCircle2, Circle, Flame, Droplets } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { UtensilsCrossed, CheckCircle2, Circle, Flame, Info } from 'lucide-react';
 import { calculateMacros, calculateTDEE } from '../utils/calculations';
+import { getMealPlan } from '../utils/nutritionGenerator';
 
 export default function Nutrition() {
   const { profile, user } = useAuth();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Simplified meals structure based on objectives
-  const meals = [
-    { id: 'm1', timing: 'petit_dejeuner', nom: 'Petit-déjeuner', ratio: 0.25 },
-    { id: 'm2', timing: 'dejeuner', nom: 'Déjeuner', ratio: 0.35 },
-    { id: 'm3', timing: 'collation', nom: 'Collation', ratio: 0.10 },
-    { id: 'm4', timing: 'diner', nom: 'Dîner', ratio: 0.30 },
-  ];
+  const [expandedMeal, setExpandedMeal] = useState(null);
 
   useEffect(() => {
     if (user) loadLogs();
@@ -34,7 +28,8 @@ export default function Nutrition() {
     setLoading(false);
   }
 
-  async function toggleMeal(mealId) {
+  async function toggleMeal(e, mealId) {
+    e.stopPropagation(); // Empêcher l'expansion de la carte quand on clique sur le bouton check
     const todayStr = new Date().toISOString().split('T')[0];
     const existing = logs.find(l => l.meal_id === mealId);
     
@@ -42,10 +37,6 @@ export default function Nutrition() {
       await supabase.from('nutrition_logs').update({ consomme: !existing.consomme }).eq('id', existing.id);
       setLogs(logs.map(l => l.id === existing.id ? { ...l, consomme: !existing.consomme } : l));
     } else {
-      // Need UUID for meal_id, but we are faking meals without DB rows for now to keep it simple.
-      // In a real app we would seed meals per plan. Let's just use notes to store the meal type for now if we don't have UUID meals.
-      // Actually, since nutrition_logs requires a UUID meal_id, this might fail if we pass a string.
-      // Let's just mock the state for the UI demonstration.
       const newLog = { id: Math.random().toString(), meal_id: mealId, consomme: true, date: todayStr };
       setLogs([...logs, newLog]);
     }
@@ -62,6 +53,25 @@ export default function Nutrition() {
       )
     : { calories: 0, proteines: 0, glucides: 0, lipides: 0 };
 
+  const mealPlan = getMealPlan(profile?.objectif || 'maintien');
+  let meals = [];
+  if (isTrainingDay) {
+    meals = [
+      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, ratio: 0.20 },
+      { id: 'm2', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, ratio: 0.30 },
+      { id: 'm3', type: 'Pré-Workout', nom: mealPlan.pre_workout.nom, desc: mealPlan.pre_workout.description, ratio: 0.10 },
+      { id: 'm4', type: 'Post-Workout', nom: mealPlan.post_workout.nom, desc: mealPlan.post_workout.description, ratio: 0.15 },
+      { id: 'm5', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, ratio: 0.25 },
+    ];
+  } else {
+    meals = [
+      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, ratio: 0.25 },
+      { id: 'm2', type: 'Collation', nom: mealPlan.collation.nom, desc: mealPlan.collation.description, ratio: 0.10 },
+      { id: 'm3', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, ratio: 0.35 },
+      { id: 'm4', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, ratio: 0.30 },
+    ];
+  }
+
   const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } };
   const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 
@@ -70,7 +80,7 @@ export default function Nutrition() {
       <motion.div variants={container} initial="hidden" animate="show">
         <motion.div variants={item} className="page-header">
           <h1 className="headline-md">Nutrition</h1>
-          <span className="chip chip--secondary">{isTrainingDay ? 'Jour d\'entraînement' : 'Jour de repos'}</span>
+          <span className="chip chip--secondary">{isTrainingDay ? "Jour d'entraînement" : "Jour de repos"}</span>
         </motion.div>
 
         {/* Macros Summary */}
@@ -110,9 +120,13 @@ export default function Nutrition() {
 
         {/* Meals List */}
         <motion.div variants={item}>
-          <p className="section-label mb-4">Repas du jour</p>
+          <div className="flex justify-between items-center mb-4">
+            <p className="section-label">Plan Alimentaire Suggéré</p>
+            <span className="label-sm text-muted">Cliquez pour voir les ingrédients</span>
+          </div>
           {meals.map((meal) => {
             const isConsumed = logs.some(l => l.meal_id === meal.id && l.consomme);
+            const isExpanded = expandedMeal === meal.id;
             const mCals = Math.round(macros.calories * meal.ratio);
             const mPro = Math.round(macros.proteines * meal.ratio);
             const mGlu = Math.round(macros.glucides * meal.ratio);
@@ -120,22 +134,43 @@ export default function Nutrition() {
 
             return (
               <div key={meal.id} className={`card mb-3 ${isConsumed ? 'card--recessed' : 'card--elevated'}`} 
-                   style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', transition: 'all 0.3s' }}
-                   onClick={() => toggleMeal(meal.id)}>
+                   style={{ padding: 'var(--space-4)', transition: 'all 0.3s', cursor: 'pointer' }}
+                   onClick={() => setExpandedMeal(isExpanded ? null : meal.id)}>
                 
-                <button style={{ background: 'none', border: 'none', color: isConsumed ? 'var(--primary)' : 'var(--outline)', cursor: 'pointer', marginRight: 'var(--space-4)' }}>
-                  {isConsumed ? <CheckCircle2 size={24} /> : <Circle size={24} />}
-                </button>
-                
-                <div style={{ flex: 1 }}>
-                  <h3 className="title-md" style={{ textDecoration: isConsumed ? 'line-through' : 'none', color: isConsumed ? 'var(--on-surface-variant)' : 'var(--on-surface)' }}>
-                    {meal.nom}
-                  </h3>
-                  <div className="flex gap-3 mt-1">
-                    <span className="label-sm text-primary">{mCals} kcal</span>
-                    <span className="label-sm text-muted">P:{mPro}g G:{mGlu}g L:{mLip}g</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <button onClick={(e) => toggleMeal(e, meal.id)} style={{ background: 'none', border: 'none', color: isConsumed ? 'var(--primary)' : 'var(--outline)', cursor: 'pointer', marginRight: 'var(--space-4)', marginTop: '2px' }}>
+                    {isConsumed ? <CheckCircle2 size={24} /> : <Circle size={24} />}
+                  </button>
+                  
+                  <div style={{ flex: 1 }}>
+                    <p className="label-sm text-muted mb-1">{meal.type}</p>
+                    <h3 className="title-md" style={{ textDecoration: isConsumed ? 'line-through' : 'none', color: isConsumed ? 'var(--on-surface-variant)' : 'var(--on-surface)' }}>
+                      {meal.nom}
+                    </h3>
+                    <div className="flex gap-3 mt-1">
+                      <span className="label-sm text-primary">{mCals} kcal</span>
+                      <span className="label-sm text-muted">P:{mPro}g G:{mGlu}g L:{mLip}g</span>
+                    </div>
                   </div>
                 </div>
+
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                      animate={{ height: 'auto', opacity: 1, marginTop: 16 }}
+                      exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div className="card card--glass" style={{ padding: 'var(--space-3)', background: 'rgba(255,255,255,0.03)' }}>
+                        <div className="flex items-start gap-2">
+                          <Info size={16} className="text-muted" style={{ marginTop: '2px', flexShrink: 0 }} />
+                          <p className="body-sm text-muted">{meal.desc}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
