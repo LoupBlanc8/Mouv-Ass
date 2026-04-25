@@ -9,6 +9,7 @@ const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi
 
 function getExerciseImage(nom) {
   const nomLower = (nom || '').toLowerCase();
+  if (nomLower.includes('incliné') || nomLower.includes('incline')) return '/exercises/developpe-incline-halteres.gif';
   if (nomLower.includes('développé') || nomLower.includes('bench') || nomLower.includes('pec')) return '/exercises/developpe-couche.gif';
   if (nomLower.includes('pompe') || nomLower.includes('push')) return '/exercises/pompe.gif';
   if (nomLower.includes('traction') || nomLower.includes('pull') || nomLower.includes('muscle-up')) return '/exercises/traction.gif';
