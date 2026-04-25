@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
 import { Flame, Droplets, Dumbbell, ChevronRight, Trophy, Plus, Minus } from 'lucide-react';
 import { calculateMacros, calculateTDEE, calculateHydratation } from '../utils/calculations';
+import { getRankProgress } from '../utils/gamification';
 
 const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
@@ -107,6 +108,9 @@ export default function Dashboard() {
   const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } };
   const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
+  // Calculate XP Progress
+  const xpData = getRankProgress(profile?.xp || 0);
+
   return (
     <div className="page">
       <motion.div variants={container} initial="hidden" animate="show">
@@ -120,6 +124,24 @@ export default function Dashboard() {
             <Flame size={18} className="text-warning" />
             <span className="title-md">{workoutCount}</span>
           </div>
+        </motion.div>
+
+        {/* XP Progress Bar */}
+        <motion.div variants={item} className="card mb-6" style={{ padding: 'var(--space-4)', position: 'relative', overflow: 'hidden', border: '1px solid rgba(0, 229, 255, 0.2)' }}>
+          <div style={{ position: 'absolute', top: -30, right: -30, width: 100, height: 100, background: 'radial-gradient(circle, rgba(124, 77, 255, 0.15) 0%, transparent 70%)', borderRadius: '50%' }} />
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Trophy size={18} style={{ color: '#00E5FF' }} />
+              <span className="title-md" style={{ fontFamily: 'Space Grotesk' }}>{xpData.currentRank}</span>
+            </div>
+            <span className="label-sm" style={{ color: '#00E5FF', fontWeight: 700 }}>{profile?.xp || 0} XP</span>
+          </div>
+          <div className="progress-bar mb-2" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.05)' }}>
+            <div className="progress-bar__fill" style={{ width: `${xpData.progress}%`, background: 'linear-gradient(90deg, #00E5FF, #7C4DFF)', boxShadow: '0 0 10px rgba(0, 229, 255, 0.5)' }} />
+          </div>
+          {xpData.nextRank && (
+            <p className="label-sm text-right" style={{ color: '#adaaaa' }}>Plus que {xpData.xpToNext} XP pour <span style={{ color: '#fff' }}>{xpData.nextRank}</span></p>
+          )}
         </motion.div>
 
         {/* Week Progress */}

@@ -1,0 +1,729 @@
+DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 1 — Street Workout Documentation v1.0 — 2025  
+ 
+ 
+ 
+STREET WORKOUT  
+DOCUMENTATION COMPLÈTE  
+Pour le développement d'une application mobile de sport  
+ 
+ 
+Maison • Parc • Toutes morphologies • Tous niveaux • Tous IMC  
+ 
+ 
+Version 1.0 — 2025 
+ 
+ 
+ 
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 2 — Street Workout Documentation v1.0 — 2025 1. Introduction au Street Workout  
+1.1 Définition et philosophie  
+Le street workout est une discipline sportive basée sur des exercices de musculation au 
+poids du corps, pratiqués en extérieur (parcs, rues) ou à domicile. Il s'agit d'une forme 
+d'entraînement fonctionnel qui développe la force, l'endurance musculaire, la coordination, 
+l'équilibre et la souplesse, sans équipement coûteux.  
+ 
+La philosophie du street workout repose sur trois piliers fondamentaux :  
+• La liberté : s'entraîner n'importe où, n'importe quand, sans abonnement  
+• La progressivité : chaque individu évolue à son propre rythme  
+• L'accessibilité : adapté à toutes les morphologies et tous les niveaux  
+1.2 Histoire et origines  
+Né dans les quartiers de New York dans les années 1970 -1980, le street workout trouve ses 
+racines dans les arts martiaux, la gymnastique et les exercices militaires. Il s'est 
+démocratisé en Europe de l'Est dans les années 2000 avant de se répandre mondialement. 
+Des figures comme Hannibal for King aux États -Unis ont popularisé la discipline sur les 
+réseaux sociaux dans les années 2010.  
+1.3 Bénéfices scientifiquement prouvés  
+Bénéfice  Description  Délai visible  
+Force fonctionnelle  Développe la force dans des mouvements 
+naturels multi -articulaires  4-8 semaines  
+Composition corporelle  Réduction de la masse grasse, augmentation 
+de la masse maigre  6-12 
+semaines  
+Santé articulaire  Renforce les tendons et ligaments par le travail 
+progressif  8-16 
+semaines  
+Équilibre & proprioception  Améliore le contrôle neuromusculaire  2-4 semaines  
+Santé cardiovasculaire  Améliore le VO2max et la récupération 
+cardiaque  4-8 semaines  
+Santé mentale  Réduit le cortisol, augmente la dopamine et 
+sérotonine  2-4 semaines  
+Posture  Rééquilibre les chaînes musculaires, corrige les 
+déséquilibres  6-12 
+semaines  
+ 
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 3 — Street Workout Documentation v1.0 — 2025 2. Classification des Profils Utilisateurs  
+2.1 Profils par IMC (Indice de Masse Corporelle)  
+L'IMC (poids en kg / taille² en m) est un premier indicateur. Il ne doit jamais être le seul 
+critère : la composition corporelle, l'âge, le sexe et l'état de santé  général sont tout aussi 
+importants.  
+ 
+Profil IMC  Valeur  Adaptations spécifiques  Précautions  
+Maigreur sévère  < 16.5  Priorité à la prise de masse — 
+charges légères, volume faible  Consultation médicale 
+obligatoire avant tout 
+programme  
+Maigreur  16.5 – 
+18.5 Construction musculaire 
+progressive, focus sur la 
+récupération  Surveiller l'apport calorique, 
+éviter le surentraînement  
+Poids normal  18.5 – 
+24.9 Tous les programmes 
+disponibles, progression libre  Programme standard avec 
+variations  
+Surpoids  25 – 29.9 Adapter les exercices au sol, 
+privilégier le cardio d'abord  Éviter les impacts 
+articulaires excessifs  
+Obésité modérée  30 – 34.9 Exercices adaptés, progression 
+lente, travail debout préféré  Suivi médical recommandé, 
+attention aux genoux et 
+hanches  
+Obésité sévère  35 – 39.9 Marche, exercices debout, 
+mobilité articulaire prioritaire  Obligatoire : avis médical, 
+adaptation maximale  
+Obésité morbide  > 40 Programme de réactivation très 
+progressive, mobilité seule  Suivi médical obligatoire, 
+programme personnalisé 
+uniquement  
+2.2 Profils par niveau d'expérience  
+Niveau 1 — Débutant (0 à 6 mois)  
+Aucune ou très peu d'expérience sportive. L'objectif est de créer des habitudes motrices de 
+base, de renforcer les tendons et ligaments, et d'établir une routine régulière.  
+• Ne peut pas effectuer une traction complète  
+• Ne peut pas effectuer une pompe correcte en position normale  
+• Cardio limité (< 15 min d'effort continu)  
+• Récupération lente (72h+ entre séances intenses)  
+Niveau 2 — Intermédiaire (6 mois à 2 ans)  
+Bases maîtrisées. Commence à enchaîner des séries, améliore la  technique et explore de 
+nouveaux exercices.  
+• 5-10 pompes parfaites en série  
+• 1-5 tractions contrôlées  
+• Endurance musculaire développée sur exercices de base  
+• Comprend les phases d'entraînement et de récupération  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 4 — Street Workout Documentation v1.0 — 2025 Niveau 3 — Avancé (2 à 5 ans)  
+Maîtrise technique solide, capable de travailler en force maximale et en endurance. 
+Commence les éléments de skill (compétences gymniques).  
+• 15+ pompes parfaites en série, variations difficiles  
+• 10+ tractions, variations L -sit, archer pull -ups 
+• Maîtrise du mu scle-up en progression  
+• Capacité à programmer son entraînement seul  
+Niveau 4 — Expert (5+ ans)  
+Maîtrise complète des mouvements de force et début des éléments statiques (flag humain, 
+planche, etc.).  
+• Muscle -up en séries  
+• Éléments statiques : L -sit, planche, h uman flag en progression  
+• Compréhension avancée de la périodisation  
+2.3 Profils par morphologie (somatotypes)  
+Somatotype  Caractéristiques  Forces 
+naturelles  Points 
+d'attention  Adaptations  
+Ectomorphe  Ossature fine, 
+métabolisme rapide, 
+prise de masse 
+difficile  Endurance, 
+légèreté pour 
+tractions  Force maximale, 
+résistance au 
+froid Plus de 
+récupération, 
+alimentation 
+hypercalorique, 
+moins de cardio  
+Mésomorphe  Ossature moyenne, 
+prise de masse et de 
+force facile  Toutes les 
+qualités 
+physiques  Tendance au 
+surmenage  Programme 
+standard — 
+progression rapide 
+possible  
+Endomorphe  Ossature large, 
+métabolisme lent, 
+prise de masse facile  Force brute, 
+puissance  Tractions et 
+exercices au 
+poids du corps, 
+perte de graisse  Focus cardio -
+résistance, déficit 
+calorique, 
+exercices debout  
+2.4 Profils par situation personnelle  
+Femmes — spécificités  
+Les femmes présentent des différences physiologiques importantes à prendre en compte 
+dans la programmation :  
+• Cycle menstruel : adapter l'intensité selon les phases (folliculaire = intensité haute, 
+lutéale = récupération)  
+• Grossesse : programme dédié obligat oire, consultation médicale préalable  
+• Post-partum : retour progressif après validation médicale (minimum 6 -8 semaines)  
+• Ménopause : travailler davantage la densité osseuse (impact modéré), équilibre 
+hormonal  
+• Objectifs différents en moyenne : tonification vs  hypertrophie — les deux sont 
+atteignables  
+💡 Les femmes progressent aussi vite que les hommes en force relative. La différence de résultats 
+visuels est principalement due aux hormones, pas à l'effort.  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 5 — Street Workout Documentation v1.0 — 2025 Seniors (60+)  
+• Priorité à la mobilité articulaire et à l'équilibre  
+• Récupération plus longue : 2 -3 jours entre séances musculaires  
+• Travail excentrique important pour la prévention des chutes  
+• Éviter les exercices à fort impact et les positions inversées prolongées  
+• Consulta tion médicale fortement recommandée avant démarrage  
+Adolescents (13 -17 ans)  
+• Éviter les charges lourdes avant la fin de la croissance osseuse  
+• Le street workout est idéal : poids du corps adapté à la croissance  
+• Focus sur la technique plutôt que la performanc e 
+• Supervision recommandée pour les éléments avancés  
+💡 Éviter les exercices compressifs vertébraux lourds chez les adolescents en croissance.  
+Personnes avec pathologies courantes  
+Pathologie  Exercices à éviter  Exercices 
+recommandés  Précautions  
+Lombalgie 
+chronique  Soulevé de terre 
+lourd, sit -ups 
+classiques, 
+Superman  Gainage, bird -dog, 
+pont fessier, tractions 
+assistées  Renforcer les muscles 
+stabilisateurs du core en 
+priorité  
+Douleurs genoux  Squats profonds, 
+fentes profondes, 
+sauts avec impact  Squats partiels, wall -
+sit, extension jambe, 
+marche  Éviter la flexion > 90° si 
+douloureux  
+Épaule 
+douloureuse  Dips, pompes larges, 
+tractions prises larges  Rowing neutre, 
+rotation externe, 
+exercices core  Renforcer la coiffe des 
+rotateurs avant tout  
+Hypertension  Exercices 
+isométriques 
+prolongés, effort 
+maximal  Cardio modéré, 
+résistance légère en 
+circuit  Surveiller la fréquence 
+cardiaque, éviter l'apnée  
+Diabète type 2  Jeûne prolongé avant 
+entraînement  Tout programme 
+adapté à l'intensité de 
+départ  Surveiller la glycémie 
+avant/après séance  
+Asthme  Exercices par temps 
+froid/sec sans 
+préparation  Tout si bien échauffé, 
+avoir son traitement  Échauffement long, éviter 
+les efforts maximaux  
+ 
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 6 — Street Workout Documentation v1.0 — 2025 3. Exercices Fondamentaux — Catalogue 
+Complet  
+Chaque exercice est documenté avec : la description technique, les muscles cibles, les 
+variantes adaptatives, les erreurs communes et les progressions recommandées.  
+3.1 Poussée — Chaîne antérieure haut du corps  
+POMPES (Push -ups)  
+Muscles cibles : Grand pect oral, Triceps, Deltoïde antérieur, Dentelé antérieur, Gainage 
+central  
+ 
+Technique d'exécution :  
+1. Position planche : corps aligné, mains à largeur d'épaules ou légèrement plus larges  
+2. Descente : coudes à environ 45° du corps, poitrine vers le sol  
+3. Position basse : poitrine à 2 -3 cm du sol, corps toujours gainé  
+4. Montée : pousser le sol, expirer, corps aligné sans compensation  
+ 
+Variantes du plus facile au plus difficile :  
+Variante  Difficulté  Muscles prioritaires  Pour qui  
+Pompe contre mur  ★☆☆☆☆  Pectoraux (activation 
+douce)  Débutant absolu, obésité, 
+senior  
+Pompe inclinée (mains 
+surélevées)  ★★☆☆☆  Pectoraux bas  Débutant, surpoids, retour de 
+blessure  
+Pompe aux genoux  ★★☆☆☆  Pectoraux, triceps (60% 
+charge)  Débutant, IMC élevé  
+Pompe standard  ★★★☆☆  Pectoraux, triceps 
+(100%)  Intermédiaire+  
+Pompe déclinée (pieds 
+surélevés)  ★★★☆☆  Pectoraux hauts, 
+deltoïdes  Intermédiaire+  
+Pompe diamant (mains 
+proches)  ★★★★☆  Triceps prioritaire  Avancé  
+Pompe archer (latérale)  ★★★★☆  Pectoraux unilatéral  Avancé  
+Pompe Pike (fesses en 
+l'air) ★★★★☆  Épaules, triceps  Avancé  
+Pompe Pike verticale 
+(HSPU assisté)  ★★★★★  Deltoïdes prioritaire  Expert  
+Handstand Push -up 
+(HSPU)  ★★★★★  Épaules, triceps (corps 
+inversé)  Expert  
+💡 Ne jamais laisser les hanches s'affaisser ou monter — le gainage est la clé de sécurité des 
+pompes.  
+DIPS  
+Muscles cibles : Triceps, Pectoraux (partie basse), Deltoïde antérieur  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 7 — Street Workout Documentation v1.0 — 2025 Équipement : Barres parallèles, chaise solide, rebord de table, anneaux  
+ 
+Variantes progressives :  
+• Dips assistés chaise (jambes au sol) — Débutant  
+• Dips sur chaise jambes tendues — Début -Intermédiaire  
+• Dips barres parallèles — Intermédiaire  
+• Dips lestés — Avancé  
+• Dips anneaux — Expert  
+💡 Éviter les dips si douleur à l'épaule. Ne pas descendre plus bas que 90° de flexion du coude en 
+phase d'apprentissage.  
+3.2 Traction — Chaîne postérieure haut du corps  
+TRACTIONS (Pull -ups / Chin -ups)  
+Muscles cibles : Grand dorsal, Biceps, Rhomboïdes, Tra pèze moyen/inférieur, Biceps 
+brachial  
+ 
+Variante  Prise  Muscles prioritaires  Difficulté  
+Chin-up (prise 
+supination)  Paumes vers 
+soi Biceps + Grand dorsal  ★★★☆☆  
+Pull-up (prise pronation)  Paumes loin 
+de soi  Grand dorsal + 
+Rhomboïdes  ★★★★☆  
+Prise neutre (paumes 
+face à face)  Parallèle  Grand dorsal + Brachial  ★★★☆☆  
+Prise large pronation  Largeur 
+épaules 
++50%  Grand dorsal élargi  ★★★★☆  
+Commando pull -up 
+(alterné)  Un de chaque 
+côté Déséquilibre latéral 
+travaillé  ★★★★☆  
+L-sit pull -up Pronation + 
+jambes 
+tendues  Core + Grand dorsal  ★★★★★  
+Archer pull -up Large, bras 
+quasiment 
+tendu  Unilatéral grand dorsal  ★★★★★  
+One arm assisted  Un bras + 
+aide poignet  Progression one arm  ★★★★★  
+ 
+Progressions pour débutant incapable de faire une traction :  
+5. Dead hang : tenir en position suspendue, bras tendus — 3x10 -30 secondes  
+6. Scapular pull -up : élévation des épaules sans plier les coudes — 3x10  
+7. Negative pull -up : monter avec aide, descendre lentement seul — 3x5 
+8. Banded pull -up : élastique sous les pieds pou r réduire le poids — 3x8 
+9. Traction assistée partenaire : aide légère dans le bas du dos — 3x6 
+10. 1ère traction complète : félicitation !  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 8 — Street Workout Documentation v1.0 — 2025 3.3 Bas du corps  
+SQUATS  
+Muscles cibles : Quadriceps, Ischio -jambiers, Fessiers, Soléaire, Érecteurs du rachis  
+ 
+Variante  Difficulté  Focus musculaire  Adapté pour  
+Squat assisté (chaise 
+derrière)  ★★☆☆☆  Quadriceps, initiation  Débutant, senior, surpoids  
+Squat goblet (avec poids 
+imaginaire)  ★★★☆☆  Full body bas, 
+posture  Débutant -Intermédiaire  
+Squat bulgare (pied 
+arrière surélevé)  ★★★★☆  Fessiers, quad 
+unilatéral  Intermédiaire -Avancé  
+Squat sumo  ★★★☆☆  Adducteurs, fessiers  Toutes morphologies  
+Pistol squat assisté (aide 
+d'un support)  ★★★★☆  Unilatéral complet  Avancé  
+Pistol squat  ★★★★★  Force unilatérale 
+totale  Expert  
+Squat sauté (Jump 
+squat)  ★★★☆☆  Puissance explosive  Intermédiaire, bon IMC  
+FENTES (Lunges)  
+• Fente statique avant — débutant  
+• Fente marchée — intermédiaire  
+• Fente latérale — Adducteurs, mobilité hanche  
+• Fente arrière (plus sécurisée pour genoux) — débutant avec douleurs  
+• Fente sautée — avancé/explosivité  
+PONT FESSIER (Glute Bridge / Hip Thrust)  
+Exercice incontournable pour les fessiers, la chaîne postérieure et la protection lombaire.  
+• Pont simple couché : deux jambes fléchies — débutant  
+• Pont une jambe (Single leg glute bridge) — intermédiaire  
+• Hip thrust (épaules sur banc/canapé) — intermédiaire -avancé  
+• Hip thrust lestés — avancé  
+3.4 Core — Gainage et abdominaux  
+GAINAGE  
+Exercice  Muscles  Durée cible 
+débutant  Durée cible 
+avancé  
+Planche frontale (Plank)  Transverse, iliopsoas, 
+érecteurs  20-30s 90s-3min 
+Planche latérale (Side plank)  Obliques, abducteurs  15-20s 60s-2min 
+Planche dynamique 
+(alternance bras)  Core + stabilisation 
+épaule  5-10 reps  20-30 reps  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 9 — Street Workout Documentation v1.0 — 2025 RKC Plank (tension 
+maximale)  Core profond, fessiers  10-15s 30-45s 
+Hollow body hold  Abdominaux profonds, 
+fixateurs  15-20s 60s+ 
+ABDOMINAUX DYNAMIQUES  
+• Crunch classique — éviter la nuque tirée  
+• Crunch bicycle (vélo) — obliques + rectus  
+• Leg raises (levée de jambes) — abdominaux bas  
+• V-up — abdominaux complets  
+• Dragon flag (partiel puis complet) — niveau expert  
+• L-sit (sol ou barres) — abdominaux + triceps + flexeurs hanches  
+💡 Éviter les sit -ups complets avec pieds bloqués : surcharge lombaire. Préférer le crunch 
+contrôlé.  
+MOBILITÉ ET GAINAGE LOMBAIRE  
+• Bird-dog : extension bras/jambe opposés en quadrupédie — 10 reps/côté  
+• Superman : extension dorsale au sol — 10-15 reps  
+• Cat-cow : mobilité rachidienne en quadrupédie — 10 reps  
+• Dead bug : stabilisation anti -extension — 10 reps/côté  
+3.5 Exercices complets et skills avancés  
+Skill Prérequis  Temps 
+d'apprentissage 
+moyen  Valeur dans une app  
+Muscle -up 
+(barre)  10+ tractions, 15+ di ps 3-12 mois  Objectif phare 
+intermédiaire -avancé  
+Muscle -up 
+(anneaux)  Muscle -up barre 
+maîtrisé  6-18 mois  Progression naturelle  
+Front lever  10+ tractions L -sit 6-24 mois  Isométrique de prestige  
+Back lever  Bonne mobilité épaule  3-12 mois  Plus accessible que front 
+lever 
+Human flag  Force latérale 
+exceptionnelle  12-36 mois  Icône du street workout  
+Planche 
+(Planche Push -
+up) Handstand solide, force 
+pectoraux  24-60 mois  Sommet du street workout  
+Handstand 
+(équilibre)  Force épaules, gainage  3-12 mois  Accessible avec 
+entraînement dédié  
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 10 — Street Workout Documentation v1.0 — 2025 4. Programmes d'Entraînement Structurés  
+Les programmes ci -dessous sont conçus pour l'application et couvrent toutes les situations. 
+Chaque programme suit la structure : Échauffement → Bloc principal → Récupération.  
+4.1 Programme DÉBUTANT ABSOLU — 4 semaines  
+Objectif : Créer les bases motrices, h abituer les tendons et ligaments, développer la 
+régularité.  
+Fréquence : 3 séances / semaine (ex: Lundi, Mercredi, Vendredi) | Durée : 30 -40 min  
+ 
+Semaine  Exercice  Séries × Répétitions  Repos  
+S1-S2 Pompes inclinées ou aux 
+genoux  3 × 5 -8 90 sec  
+S1-S2 Squat assisté (chaise)  3 × 8 -10 90 sec  
+S1-S2 Planche (genoux)  3 × 15 -20 sec  60 sec  
+S1-S2 Bird-dog 2 × 8/côté  60 sec  
+S1-S2 Dead hang (suspension)  2 × 10 -20 sec  90 sec  
+S3-S4 Pompes standard ou inclinées  3 × 6 -10 90 sec  
+S3-S4 Squat libre  3 × 10 -12 90 sec  
+S3-S4 Planche frontale  3 × 20 -30 sec  60 sec  
+S3-S4 Negative pull -up (si possible)  3 × 3 -5 120 sec  
+S3-S4 Pont fessier  3 × 12 -15 60 sec  
+4.2 Programme INTERMÉDIAIRE — Prise de force  
+Objectif : Augmenter la force et l'endurance musculaire, atteindre des jalons (première 
+traction, 20 pompes, etc.)  
+Fréquence : 4 séances / semaine (Push/Pull/Bas/Core) | Durée : 45 -60 min  
+ 
+Jour 1 — PUSH (Poussée) :  
+• Pompes — 4 × 10 -15 (choisir la variante a u 80% du max)  
+• Dips assistés ou sur chaise — 3 × 8 -12 
+• Pike push -up — 3 × 8 -10 
+• Planche RKC — 3 × 20 -30s 
+ 
+Jour 2 — PULL (Tirage) :  
+• Tractions (ou négatives/assistées selon niveau) — 4 × max ou 5  
+• Inverted rows (rowing inversé sur barre basse) — 3 × 10 -15 
+• Dead hang — 2 × 30 sec  
+• Face pulls avec élastique (si disponible) — 3 × 15  
+ 
+Jour 3 — BAS DU CORPS :  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 11 — Street Workout Documentation v1.0 — 2025 • Squat libre — 4 × 15 -20 
+• Fentes marchées — 3 × 10/jambe  
+• Pont fessier une jambe — 3 × 12/côté  
+• Calf raises — 3 × 20  
+ 
+Jour 4 — CORE & MOBILITÉ :  
+• Hollow body hold  — 3 × 20 -30s 
+• Planche latérale — 3 × 20 -30s/côté  
+• Leg raises — 3 × 10 -15 
+• Crunch bicycle — 3 × 20  
+• Étirements complets — 15-20 min  
+4.3 Programme AVANCÉ — Skill development  
+Objectif : Apprendre les skills avancés (muscle -up, front lever, handstand)  
+Fréquence :  5 séances / semaine avec périodisation hebdomadaire | Durée : 60 -90 min  
+ 
+Structure hebdomadaire :  
+• Lundi : Force maximale Push + skill statique  
+• Mardi : Force maximale Pull + progressions  
+• Mercredi : Bas du corps + explosivité  
+• Jeudi : Skill technique (handst and, muscle -up progressions)  
+• Vendredi : Volume hypertrophie  
+• Week -end : Récupération active ou mobilité  
+💡 Les programmes avancés nécessitent une périodisation rigoureuse. L'application devra 
+proposer des cycles de 4 semaines avec une semaine de décharge.  
+4.4 Programmes spécifiques morphologie/situation  
+Programme SURPOIDS (IMC 25 -35) 
+Priorités : réduire l'impact articulaire, travailler debout, créer un déficit calorique par le 
+mouvement.  
+• Marche rapide 10 min — échauffement  
+• Squat au mur (Wall squat) — 3 × 30  sec 
+• Pompes inclinées (mains sur table) — 3 × 8  
+• Step-ups (montée de marche) — 3 × 10/jambe  
+• Planche inclinée (mains sur table) — 3 × 20 sec  
+• Pont fessier — 3 × 12  
+• Marche avec variation de rythme — 10 min cool -down  
+💡 Pour les personnes en surpoids, augmenter le volume avant l'intensité. La régularité > 
+l'intensité.  
+Programme SENIOR (60+)  
+Priorités : mobilité, équilibre, prévention des chutes, maintien de la densité osseuse.  
+• Mobilité articulaire complète — 10 min (ce rcles épaules, hanches, chevilles)  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 12 — Street Workout Documentation v1.0 — 2025 • Squat chaise (chair squat) — 3 × 8 -10 
+• Pompes contre mur — 3 × 8 -10 
+• Équilibre unipodal — 3 × 20 -30 sec/pied  
+• Marche talon -pointe — 2 × 20 pas  
+• Planche aux genoux — 3 × 15 -20 sec  
+• Étirements doux — 15 min  
+Programme MAISON sans  équipement  
+Applicable en appartement, ne nécessite qu'un espace de 2m x 2m.  
+• Pompes (toutes variantes)  
+• Squats et variantes  
+• Fentes  
+• Gainage complet  
+• Pont fessier  
+• Dips sur chaise  
+• Triceps sur canapé  
+• Pike push -ups 
+• Mountain climbers  
+• Burpees (niveau intermédiaire+)  
+💡 Sans barre de traction, utiliser une table solide pour les inverted rows (rowing sous table) — 
+excellent substitut aux tractions.  
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 13 — Street Workout Documentation v1.0 — 2025 5. Lieux d'Entraînement — Maison vs Parc  
+5.1 Entraînement à la maison  
+Zone  Exercices possibles  Équipement 
+suggéré  Notes  
+Salon/chambre 
+(2x2m)  Pompes, squat, fentes, 
+gainage, fessiers  Tapis de sol, 
+chronomètre  Espace minimal suffisant  
+Mur Pompes mur, squat mur, 
+handstand progressions  Aucun  Excellent pour débutants  
+Chaise/canapé 
+solide  Dips, step -ups, hip 
+thrust, elevated push -ups Chaise stable (sans 
+roulettes)  Vérifier la solidité  
+Table sturdy  Inverted rows (rowing 
+sous table)  Table à tréteaux ou 
+bureau solide  Substitut traction  
+Encadrement de 
+porte Barre de traction 
+amovible  Barre pull -up ~20 -30€ Investissement minimal  
+Couloir/corridor  Marche, fentes, mobilité  Aucun  Utiliser le linéaire  
+Terrasse/balcon  Tout exercice maison + 
+air frais  Tapis extérieur si sol 
+dur Idéal psychologiquement  
+5.2 Entraînement en parc  
+Équipement parc  Exercices  Niveau requis  Avantages  
+Barre horizontale 
+haute  Tractions, hanging, 
+leg raises, muscle -up Débutant+  Exercice roi du SW  
+Barre basse  Inverted rows, L -sit 
+progressions  Débutant  Accessible à tous  
+Barres parallèles  Dips, L -sit, skin the 
+cat Débutant+  Triceps et core  
+Banc de parc  Dips, step -up, 
+inclined push -ups, hip 
+thrust  Tous Polyvalent  
+Cage/structure 
+combinée  Tout le catalogue  Tous Équipement idéal  
+Escaliers  Step-ups, inclines, 
+cardio  Tous Souvent sous -utilisé  
+Sol stabilisé  Tous exercices au sol  Tous Loin du sol béton dur  
+5.3 Météo et conditions extérieures  
+• Chaleur (>30°C) : Réduire l'intensité de 20%, hydrater x2, s'entraîner tôt le matin ou 
+en soirée  
+• Froid (<5°C) : Échauffement doublé (15 -20 min), couvrir les articulations, raccourcir 
+les rests  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 14 — Street Workout Documentation v1.0 — 2025 • Pluie : Éviter les surfaces glissantes pour les exercices avec pieds ou mains sur 
+barre. Préférer la maison.  
+• Vent fort : Impacte les exercices de balance (hands tand). Rester au sol.  
+• Pollution : Éviter les efforts intenses lors des pics de pollution. Préférer la maison ou 
+un parc vert.  
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 15 — Street Workout Documentation v1.0 — 2025 6. Nutrition et Récupération  
+6.1 Principes nutritionnels de base  
+La nutrition est indissociable de la progression en street workout. Les besoins varient selon 
+l'objectif.  
+ 
+Objectif  Apport calorique 
+recommandé  Répartition macros  Priorités  
+Perte de 
+graisse  Déficit 300 -500 kcal/j  Protéines : 2 -2.5g/kg | Glucides : 
+modéré | Lipides : 0.8 -1g/kg  Maintenir les 
+protéines hautes 
+pour préserver la 
+masse musculaire  
+Maintien / 
+recomposition  Normocalorique  Protéines : 1.8 -2.2g/kg | Glucides 
+: adapté | Lipides : 1g/kg  Timing : protéines 
+post-entraînement 
+dans les 2h  
+Prise de 
+masse  Surplus 200 -400 
+kcal/j Protéines : 1.8 -2.5g/kg | Glucides 
+: élevé | Lipides : 0.8 -1g/kg  Glucides peri -
+workout pour les 
+performances  
+6.2 Hydratation  
+• Minimum 35ml/kg de poids corporel par jour au repos  
+• Ajouter 500 -750ml par heure d'entraînement modéré  
+• Ajouter 750 -1000ml par heure d'entraînement intense ou par temps chaud  
+• L'urine doit être jaune paille — signe d'hydratation correcte  
+6.3 Récupération  
+Récu pération passive  
+• Sommeil : 7 -9h — c'est pendant le sommeil que le muscle se construit  
+• Repos actif : marche légère, étirements doux les jours off  
+• Fenêtre anabolique : 30 -60 min post -effort pour les protéines (impact modéré mais 
+réel) 
+Récupération active  
+• Foam roller (rouleau de massage) : 5 -10 min sur les groupes travaillés  
+• Stretching statique post -séance : maintenir 30 -60 sec par position  
+• Bain froid ou douche froide : réduction de l'inflammation  
+• Yoga ou mobilité : au moins 1 session/semaine  
+Signes de surentraînement à surveiller  
+• Baisse de performance durable (>1 semaine)  
+• Fatigue persistante malgré le repos  
+• Irritabilité, troubles du sommeil  
+• Fréquence cardiaque au repos augmentée  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 16 — Street Workout Documentation v1.0 — 2025 • Maladies fréquentes (immunité diminuée)  
+💡 Si 3 signes ou plus so nt présents, prévoir une semaine de récupération complète et consulter si 
+persistance.  
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 17 — Street Workout Documentation v1.0 — 2025 7. Prévention des Blessures et Sécurité  
+7.1 Échauffement — Structure recommandée  
+Un échauffement de qualité réduit le risque de blessure de 50 -60% (données sportives 
+générales).  
+ 
+11. Activation cardiovasculaire légère : 3 -5 min (jumping jacks, marche rapide, corde à 
+sauter)  
+12. Mobilisation articulaire : 3 -5 min (cercles d'épaules, hanches, chevilles, cou)  
+13. Activation musculaire : 2 -3 min (band pull -aparts, glute bridges, scapul ar pull -ups) 
+14. Séries d'activation spécifiques : 1 -2 séries à 50% de charge des exercices principaux  
+7.2 Erreurs techniques les plus dangereuses  
+Erreur  Exercice  Risque  Correction  
+Nuque tirée  Tractions  Hernie cervicale  Regarder devant, pas en l'air  
+Dos rond sous 
+tension  Tous exercices 
+debout/sol  Hernie lombaire  Gainage constant, vidéo de 
+contrôle  
+Genoux en 
+valgus (vers 
+l'intérieur)  Squat, fente  Ligaments croisés  Pousser les genoux sur les 
+orteils  
+Épaules roulées 
+avant  Dips, pompes  Conflit sous -acromial  Rétracter les omoplates  
+Trop, trop vite  Tous exercices  Tendinopathie, 
+fracture stress  Augmenter le volume max 
+10%/semaine  
+Pas de 
+récupération  Tout programme  Surentraînement, 
+blessure chronique  Au moins 1 jour off/2 jours ON  
+7.3 Gestion de la douleur  
+Distinguer la douleur normale de la douleur à risque :  
+• Brûlure musculaire (pump) : normale — signe de travail efficace  
+• Courbatures (DOMS) dans les 24 -72h : normale — récupération active 
+recommandée  
+• Douleur articulaire aiguë : STOP  — ne pas forcer, repos 48 -72h, consulter si 
+persistance  
+• Douleur tendineuse chronique : adapter le programme, travail excentrique, consulter 
+un kinésithérapeute  
+• Douleur avec craquement ou blocage : ARRÊT IMMÉDIAT — consultation médicale  
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 18 — Street Workout Documentation v1.0 — 2025 8. Structure de l 'Application — 
+Recommandations  
+8.1 Flux d'onboarding recommandé  
+L'onboarding est critique pour personnaliser l'expérience. Données à collecter au minimum :  
+15. Données physiques : âge, sexe, poids, taille (calcul IMC automatique)  
+16. Niveau d'expérience : test de niveau (pompes max, tractions max, cardio basique)  
+17. Objectif principal : perte de graisse / force / endurance / skills / santé  
+18. Disponibilité : jours/semaine, durée par séance  
+19. Lieu d'entraînement : maison / parc / les deux  
+20. Équip ement disponible : aucun / barre de traction / barres parallèles / anneaux  
+21. Pathologies ou restrictions : checklist des contraintes communes  
+💡 Ne pas demander plus de 7 questions en onboarding. Permettre de compléter le profil plus 
+tard. 
+8.2 Système de pro gression dans l'app  
+Fonctionnalité  Description  Priorité  
+Détection automatique du 
+niveau  Algorithme basé sur les performances test  P0 — Critique  
+Déverrouillage progressif  Les variantes difficiles s'ouvrent quand les 
+prérequis sont atteints  P0 — Critique  
+Ajustement temps réel  Si l'utilisateur rate ses objectifs, l'app 
+propose de réduire  P1 — Haute  
+Défi de la semaine  1 exercice spécifique à maîtriser  P1 — Haute  
+Calendrier de séances  Visualisation semaine + streak  P1 — Haute  
+Bibliothèque vidéo  Démonstrations technique avec angles 
+multiples  P0 — Critique  
+Journal de performance  Historique des séries/reps/temps  P0 — Critique  
+Rappels intelligents  Notifications adaptées au planning  P2 — Normale  
+Communauté  Partage de progressions, challenges  P3 — Plus tard  
+Nutrition de base  Calculateur et conseils simples  P2 — Normale  
+8.3 Algorithme de personnalisation  
+L'application doit implémenter les règles suivantes pour adapter automatiquement les 
+programmes :  
+• IMC > 30 : Désactiver les exercises à fort impact (sauts, burpees) et les tractions non 
+assistées  
+• Âge > 60 : Réduire automatiquement la densité, ajouter 10 min de mobilité  
+• Débutant < 4 semaines : Ne proposer que les variantes étoile 1 -2 
+• Pathologie renseign ée : filtrer les exercices contraindiqués de la base de données  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 19 — Street Workout Documentation v1.0 — 2025 • Maison sans barre : substituer toutes les tractions par inverted rows et alternatives  
+• Progression : si objectif dépassé 2 semaines de suite, proposer la variante 
+supérieure  
+8.4 Modèle de donné es exercice recommandé  
+Chaque exercice dans la base de données devrait contenir :  
+• id, nom, nom_fr, catégorie (push/pull/legs/core/skill)  
+• niveau_min (1 -4), niveau_max (1 -4) 
+• imc_max_recommandé, imc_min_recommandé  
+• pathologies_contre_indiquées (array)  
+• prérequis (array d'id d'exercices)  
+• muscles_primaires (array), muscles_secondaires (array)  
+• équipement_requis (aucun/barre/parallèles/anneaux)  
+• lieu (maison/parc/les_deux)  
+• variantes_plus_faciles (array d'id), variantes_plus_difficiles (array d'id)  
+• url_video, url_thumbnail  
+• instructions_texte, erreurs_communes, conseils_sécurité  
+• adapté_senior (bool), adapté_femme_enceinte (bool), adapté_adolescent (bool)  
+ 
+  DOCUMENTATION STREET WORKOUT  | Application de Sport  
+Page 20 — Street Workout Documentation v1.0 — 2025 9. Glossaire et Références  
+9.1 Glossaire des termes techniques  
+Terme  Définition  
+Calisthenics  Terme anglais englobant les exercices au poids du corps (dont le 
+street workout)  
+Concentric  Phase de contraction musculaire (montée d'une traction, montée d'une 
+pompe)  
+Eccentric  Phase d'allongement sous tension (descente contrôlée)  
+Isometric  Contraction sans mouvement (planche, L -sit, front lever)  
+Superset  Deux exercices enchaînés sans repos entre les deux  
+AMRAP  As Many Reps As Possible — max de répétitions en un temps donné  
+EMOM  Every Minute On the Minute — exercice au début de chaque minute  
+RPE Rate of Perceived Exertion — échelle d'effort subjectif de 1 à 10  
+1RM 1 Repetition Maximum — charge maximale pour une répétition 
+(adapté au poids corps via formule)  
+DOMS  Delayed Onset Muscle Soreness — courbatures apparaissant 24 -72h 
+post-effort  
+Scapular pull -up Élévation des épaules en position suspendue sans plier les coudes  
+Hollow body  Position abdominale fondamentale : corps creusé, lombaires au sol, 
+jambes tendues  
+Arch body  Inverse du hollow body, position cambrée fondamentale en 
+gymnastique  
+False grip  Prise spéciale poignet sur anneaux pour faciliter le muscle -up 
+Dead hang  Suspension bras tendus sur barre, sans mouvement  
+9.2 Références et ressources pour les développeurs  
+• Progressions calisthenics : r/bodyweightfitness Wiki (Reddit) — référence 
+communautaire complète  
+• Base de données exercices : ExerciseDB API — intégrable dans une application  
+• Calcul IMC OMS : WHO BMI Classi fication 2000  
+• Guidelines activité physique : OMS — 150-300 min cardio modéré/semaine pour 
+adultes  
+• Somatotypes : Sheldon (1940), revisité par Carter & Heath (1990)  
+• Périodisation : Tudor Bompa — Periodization Training for Sports  
+ 
+ 
+FIN DE LA DOCUMENTATION  
+Street Workout App — Documentation v1.0 — 2025 

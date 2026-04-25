@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UtensilsCrossed, CheckCircle2, Circle, Flame, Info } from 'lucide-react';
 import { calculateMacros, calculateTDEE } from '../utils/calculations';
 import { getMealPlan } from '../utils/nutritionGenerator';
+import { addXP } from '../utils/gamification';
 
 export default function Nutrition() {
   const { profile, user } = useAuth();
@@ -35,15 +36,20 @@ export default function Nutrition() {
     
     if (existing) {
       // Met à jour la BDD
+      const newConsomme = !existing.consomme;
       const { data, error } = await supabase
         .from('nutrition_logs')
-        .update({ consomme: !existing.consomme })
+        .update({ consomme: newConsomme })
         .eq('id', existing.id)
         .select()
         .single();
         
       if (!error && data) {
         setLogs(logs.map(l => l.id === existing.id ? data : l));
+        // Add XP if checked
+        if (newConsomme) {
+          await addXP(user.id, 30);
+        }
       }
     } else {
       // Insère dans la BDD
@@ -60,6 +66,8 @@ export default function Nutrition() {
         
       if (!error && data) {
         setLogs([...logs, data]);
+        // Add XP for first time logging
+        await addXP(user.id, 30);
       } else {
         console.error("Erreur lors de l'insertion du repas", error);
       }

@@ -197,7 +197,8 @@ export default function Onboarding() {
               { id: 'perte_poids', title: '🔥 Perte de poids' },
               { id: 'prise_masse', title: '💪 Prise de masse' },
               { id: 'tonification', title: '✨ Tonification' },
-              { id: 'endurance', title: '🏃 Endurance' }
+              { id: 'endurance', title: '🏃 Endurance' },
+              { id: 'street_workout', title: '🤸 Street Workout (Figures)' }
             ].map(o => (
               <div key={o.id} className={`card card--interactive ${formData.objectif === o.id ? 'card--selected' : ''}`} style={{ padding: 'var(--space-4)' }} onClick={() => updateForm('objectif', o.id)}>
                 <h3 className="title-md">{o.title}</h3>

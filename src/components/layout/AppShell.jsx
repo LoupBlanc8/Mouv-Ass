@@ -6,7 +6,7 @@ const navItems = [
   { path: '/', icon: Home, label: 'Accueil' },
   { path: '/workout', icon: Dumbbell, label: 'Sport' },
   { path: '/nutrition', icon: UtensilsCrossed, label: 'Nutrition' },
-  { path: '/stats', icon: BarChart3, label: 'Stats' },
+  { path: '/academy', icon: BarChart3, label: 'Académie' },
   { path: '/profile', icon: User, label: 'Profil' },
 ];
 

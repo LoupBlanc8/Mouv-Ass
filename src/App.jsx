@@ -7,6 +7,7 @@ import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Workout from './pages/Workout';
 import Nutrition from './pages/Nutrition';
+import Academy from './pages/Academy';
 import Stats from './pages/Stats';
 import Profile from './pages/Profile';
 
@@ -74,6 +75,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/workout" element={<Workout />} />
               <Route path="/nutrition" element={<Nutrition />} />
+              <Route path="/academy" element={<Academy />} />
               <Route path="/stats" element={<Stats />} />
               <Route path="/profile" element={<Profile />} />
             </Route>

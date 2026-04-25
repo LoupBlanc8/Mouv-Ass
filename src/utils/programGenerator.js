@@ -1,3 +1,5 @@
+import { STREET_WORKOUT_PROGRAMS } from '../data/streetWorkoutSkills';
+
 export function generateProgramSessions(formData, allExercises) {
   const sessions = [];
   const sessionExercises = [];
@@ -8,6 +10,51 @@ export function generateProgramSessions(formData, allExercises) {
   if (numDays === 4) splitType = 'upper_lower';
   else if (numDays >= 5) splitType = 'ppl';
   
+  // --- STREET WORKOUT LOGIC ---
+  // We assume street workout uses bodyweight logic from our new data
+  const isStreetWorkout = formData.mode_entrainement === 'street_workout' || formData.objectif === 'street_workout';
+  
+  if (isStreetWorkout) {
+    const swProg = formData.niveau === 'debutant' ? STREET_WORKOUT_PROGRAMS.debutant : STREET_WORKOUT_PROGRAMS.intermediaire;
+    
+    // We try to match SW sessions to user's selected days
+    formData.jours_semaine.forEach((jour, i) => {
+      const sourceSession = swProg.sessions[i % swProg.sessions.length];
+      
+      const sessionObj = {
+        jour_semaine: jour,
+        nom: sourceSession.nom,
+        type_session: sourceSession.type_session,
+        duree_estimee: sourceSession.duree_estimee
+      };
+      sessions.push(sessionObj);
+      
+      const sessionExList = [];
+      sourceSession.exercices.forEach((ex, j) => {
+        // Find matching exercise in DB by name if possible, or fallback to random bodyweight
+        let dbEx = allExercises.find(e => e.nom.toLowerCase().includes(ex.nom.toLowerCase()));
+        if (!dbEx) {
+          // Fallback
+          dbEx = allExercises.find(e => e.equipement === 'aucun' || e.equipement === 'barre_traction');
+        }
+        
+        if (dbEx) {
+          sessionExList.push({
+            exercise_id: dbEx.id,
+            ordre: j,
+            series: ex.series,
+            reps_min: typeof ex.reps === 'string' ? 0 : ex.reps, // If time-based like "20s", reps_min is 0 (or we handle it differently)
+            reps_max: typeof ex.reps === 'string' ? 0 : ex.reps
+          });
+        }
+      });
+      sessionExercises.push(sessionExList);
+    });
+    
+    return { sessionsData: sessions, sessionExercisesData: sessionExercises, programType: 'street_workout' };
+  }
+  // --- END STREET WORKOUT LOGIC ---
+
   // Set reps and sets based on objective
   let sets = 3;
   let repsMin = 8;
