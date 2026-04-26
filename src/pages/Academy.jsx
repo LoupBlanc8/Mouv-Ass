@@ -8,7 +8,7 @@ import { supabase } from '../lib/supabase';
 import { addXP } from '../utils/gamification';
 
 export default function Academy() {
-  const { profile, user, updateProfile } = useAuth();
+  const { profile, user, updateProfile, refreshProfile } = useAuth();
   const [expandedSkill, setExpandedSkill] = useState(null);
   const [loadingSkill, setLoadingSkill] = useState(null);
   const [justValidated, setJustValidated] = useState(null);
@@ -63,6 +63,9 @@ export default function Academy() {
 
       // 2. Ajouter XP (Gros gain pour un palier)
       await addXP(user.id, 500);
+      
+      // 3. Rafraîchir le profil complet pour synchroniser XP + rank + unlocked_skills
+      await refreshProfile();
       
       setJustValidated(skill.id);
       setTimeout(() => setJustValidated(null), 3000);
