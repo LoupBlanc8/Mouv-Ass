@@ -60,6 +60,9 @@ function LoadingScreen() {
   );
 }
 
+import Rank from './pages/Rank';
+import Social from './pages/Social';
+
 function App() {
   return (
     <BrowserRouter>
@@ -79,6 +82,8 @@ function App() {
               <Route path="/nutrition" element={<Nutrition />} />
               <Route path="/academy" element={<Academy />} />
               <Route path="/stats" element={<Stats />} />
+              <Route path="/rank" element={<Rank />} />
+              <Route path="/social" element={<Social />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

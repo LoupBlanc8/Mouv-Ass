@@ -36,14 +36,20 @@ export default function Academy() {
     pageDesc = 'Paliers de force et figures au poids du corps.';
   }
 
-  // Calcul du palier max atteint pour définir ce qui est déblocable
+  // Obtenir toutes les difficultés uniques triées
+  const availableDifficulties = [...new Set(displayedSkills.map(s => s.difficulty))].sort((a, b) => a - b);
+  
   const achievedSkillObjects = displayedSkills.filter(s => achievedSkills.includes(s.id));
   const maxDifficultyAchieved = achievedSkillObjects.length > 0 ? Math.max(...achievedSkillObjects.map(s => s.difficulty)) : 0;
-  const minDifficultyInList = Math.min(...displayedSkills.map(s => s.difficulty));
+  
+  // Trouver l'index de la difficulté max atteinte dans le tableau des difficultés
+  const currentDiffIndex = availableDifficulties.indexOf(maxDifficultyAchieved);
+  const nextUnlockableDifficulty = currentDiffIndex >= 0 && currentDiffIndex < availableDifficulties.length - 1 
+    ? availableDifficulties[currentDiffIndex + 1] 
+    : availableDifficulties[0]; // Si 0, on prend la première
 
   const isAchieved = (skillId) => achievedSkills.includes(skillId);
-  // On peut s'entraîner/valider un palier si sa difficulté est au plus (max_atteint + 1)
-  const isUnlockable = (difficulty) => difficulty <= maxDifficultyAchieved + 1 || (maxDifficultyAchieved === 0 && difficulty === minDifficultyInList);
+  const isUnlockable = (difficulty) => difficulty <= maxDifficultyAchieved || difficulty === nextUnlockableDifficulty;
 
   async function validateSkill(e, skill) {
     e.stopPropagation();
