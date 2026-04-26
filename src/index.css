@@ -91,6 +91,52 @@
 }
 
 /* ============================================
+   LIGHT THEME (Glacier Performance)
+   ============================================ */
+:root[data-theme="light"] {
+  --surface: #f8fafc;
+  --surface-dim: #f1f5f9;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #f1f5f9;
+  --surface-container-high: #e2e8f0;
+  --surface-container-highest: #cbd5e1;
+  --surface-variant: #e2e8f0;
+
+  --primary: #0284c7;
+  --primary-container: #7dd3fc;
+  --primary-dim: #0369a1;
+  --on-primary: #ffffff;
+  --on-primary-container: #0c4a6e;
+
+  --secondary: #4f46e5;
+  --secondary-container: #c7d2fe;
+  --secondary-dim: #4338ca;
+  --on-secondary: #ffffff;
+
+  --tertiary: #2563eb;
+  --tertiary-container: #bfdbfe;
+  --tertiary-dim: #1d4ed8;
+
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --on-background: #0f172a;
+
+  --error: #ef4444;
+  --error-container: #fee2e2;
+  --success: #10b981;
+  --warning: #f59e0b;
+
+  --outline: #94a3b8;
+  --outline-variant: #cbd5e1;
+
+  --shadow-glow-primary: 0 0 40px rgba(2, 132, 199, 0.15);
+  --shadow-glow-secondary: 0 0 40px rgba(79, 70, 229, 0.12);
+  --shadow-ambient: 0 8px 32px rgba(15, 23, 42, 0.06);
+}
+
+/* ============================================
    RESET & BASE
    ============================================ */
 *, *::before, *::after {

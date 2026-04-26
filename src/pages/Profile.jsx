@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogOut, ChevronRight, User as UserIcon, Scale, Ruler, Target, Activity, Calendar, Clock } from 'lucide-react';
+import { LogOut, ChevronRight, User as UserIcon, Scale, Ruler, Target, Activity, Calendar, Clock, Moon, Sun } from 'lucide-react';
 
 const MORPHOTYPE_LABEL = { ectomorphe: '🏃 Ectomorphe', mesomorphe: '💪 Mésomorphe', endomorphe: '🐻 Endomorphe' };
 const OBJECTIF_LABEL = { perte_poids: '🔥 Perte de poids', prise_masse: '💪 Prise de masse', tonification: '✨ Tonification', endurance: '🏃 Endurance' };
@@ -12,6 +13,7 @@ const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
 export default function Profile() {
   const { profile, user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
   const navigate = useNavigate();
 
@@ -108,6 +110,22 @@ export default function Profile() {
 
         {/* Sign Out */}
         <motion.div variants={item} style={{ marginTop: 'var(--space-4)' }}>
+          <p className="section-label">Préférences</p>
+          <div className="card" style={{ marginBottom: 'var(--space-6)', padding: 'var(--space-2) var(--space-4)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-2) 0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                {theme === 'dark' ? <Moon size={20} style={{ color: 'var(--primary)' }} /> : <Sun size={20} style={{ color: 'var(--primary)' }} />}
+                <span className="body-md">Thème {theme === 'dark' ? 'Sombre' : 'Clair'}</span>
+              </div>
+              <button 
+                className={`toggle ${theme === 'light' ? 'toggle--active' : ''}`} 
+                onClick={toggleTheme}
+                aria-label="Changer de thème"
+              >
+                <div className="toggle__thumb"></div>
+              </button>
+            </div>
+          </div>
           <button className="btn btn--danger btn--full" onClick={handleLogout} disabled={loggingOut}>
             <LogOut size={18} /> {loggingOut ? 'Déconnexion...' : 'Se déconnecter'}
           </button>

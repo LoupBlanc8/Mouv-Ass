@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import AppShell from './components/layout/AppShell';
 import Login from './pages/Login';
 import Onboarding from './pages/Onboarding';
@@ -62,8 +63,9 @@ function LoadingScreen() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <div className="app-shell">
+      <ThemeProvider>
+        <AuthProvider>
+          <div className="app-shell">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/onboarding" element={
@@ -83,6 +85,7 @@ function App() {
           </Routes>
         </div>
       </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }
