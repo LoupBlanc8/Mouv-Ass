@@ -2,7 +2,7 @@
    MOUV'ASS — Design System: Kinetic Noir
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 /* ============================================
    CSS VARIABLES (Design Tokens)
@@ -14,28 +14,29 @@
   --surface-bright: #2c2c2c;
   --surface-container-lowest: #000000;
   --surface-container-low: #131313;
-  --surface-container: #1a1919;
-  --surface-container-high: #201f1f;
+  --surface-container: #1a1a1a;
+  --surface-container-high: #20201f;
   --surface-container-highest: #262626;
   --surface-variant: #262626;
 
-  /* Primary: Electric Cyan */
-  --primary: #81ecff;
-  --primary-container: #00e3fd;
-  --primary-dim: #00d4ec;
-  --on-primary: #005762;
-  --on-primary-container: #004d57;
+  /* Primary: Vibrant Orange */
+  --primary: #ff9159;
+  --primary-rgb: 255, 145, 89;
+  --primary-container: #ff7a2f;
+  --primary-dim: #ff7524;
+  --on-primary: #531e00;
+  --on-primary-container: #401500;
 
-  /* Secondary: Electric Purple */
-  --secondary: #a68cff;
-  --secondary-container: #591adc;
-  --secondary-dim: #7e51ff;
-  --on-secondary: #25006b;
+  /* Secondary: Deep Energetic Blue */
+  --secondary: #7e98ff;
+  --secondary-container: #034ae7;
+  --secondary-dim: #3766ff;
+  --on-secondary: #00185d;
 
-  /* Tertiary: Deep Blue */
-  --tertiary: #6e9bff;
-  --tertiary-container: #2778fe;
-  --tertiary-dim: #0f6df3;
+  /* Tertiary: Gold */
+  --tertiary: #ffc562;
+  --tertiary-container: #fbb423;
+  --tertiary-dim: #eba60f;
 
   /* Text */
   --on-surface: #ffffff;
@@ -43,18 +44,18 @@
   --on-background: #ffffff;
 
   /* Status */
-  --error: #ff716c;
-  --error-container: #9f0519;
+  --error: #ff7351;
+  --error-container: #b92902;
   --success: #4ade80;
-  --warning: #fbbf24;
+  --warning: #ffc562;
 
   /* Outline */
   --outline: #767575;
   --outline-variant: #484847;
 
   /* Typography */
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Manrope', sans-serif;
+  --font-display: 'Lexend', sans-serif;
+  --font-body: 'Lexend', sans-serif;
 
   /* Spacing Scale */
   --space-1: 0.25rem;
@@ -79,9 +80,9 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-glow-primary: 0 0 40px rgba(129, 236, 255, 0.15);
-  --shadow-glow-secondary: 0 0 40px rgba(166, 140, 255, 0.12);
-  --shadow-ambient: 0 8px 32px rgba(166, 140, 255, 0.06);
+  --shadow-glow-primary: 0 0 40px rgba(255, 145, 89, 0.15);
+  --shadow-glow-secondary: 0 0 40px rgba(126, 152, 255, 0.12);
+  --shadow-ambient: 0 8px 32px rgba(255, 145, 89, 0.05);
 
   /* Transitions */
   --ease-kinetic: cubic-bezier(0.33, 1, 0.68, 1);
@@ -91,49 +92,53 @@
 }
 
 /* ============================================
-   LIGHT THEME (Glacier Performance)
+   LIGHT THEME (Volt Performance)
    ============================================ */
 :root[data-theme="light"] {
-  --surface: #f8fafc;
-  --surface-dim: #f1f5f9;
-  --surface-bright: #ffffff;
+  --surface: #f9f5ff;
+  --surface-dim: #d2d0ff;
+  --surface-bright: #f9f5ff;
   --surface-container-lowest: #ffffff;
-  --surface-container-low: #f8fafc;
-  --surface-container: #f1f5f9;
-  --surface-container-high: #e2e8f0;
-  --surface-container-highest: #cbd5e1;
-  --surface-variant: #e2e8f0;
+  --surface-container-low: #f2efff;
+  --surface-container: #e9e5ff;
+  --surface-container-high: #e2dfff;
+  --surface-container-highest: #dcd9ff;
+  --surface-variant: #dcd9ff;
 
-  --primary: #0284c7;
-  --primary-container: #7dd3fc;
-  --primary-dim: #0369a1;
-  --on-primary: #ffffff;
-  --on-primary-container: #0c4a6e;
+  --primary: #0049e6;
+  --primary-rgb: 0, 73, 230;
+  --primary-container: #829bff;
+  --primary-dim: #0040cb;
+  --on-primary: #f2f1ff;
+  --on-primary-container: #001a63;
 
-  --secondary: #4f46e5;
-  --secondary-container: #c7d2fe;
-  --secondary-dim: #4338ca;
-  --on-secondary: #ffffff;
+  --secondary: #514eb6;
+  --secondary-container: #cfcdff;
+  --secondary-dim: #4541a9;
+  --on-secondary: #f4f1ff;
 
-  --tertiary: #2563eb;
-  --tertiary-container: #bfdbfe;
-  --tertiary-dim: #1d4ed8;
+  --tertiary: #913983;
+  --tertiary-container: #f790e0;
+  --tertiary-dim: #832c76;
 
-  --on-surface: #0f172a;
-  --on-surface-variant: #475569;
-  --on-background: #0f172a;
+  --on-surface: #2b2a51;
+  --on-surface-variant: #585781;
+  --on-background: #2b2a51;
 
-  --error: #ef4444;
-  --error-container: #fee2e2;
+  --error: #b41340;
+  --error-container: #f74b6d;
   --success: #10b981;
   --warning: #f59e0b;
 
-  --outline: #94a3b8;
-  --outline-variant: #cbd5e1;
+  --outline: #74739e;
+  --outline-variant: #aba9d7;
 
-  --shadow-glow-primary: 0 0 40px rgba(2, 132, 199, 0.15);
-  --shadow-glow-secondary: 0 0 40px rgba(79, 70, 229, 0.12);
-  --shadow-ambient: 0 8px 32px rgba(15, 23, 42, 0.06);
+  --font-display: 'Lexend', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  --shadow-glow-primary: 0 0 40px rgba(0, 73, 230, 0.15);
+  --shadow-glow-secondary: 0 0 40px rgba(81, 78, 182, 0.12);
+  --shadow-ambient: 0 8px 32px rgba(43, 42, 81, 0.06);
 }
 
 /* ============================================
@@ -379,7 +384,7 @@ a:hover {
 
 .card--selected {
   background: var(--surface-container-high);
-  box-shadow: inset 0 0 0 1.5px rgba(129, 236, 255, 0.15), var(--shadow-glow-primary);
+  box-shadow: inset 0 0 0 1.5px rgba(var(--primary-rgb), 0.15), var(--shadow-glow-primary);
 }
 
 /* ============================================
@@ -406,17 +411,17 @@ a:hover {
 .btn--primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dim));
   color: var(--on-primary);
-  box-shadow: 0 0 30px rgba(129, 236, 255, 0.2);
+  box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.2);
 }
 
 .btn--primary:hover {
-  box-shadow: 0 0 50px rgba(129, 236, 255, 0.35);
+  box-shadow: 0 0 50px rgba(var(--primary-rgb), 0.35);
   transform: translateY(-1px);
 }
 
 .btn--primary:active {
   transform: translateY(0);
-  box-shadow: 0 0 20px rgba(129, 236, 255, 0.15);
+  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.15);
 }
 
 .btn--secondary {
@@ -436,7 +441,7 @@ a:hover {
 }
 
 .btn--ghost:hover {
-  background: rgba(129, 236, 255, 0.08);
+  background: rgba(var(--primary-rgb), 0.08);
 }
 
 .btn--danger {
@@ -498,7 +503,7 @@ a:hover {
 .input:focus {
   background: var(--surface-container);
   border-bottom-color: var(--primary);
-  box-shadow: 0 4px 20px rgba(129, 236, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.08);
 }
 
 .input::placeholder {
@@ -525,7 +530,7 @@ a:hover {
 }
 
 .chip--selected {
-  background: rgba(129, 236, 255, 0.12);
+  background: rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
 }
 
@@ -652,7 +657,7 @@ a:hover {
 }
 
 .bottom-nav__item--active .bottom-nav__icon {
-  filter: drop-shadow(0 0 8px rgba(129, 236, 255, 0.4));
+  filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.4));
 }
 
 .bottom-nav__icon {
@@ -759,12 +764,12 @@ a:hover {
   background: linear-gradient(135deg, var(--primary), var(--primary-dim));
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 0 16px rgba(129, 236, 255, 0.3);
+  box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.3);
   transition: box-shadow var(--duration-fast) var(--ease-kinetic);
 }
 
 .slider::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 24px rgba(129, 236, 255, 0.5);
+  box-shadow: 0 0 24px rgba(var(--primary-rgb), 0.5);
 }
 
 .slider-value {
@@ -841,14 +846,14 @@ a:hover {
 
 /* Selection */
 ::selection {
-  background: rgba(129, 236, 255, 0.2);
+  background: rgba(var(--primary-rgb), 0.2);
   color: var(--on-surface);
 }
 
 /* Animations */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(129, 236, 255, 0.15); }
-  50% { box-shadow: 0 0 40px rgba(129, 236, 255, 0.3); }
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.15); }
+  50% { box-shadow: 0 0 40px rgba(var(--primary-rgb), 0.3); }
 }
 
 @keyframes fade-in {
