@@ -118,7 +118,7 @@ export default function Nutrition() {
           <div>
             <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
               NUTRITION<br />
-              <span style={{ color: 'var(--primary)' }}>KINETIC</span>
+              <span style={{ color: 'var(--primary)' }}>MOUV'ASS</span>
             </h1>
           </div>
           <div style={{ marginBottom: '4px', background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>

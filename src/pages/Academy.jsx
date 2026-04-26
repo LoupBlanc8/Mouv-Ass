@@ -39,10 +39,11 @@ export default function Academy() {
   // Calcul du palier max atteint pour définir ce qui est déblocable
   const achievedSkillObjects = displayedSkills.filter(s => achievedSkills.includes(s.id));
   const maxDifficultyAchieved = achievedSkillObjects.length > 0 ? Math.max(...achievedSkillObjects.map(s => s.difficulty)) : 0;
+  const minDifficultyInList = Math.min(...displayedSkills.map(s => s.difficulty));
 
   const isAchieved = (skillId) => achievedSkills.includes(skillId);
   // On peut s'entraîner/valider un palier si sa difficulté est au plus (max_atteint + 1)
-  const isUnlockable = (difficulty) => difficulty <= maxDifficultyAchieved + 1 || difficulty === 1;
+  const isUnlockable = (difficulty) => difficulty <= maxDifficultyAchieved + 1 || (maxDifficultyAchieved === 0 && difficulty === minDifficultyInList);
 
   async function validateSkill(e, skill) {
     e.stopPropagation();
@@ -83,7 +84,7 @@ export default function Academy() {
         <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
           <div>
             <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
-              KINETIC<br />
+              MOUV'ASS<br />
               <span style={{ color: 'var(--primary)' }}>{mode === 'street_workout' ? 'ACADEMY' : 'STRENGTH'}</span>
             </h1>
           </div>
