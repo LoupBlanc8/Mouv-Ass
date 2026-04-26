@@ -16,7 +16,7 @@ export async function addXP(userId, amount) {
     const { data: profile, error: fetchError } = await supabase
       .from('profiles')
       .select('xp, rank')
-      .eq('id', userId)
+      .eq('user_id', userId)
       .single();
 
     if (fetchError) throw fetchError;
@@ -37,7 +37,7 @@ export async function addXP(userId, amount) {
     const { error: updateError } = await supabase
       .from('profiles')
       .update({ xp: newXP, rank: newRank })
-      .eq('id', userId);
+      .eq('user_id', userId);
 
     if (updateError) throw updateError;
 

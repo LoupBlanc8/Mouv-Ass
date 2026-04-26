@@ -8,7 +8,7 @@ import { supabase } from '../lib/supabase';
 import { addXP } from '../utils/gamification';
 
 export default function Academy() {
-  const { profile, user } = useAuth();
+  const { profile, user, updateProfile } = useAuth();
   const [expandedSkill, setExpandedSkill] = useState(null);
   const [loadingSkill, setLoadingSkill] = useState(null);
   const [justValidated, setJustValidated] = useState(null);
@@ -51,18 +51,12 @@ export default function Academy() {
     setLoadingSkill(skill.id);
     
     try {
-      // 1. Ajouter à unlocked_skills
+      // 1. Ajouter à unlocked_skills via le context (utilise user_id au lieu de id)
       const newUnlockedSkills = [...achievedSkills, skill.id];
-      const { error } = await supabase.from('profiles').update({ unlocked_skills: newUnlockedSkills }).eq('id', user.id);
-      
-      if (error) throw error;
+      await updateProfile({ unlocked_skills: newUnlockedSkills });
 
       // 2. Ajouter XP (Gros gain pour un palier)
       await addXP(user.id, 500);
-      
-      // Update local profile ref if possible, otherwise rely on a page refresh or context update
-      // For now, it will update when context refreshes, but we can visually show it:
-      profile.unlocked_skills = newUnlockedSkills; 
       
       setJustValidated(skill.id);
       setTimeout(() => setJustValidated(null), 3000);
