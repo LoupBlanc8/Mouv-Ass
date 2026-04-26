@@ -1,5 +1,5 @@
 /**
- * Calculs biométriques et nutritionnels pour Mouv'Ass
+ * Calculs biométriques et nutritionnels pour Mouv'Body
  * Basé sur la documentation sport complète (Sections 1, 3, 4, 10, 11)
  */
 

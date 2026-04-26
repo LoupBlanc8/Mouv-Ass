@@ -38,7 +38,7 @@ export default function Login() {
         <div style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:72, height:72, borderRadius:'var(--radius-2xl)', background:'linear-gradient(135deg, var(--primary), var(--secondary-dim))', marginBottom:'var(--space-4)', boxShadow:'0 0 60px rgba(129,236,255,0.2)' }}>
           <Zap size={36} color="#004d57" strokeWidth={2.5} />
         </div>
-        <h1 className="display-md" style={{ background:'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Mouv'Ass</h1>
+        <h1 className="display-md" style={{ background:'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Mouv'Body</h1>
         <p className="body-md text-muted" style={{ marginTop:'var(--space-2)' }}>{isLogin ? 'Content de te revoir 💪' : 'Prêt à transformer ton corps ?'}</p>
       </motion.div>
 

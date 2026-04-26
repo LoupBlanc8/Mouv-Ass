@@ -87,7 +87,7 @@ export default function Academy() {
         <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
           <div>
             <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
-              MOUV'ASS<br />
+              MOUV'BODY<br />
               <span style={{ color: 'var(--primary)' }}>{mode === 'street_workout' ? 'ACADEMY' : 'STRENGTH'}</span>
             </h1>
           </div>

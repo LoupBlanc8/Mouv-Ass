@@ -19,7 +19,7 @@ export default function Social() {
     <div className="page-container" style={{ paddingBottom: 'calc(var(--space-24) + 60px)' }}>
       <header className="header" style={{ marginBottom: 'var(--space-6)' }}>
         <h1 className="display-sm">Réseau</h1>
-        <p className="body-md text-muted">Trouvez d'autres athlètes Mouv'Ass.</p>
+        <p className="body-md text-muted">Trouvez d'autres athlètes Mouv'Body.</p>
       </header>
 
       {/* Barre de recherche */}

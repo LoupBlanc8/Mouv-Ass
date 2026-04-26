@@ -1,8 +1,8 @@
-# Plan d'implémentation de Mouv'Ass V2
+# Plan d'implémentation de Mouv'Body V2
 
 > **Pour l'agent d'exécution :** Utilisez ce plan détaillé pour implémenter la tâche étape par étape. Mettez à jour les cases (`- [ ]` en `- [x]`) au fur et à mesure que les étapes sont complétées.
 
-**Objectif :** Transformer Mouv'Ass en une app dynamique en ajoutant le Tracker de Séance, la Gamification (XP/Rangs), l'Analytics et l'Académie Street Workout.
+**Objectif :** Transformer Mouv'Body en une app dynamique en ajoutant le Tracker de Séance, la Gamification (XP/Rangs), l'Analytics et l'Académie Street Workout.
 
 **Architecture :** 
 L'application utilisera Supabase pour stocker les nouveaux logs d'exercices, le système d'XP et les rangs. Le Front-End s'appuiera sur React et Framer Motion pour les animations du tracker et du dashboard.

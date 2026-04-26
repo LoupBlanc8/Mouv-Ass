@@ -1,5 +1,5 @@
 -- ============================================
--- MOUV'ASS - Schéma Base de Données Supabase
+-- MOUV'BODY - Schéma Base de Données Supabase
 -- ============================================
 
 -- Extension UUID

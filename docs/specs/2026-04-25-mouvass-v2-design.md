@@ -1,7 +1,7 @@
-# Spécifications Techniques & Design : Mouv'Ass V2
+# Spécifications Techniques & Design : Mouv'Body V2
 
 ## 1. Objectif du projet
-Transformer l'application fitness Mouv'Ass d'un simple générateur de routines statiques en un écosystème dynamique incluant :
+Transformer l'application fitness Mouv'Body d'un simple générateur de routines statiques en un écosystème dynamique incluant :
 - Un Tracker d'entraînement en direct.
 - L'Académie Street Workout (basée sur la documentation officielle PDF).
 - De l'Analytique (suivi de la surcharge progressive).
