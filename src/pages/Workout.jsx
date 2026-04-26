@@ -208,7 +208,7 @@ export default function Workout() {
       return (
         <div className="page" style={{ 
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-          minHeight: '80vh', backgroundColor: '#0e0e0e', padding: 'var(--space-6)' 
+          minHeight: '80vh', backgroundColor: 'var(--surface)', padding: 'var(--space-6)' 
         }}>
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }} 
@@ -216,21 +216,21 @@ export default function Workout() {
             className="card"
             style={{ 
               textAlign: 'center', 
-              background: 'linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(124, 77, 255, 0.1))',
+              background: 'linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--secondary-rgb), 0.1))',
               backdropFilter: 'blur(20px)',
-              border: 'none',
-              boxShadow: '0 8px 32px rgba(0, 229, 255, 0.1)'
+              border: '1px solid rgba(var(--primary-rgb), 0.2)',
+              boxShadow: '0 8px 32px rgba(var(--primary-rgb), 0.1)'
             }}>
             <div style={{
-              width: 80, height: 80, borderRadius: '50%', backgroundColor: 'rgba(0, 229, 255, 0.2)',
+              width: 80, height: 80, borderRadius: '50%', backgroundColor: 'rgba(var(--primary-rgb), 0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-6)',
-              boxShadow: '0 0 20px rgba(0, 229, 255, 0.4)'
+              boxShadow: '0 0 20px rgba(var(--primary-rgb), 0.4)'
             }}>
-              <Check size={40} color="#00E5FF" />
+              <Check size={40} color="var(--primary)" />
             </div>
-            <h2 className="display-sm" style={{ color: '#fff', marginBottom: 'var(--space-2)' }}>Entraînement Terminé !</h2>
+            <h2 className="display-sm" style={{ color: 'var(--on-surface)', marginBottom: 'var(--space-2)' }}>Entraînement Terminé !</h2>
             <div className="flex items-center justify-center gap-2 mb-6 text-primary">
-              <Zap size={20} fill="#00E5FF" />
+              <Zap size={20} fill="var(--primary)" />
               <span className="title-lg">+{xpEarned} XP</span>
             </div>
           </motion.div>
@@ -239,33 +239,33 @@ export default function Workout() {
     }
 
     return (
-      <div className="page" style={{ paddingBottom: 'var(--space-8)', backgroundColor: '#0e0e0e', minHeight: '100vh', color: '#fff' }}>
-        <div className="flex items-center justify-between mb-8">
+      <div className="page" style={{ paddingBottom: 'var(--space-8)', backgroundColor: 'var(--surface)', minHeight: '100vh', color: 'var(--on-surface)' }}>
+        <div className="flex items-center justify-between mb-8" style={{ marginTop: 'var(--space-4)' }}>
           <div>
-            <p className="label-sm" style={{ color: '#00E5FF', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{activeWorkout.nom}</p>
-            <h2 className="headline-md" style={{ fontFamily: 'Space Grotesk' }}>EXERCICE {currentExIdx + 1}<span style={{ color: '#484847' }}>/{activeWorkout.session_exercises.length}</span></h2>
+            <p className="label-sm" style={{ color: 'var(--primary)', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 'bold' }}>{activeWorkout.nom}</p>
+            <h2 className="display-sm" style={{ margin: 0, textTransform: 'uppercase', lineHeight: 1 }}>EXERCICE {currentExIdx + 1}<span style={{ color: 'var(--on-surface-variant)' }}>/{activeWorkout.session_exercises.length}</span></h2>
           </div>
-          <button className="btn btn--sm" style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#adaaaa', border: 'none' }} onClick={() => finishWorkout(logs)}>Terminer</button>
+          <button className="btn btn--sm" style={{ backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid rgba(var(--outline-variant), 0.2)' }} onClick={() => finishWorkout(logs)}>Terminer</button>
         </div>
 
         <motion.div key={currentExIdx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} 
           style={{ 
-            backgroundColor: '#1a1919', borderRadius: '1.5rem', padding: 'var(--space-6)', marginBottom: 'var(--space-6)',
-            position: 'relative', overflow: 'hidden'
+            backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)', marginBottom: 'var(--space-6)',
+            position: 'relative', overflow: 'hidden', border: '1px solid rgba(var(--outline-variant), 0.1)'
           }}>
           <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundImage: `url(${getExerciseImage(exercise?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15, zIndex: 0 }}></div>
-          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(126, 81, 255, 0.15) 0%, rgba(0,0,0,0) 70%)', borderRadius: '50%', zIndex: 0 }}></div>
-          <h3 className="title-lg mb-2" style={{ fontFamily: 'Space Grotesk', position: 'relative', zIndex: 1 }}>{exercise?.nom}</h3>
-          <p className="body-sm mb-6" style={{ color: '#adaaaa', position: 'relative', zIndex: 1 }}>{exercise?.description_technique}</p>
+          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(var(--secondary-rgb), 0.15) 0%, rgba(0,0,0,0) 70%)', borderRadius: '50%', zIndex: 0 }}></div>
+          <h3 className="title-lg mb-2" style={{ position: 'relative', zIndex: 1, textTransform: 'uppercase' }}>{exercise?.nom}</h3>
+          <p className="body-sm mb-6" style={{ color: 'var(--on-surface-variant)', position: 'relative', zIndex: 1 }}>{exercise?.description_technique}</p>
           
           <div className="flex gap-4" style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ flex: 1, backgroundColor: '#131313', padding: 'var(--space-3)', borderRadius: '1rem' }}>
-              <span className="label-sm" style={{ color: '#767575', display: 'block', marginBottom: '4px' }}>OBJECTIF</span>
-              <div className="title-md" style={{ color: '#00E5FF' }}>{ex.series} × {ex.reps_min}-{ex.reps_max}</div>
+            <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
+              <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>OBJECTIF</span>
+              <div className="title-md" style={{ color: 'var(--primary)' }}>{ex.series} × {ex.reps_min}-{ex.reps_max}</div>
             </div>
-            <div style={{ flex: 1, backgroundColor: '#131313', padding: 'var(--space-3)', borderRadius: '1rem' }}>
-              <span className="label-sm" style={{ color: '#767575', display: 'block', marginBottom: '4px' }}>REPOS</span>
-              <div className="title-md">{ex.repos_secondes || 90}s</div>
+            <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
+              <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>REPOS</span>
+              <div className="title-md" style={{ color: 'var(--on-surface)' }}>{ex.repos_secondes || 90}s</div>
             </div>
           </div>
         </motion.div>
@@ -276,64 +276,64 @@ export default function Workout() {
               style={{ textAlign: 'center', padding: 'var(--space-10) 0' }}>
               <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 140, height: 140, marginBottom: 'var(--space-6)' }}>
                 <svg width="140" height="140" viewBox="0 0 140 140" style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}>
-                  <circle cx="70" cy="70" r="66" fill="none" stroke="#262626" strokeWidth="4" />
-                  <circle cx="70" cy="70" r="66" fill="none" stroke="#00E5FF" strokeWidth="4" strokeDasharray="414" strokeDashoffset={414 - (414 * restTimer / (ex.repos_secondes || 90))} style={{ transition: 'stroke-dashoffset 1s linear' }} />
+                  <circle cx="70" cy="70" r="66" fill="none" stroke="var(--surface-container-highest)" strokeWidth="4" />
+                  <circle cx="70" cy="70" r="66" fill="none" stroke="var(--primary)" strokeWidth="4" strokeDasharray="414" strokeDashoffset={414 - (414 * restTimer / (ex.repos_secondes || 90))} style={{ transition: 'stroke-dashoffset 1s linear' }} />
                 </svg>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <Timer size={24} color="#00E5FF" style={{ marginBottom: 4 }} />
-                  <span className="display-sm" style={{ color: '#00E5FF', fontFamily: 'Space Grotesk' }}>
+                  <Timer size={24} color="var(--primary)" style={{ marginBottom: 4 }} />
+                  <span className="display-md" style={{ color: 'var(--primary)', lineHeight: 1 }}>
                     {Math.floor(restTimer / 60)}:{String(restTimer % 60).padStart(2, '0')}
                   </span>
                 </div>
               </div>
               <div>
-                <button className="btn btn--sm" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', borderRadius: '2rem', padding: '10px 24px' }} onClick={skipRest}>
+                <button className="btn btn--sm" style={{ backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid rgba(var(--outline-variant), 0.2)', borderRadius: 'var(--radius-xl)', padding: '10px 24px' }} onClick={skipRest}>
                   Passer le repos
                 </button>
               </div>
             </motion.div>
           ) : (
             <motion.div key="logging" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-              <div style={{ backgroundColor: '#1a1919', borderRadius: '1.5rem', padding: 'var(--space-6)', marginBottom: 'var(--space-6)' }}>
+              <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)', marginBottom: 'var(--space-6)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
                 <div className="flex items-center justify-between mb-6">
-                  <span className="title-md">Série {currentSet} <span style={{ color: '#767575' }}>/ {ex.series}</span></span>
+                  <span className="title-md" style={{ textTransform: 'uppercase' }}>Série {currentSet} <span style={{ color: 'var(--on-surface-variant)' }}>/ {ex.series}</span></span>
                 </div>
                 
                 <div className="flex gap-4 mb-6">
                   <div style={{ flex: 1 }}>
-                    <label className="label-sm" style={{ color: '#adaaaa', display: 'block', marginBottom: '8px' }}>POIDS (KG)</label>
+                    <label className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>POIDS (KG)</label>
                     <input type="number" step="0.5" value={weight} onChange={e => setWeight(e.target.value)} placeholder="0" 
                       style={{ 
-                        width: '100%', backgroundColor: '#131313', border: 'none', borderBottom: '2px solid #262626', 
-                        color: '#fff', padding: '12px 16px', fontSize: '1.25rem', fontFamily: 'Space Grotesk', borderRadius: '8px 8px 0 0',
+                        width: '100%', backgroundColor: 'var(--surface-container-high)', border: 'none', borderBottom: '2px solid var(--outline-variant)', 
+                        color: 'var(--on-surface)', padding: '12px 16px', fontSize: '1.25rem', borderRadius: 'var(--radius-md) var(--radius-md) 0 0',
                         outline: 'none', transition: 'border-color 0.2s'
                       }} 
-                      onFocus={e => e.target.style.borderColor = '#00E5FF'}
-                      onBlur={e => e.target.style.borderColor = '#262626'}
+                      onFocus={e => e.target.style.borderColor = 'var(--primary)'}
+                      onBlur={e => e.target.style.borderColor = 'var(--outline-variant)'}
                     />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <label className="label-sm" style={{ color: '#adaaaa', display: 'block', marginBottom: '8px' }}>RÉPÉTITIONS</label>
+                    <label className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>RÉPÉTITIONS</label>
                     <input type="number" value={reps} onChange={e => setReps(e.target.value)} placeholder="0" 
                       style={{ 
-                        width: '100%', backgroundColor: '#131313', border: 'none', borderBottom: '2px solid #262626', 
-                        color: '#fff', padding: '12px 16px', fontSize: '1.25rem', fontFamily: 'Space Grotesk', borderRadius: '8px 8px 0 0',
+                        width: '100%', backgroundColor: 'var(--surface-container-high)', border: 'none', borderBottom: '2px solid var(--outline-variant)', 
+                        color: 'var(--on-surface)', padding: '12px 16px', fontSize: '1.25rem', borderRadius: 'var(--radius-md) var(--radius-md) 0 0',
                         outline: 'none', transition: 'border-color 0.2s'
                       }}
-                      onFocus={e => e.target.style.borderColor = '#00E5FF'}
-                      onBlur={e => e.target.style.borderColor = '#262626'}
+                      onFocus={e => e.target.style.borderColor = 'var(--primary)'}
+                      onBlur={e => e.target.style.borderColor = 'var(--outline-variant)'}
                     />
                   </div>
                 </div>
 
                 <button onClick={logSet} disabled={!weight || !reps}
                   style={{ 
-                    width: '100%', background: (!weight || !reps) ? '#262626' : 'linear-gradient(135deg, #00E5FF 0%, #00d4ec 100%)',
-                    color: (!weight || !reps) ? '#767575' : '#0e0e0e',
-                    border: 'none', padding: '16px', borderRadius: '2rem', fontSize: '1rem', fontWeight: 600,
+                    width: '100%', background: (!weight || !reps) ? 'var(--surface-container-highest)' : 'var(--primary)',
+                    color: (!weight || !reps) ? 'var(--on-surface-variant)' : 'var(--on-primary)',
+                    border: 'none', padding: '16px', borderRadius: 'var(--radius-xl)', fontSize: '1rem', fontWeight: 600,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                    boxShadow: (!weight || !reps) ? 'none' : '0 4px 12px rgba(0, 229, 255, 0.3)',
-                    transition: 'all 0.2s'
+                    boxShadow: (!weight || !reps) ? 'none' : '0 4px 12px rgba(var(--primary-rgb), 0.3)',
+                    transition: 'all 0.2s', textTransform: 'uppercase', letterSpacing: '0.05em'
                   }}>
                   <Check size={20} /> VALIDER & REPOS
                 </button>
@@ -342,11 +342,11 @@ export default function Workout() {
               {/* Logged sets summary */}
               {logs.filter(l => l.exercise_id === ex.exercise_id).length > 0 && (
                 <div style={{ padding: '0 var(--space-4)' }}>
-                  <p className="label-sm mb-4" style={{ color: '#767575', letterSpacing: '0.05em' }}>HISTORIQUE DES SÉRIES</p>
+                  <p className="label-sm mb-4" style={{ color: 'var(--on-surface-variant)', letterSpacing: '0.05em', fontWeight: 'bold' }}>HISTORIQUE DES SÉRIES</p>
                   {logs.filter(l => l.exercise_id === ex.exercise_id).map((l, i) => (
-                    <div key={i} className="flex items-center justify-between" style={{ padding: '12px 0', borderBottom: '1px solid #1a1919' }}>
-                      <span className="body-md" style={{ color: '#adaaaa' }}>Série {l.serie}</span>
-                      <span className="title-md" style={{ color: '#fff' }}>{l.poids_kg}kg × {l.reps}</span>
+                    <div key={i} className="flex items-center justify-between" style={{ padding: '12px 0', borderBottom: '1px solid var(--surface-container-high)' }}>
+                      <span className="body-md" style={{ color: 'var(--on-surface-variant)' }}>Série {l.serie}</span>
+                      <span className="title-md" style={{ color: 'var(--on-surface)' }}>{l.poids_kg}kg × {l.reps}</span>
                     </div>
                   ))}
                 </div>
@@ -362,65 +362,90 @@ export default function Workout() {
   return (
     <div className="page">
       <motion.div variants={container} initial="hidden" animate="show">
-        <motion.div variants={item} className="page-header">
-          <h1 className="headline-md">Entraînement</h1>
-          {program && <span className="chip chip--selected">{program.nom}</span>}
+        <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
+          <div>
+            <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
+              TRAINING<br />
+              <span style={{ color: 'var(--primary)' }}>PROGRAM</span>
+            </h1>
+          </div>
+          {program && (
+            <div style={{ marginBottom: '4px', background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+              <span className="label-md" style={{ color: 'var(--on-surface)', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                {program.nom}
+              </span>
+            </div>
+          )}
         </motion.div>
 
         {!program ? (
-          <motion.div variants={item} className="card" style={{ textAlign: 'center', padding: 'var(--space-12) var(--space-6)' }}>
-            <Dumbbell size={48} style={{ color: 'var(--outline)', marginBottom: 'var(--space-4)', opacity: 0.3 }} />
-            <h3 className="title-md mb-2">Pas encore de programme</h3>
-            <p className="body-sm text-muted">Complète l'onboarding pour générer ton programme personnalisé.</p>
+          <motion.div variants={item} className="card" style={{ textAlign: 'center', padding: 'var(--space-12) var(--space-6)', background: 'var(--surface-container-low)', border: '1px dashed var(--outline-variant)' }}>
+            <Dumbbell size={48} style={{ color: 'var(--outline)', marginBottom: 'var(--space-4)', opacity: 0.5 }} />
+            <h3 className="title-lg mb-2">Pas encore de programme</h3>
+            <p className="body-md text-muted">Complète l'onboarding pour générer ton programme personnalisé.</p>
           </motion.div>
         ) : (
           <>
             {/* Day selector */}
-            <motion.div variants={item} className="flex gap-2 mb-6" style={{ overflowX: 'auto', paddingBottom: 'var(--space-2)' }}>
+            <motion.div variants={item} className="flex gap-2 mb-8" style={{ overflowX: 'auto', paddingBottom: 'var(--space-2)' }}>
               {JOURS_FULL.map((j, i) => (
                 <button key={j} onClick={() => setSelectedDay(i)}
-                  className={`chip ${selectedDay === i ? 'chip--selected' : ''}`}
-                  style={{ flexShrink: 0 }}>{j.slice(0, 3)}</button>
+                  className={`chip ${selectedDay === i ? 'chip--primary' : ''}`}
+                  style={{ 
+                    flexShrink: 0, 
+                    fontWeight: selectedDay === i ? 'bold' : 'normal',
+                    backgroundColor: selectedDay === i ? 'var(--primary)' : 'var(--surface-container-high)',
+                    color: selectedDay === i ? 'var(--on-primary)' : 'var(--on-surface-variant)',
+                    border: selectedDay === i ? 'none' : '1px solid rgba(var(--outline-variant), 0.2)'
+                  }}>{j.slice(0, 3)}</button>
               ))}
             </motion.div>
 
             {/* Session */}
             {todaySession ? (
               <motion.div variants={item}>
-                <div className="card card--elevated mb-6">
-                  <div className="flex items-center justify-between mb-4">
+                <div className="card" style={{ background: 'var(--surface-container-low)', border: '1px solid rgba(var(--outline-variant), 0.1)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', marginBottom: 'var(--space-6)' }}>
+                  <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h3 className="title-lg">{todaySession.nom}</h3>
-                      <span className="body-sm text-muted">{todaySession.type_session} · {todaySession.duree_estimee} min</span>
+                      <h3 className="display-sm" style={{ textTransform: 'uppercase', margin: 0, lineHeight: 1.1 }}>{todaySession.nom}</h3>
+                      <span className="body-md" style={{ color: 'var(--on-surface-variant)' }}>{todaySession.type_session} · {todaySession.duree_estimee} min</span>
                     </div>
-                    <div className="chip chip--primary">{todaySession.session_exercises?.length || 0} ex.</div>
+                    <div className="chip" style={{ background: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)', fontWeight: 'bold' }}>{todaySession.session_exercises?.length || 0} EX.</div>
                   </div>
 
-                  {(todaySession.session_exercises || []).map((se, i) => (
-                    <div key={se.id} className="card card--recessed" style={{ marginBottom: i < todaySession.session_exercises.length - 1 ? 'var(--space-3)' : 0, padding: 0, overflow: 'hidden' }}>
-                      <div className="flex" style={{ height: '70px' }}>
-                        <div style={{ width: '80px', flexShrink: 0, backgroundImage: `url(${getExerciseImage(se.exercises?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRight: '1px solid var(--surface)' }} />
-                        <div className="flex items-center justify-between" style={{ padding: 'var(--space-3)', flex: 1 }}>
-                          <div>
-                            <p className="body-md" style={{ fontWeight: 600 }}>{se.exercises?.nom}</p>
-                            <p className="body-sm text-muted">{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes}s repos</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                    {(todaySession.session_exercises || []).map((se, i) => (
+                      <div key={se.id} style={{ 
+                        background: 'var(--surface-container)', 
+                        border: '1px solid rgba(var(--outline-variant), 0.1)',
+                        borderRadius: 'var(--radius-lg)',
+                        overflow: 'hidden'
+                      }}>
+                        <div className="flex" style={{ height: '80px' }}>
+                          <div style={{ width: '80px', flexShrink: 0, backgroundImage: `url(${getExerciseImage(se.exercises?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRight: '1px solid rgba(var(--outline-variant), 0.1)' }} />
+                          <div className="flex items-center justify-between" style={{ padding: 'var(--space-4)', flex: 1 }}>
+                            <div>
+                              <p className="title-md" style={{ textTransform: 'uppercase', margin: 0 }}>{se.exercises?.nom}</p>
+                              <p className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes}S REPOS</p>
+                            </div>
+                            <button onClick={() => handleReplaceClick(se)} className="btn btn--sm" style={{ padding: '8px', backgroundColor: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)', color: 'var(--on-surface)', borderRadius: 'var(--radius-md)' }}>
+                              <Repeat size={18} />
+                            </button>
                           </div>
-                          <button onClick={() => handleReplaceClick(se)} className="btn btn--sm" style={{ padding: '8px', backgroundColor: 'transparent', border: '1px solid var(--outline)', color: 'var(--on-surface)' }}>
-                            <Repeat size={16} />
-                          </button>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
 
-                  <button className="btn btn--primary btn--full" style={{ marginTop: 'var(--space-5)' }} onClick={startWorkout}>
-                    <Play size={18} /> Démarrer la séance
+                  <button className="btn btn--primary btn--full" style={{ marginTop: 'var(--space-8)', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }} onClick={startWorkout}>
+                    <Play size={20} /> Démarrer la séance
                   </button>
                 </div>
               </motion.div>
             ) : (
-              <motion.div variants={item} className="card" style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-                <p className="body-md text-muted">Repos ce jour-là 🧘</p>
+              <motion.div variants={item} className="card" style={{ textAlign: 'center', padding: 'var(--space-10)', background: 'var(--surface-container-low)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+                <p className="title-lg text-muted" style={{ textTransform: 'uppercase' }}>Jour de repos</p>
+                <p className="body-md text-muted">Récupération musculaire en cours.</p>
               </motion.div>
             )}
           </>
@@ -429,30 +454,43 @@ export default function Workout() {
 
       {/* Replace Exercise Modal */}
       {replaceModal.open && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-4)' }}>
-          <div className="card" style={{ width: '100%', maxWidth: 400, maxHeight: '80vh', overflowY: 'auto' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="title-md">Remplacer l'exercice</h3>
-              <button onClick={() => setReplaceModal({ open: false, sessionExercise: null, alternatives: [], loading: false })} style={{ background: 'none', border: 'none', color: '#fff' }}>
-                <X size={24} />
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(5px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-4)' }}>
+          <div className="card" style={{ width: '100%', maxWidth: 450, maxHeight: '80vh', overflowY: 'auto', background: 'var(--surface)', border: '1px solid rgba(var(--outline-variant), 0.2)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)' }}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="display-sm" style={{ textTransform: 'uppercase', margin: 0, lineHeight: 1 }}>Remplacer</h3>
+              <button onClick={() => setReplaceModal({ open: false, sessionExercise: null, alternatives: [], loading: false })} style={{ background: 'var(--surface-container-high)', border: 'none', color: 'var(--on-surface)', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <X size={20} />
               </button>
             </div>
             
-            <p className="body-sm text-muted mb-4">Exercice actuel : <strong style={{ color: '#fff' }}>{replaceModal.sessionExercise?.exercises?.nom}</strong></p>
+            <div style={{ background: 'var(--surface-container)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-6)', borderLeft: '4px solid var(--secondary)' }}>
+              <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase' }}>Exercice actuel</p>
+              <strong className="title-md" style={{ color: 'var(--on-surface)' }}>{replaceModal.sessionExercise?.exercises?.nom}</strong>
+            </div>
 
             {replaceModal.loading ? (
-              <p className="body-md text-center">Chargement des alternatives...</p>
+              <div style={{ padding: 'var(--space-8)', textAlign: 'center' }}>
+                <div className="spinner" style={{ margin: '0 auto var(--space-4)', width: '32px', height: '32px', border: '3px solid var(--surface-container-highest)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                <p className="label-sm text-muted">RECHERCHE D'ALTERNATIVES...</p>
+              </div>
             ) : replaceModal.alternatives.length === 0 ? (
-              <p className="body-md text-center text-muted">Aucune alternative trouvée pour ce groupe musculaire.</p>
+              <p className="body-md text-center" style={{ color: 'var(--on-surface-variant)', padding: 'var(--space-8) 0' }}>Aucune alternative trouvée pour ce groupe musculaire.</p>
             ) : (
               <div className="flex flex-col gap-3">
+                <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', fontWeight: 'bold' }}>Sélectionnez un remplacement</p>
                 {replaceModal.alternatives.map(alt => (
-                  <button key={alt.id} onClick={() => confirmReplace(alt.id)} className="card card--interactive card--recessed flex items-center justify-between text-left" style={{ padding: '12px' }}>
+                  <button key={alt.id} onClick={() => confirmReplace(alt.id)} className="card" style={{ 
+                    padding: 'var(--space-4)', background: 'var(--surface-container-low)', border: '1px solid rgba(var(--outline-variant), 0.1)', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s',
+                    borderRadius: 'var(--radius-lg)'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.background = 'var(--surface-container)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(var(--outline-variant), 0.1)'; e.currentTarget.style.background = 'var(--surface-container-low)'; }}>
                     <div>
-                      <p className="body-md" style={{ fontWeight: 600, color: '#fff' }}>{alt.nom}</p>
-                      <p className="body-sm text-muted">{alt.muscles_principaux?.join(', ')}</p>
+                      <p className="title-md" style={{ textTransform: 'uppercase', color: 'var(--on-surface)', margin: 0 }}>{alt.nom}</p>
+                      <p className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>{alt.muscles_principaux?.join(', ').toUpperCase()}</p>
                     </div>
-                    <ChevronRight size={16} className="text-muted" />
+                    <ChevronRight size={20} style={{ color: 'var(--primary)' }} />
                   </button>
                 ))}
               </div>

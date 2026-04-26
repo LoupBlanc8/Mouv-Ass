@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KINETIC - Profil Utilisateur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-dim": "#eba60f",
+                    "secondary-fixed": "#c6cfff",
+                    "on-secondary-container": "#f3f2ff",
+                    "surface-container-highest": "#262626",
+                    "on-tertiary-fixed": "#372400",
+                    "secondary-dim": "#3766ff",
+                    "inverse-surface": "#fcf9f8",
+                    "outline-variant": "#484847",
+                    "on-error": "#450900",
+                    "on-primary": "#531e00",
+                    "on-primary-container": "#401500",
+                    "tertiary-fixed": "#fbb423",
+                    "on-background": "#ffffff",
+                    "background": "#0e0e0e",
+                    "on-primary-fixed-variant": "#4f1c00",
+                    "surface": "#0e0e0e",
+                    "on-tertiary": "#5e4000",
+                    "on-secondary-fixed": "#00298b",
+                    "error-dim": "#d53d18",
+                    "surface-container": "#1a1a1a",
+                    "tertiary-container": "#fbb423",
+                    "primary-fixed-dim": "#f66700",
+                    "surface-bright": "#2c2c2c",
+                    "on-error-container": "#ffd2c8",
+                    "on-secondary": "#00185d",
+                    "surface-tint": "#ff9159",
+                    "on-tertiary-container": "#523700",
+                    "error-container": "#b92902",
+                    "surface-container-lowest": "#000000",
+                    "primary-fixed": "#ff7a2f",
+                    "primary-dim": "#ff7524",
+                    "inverse-on-surface": "#565555",
+                    "secondary-container": "#034ae7",
+                    "on-surface": "#ffffff",
+                    "surface-variant": "#262626",
+                    "inverse-primary": "#a14100",
+                    "surface-container-high": "#20201f",
+                    "secondary-fixed-dim": "#b3c1ff",
+                    "on-primary-fixed": "#000000",
+                    "secondary": "#7e98ff",
+                    "primary": "#ff9159",
+                    "surface-dim": "#0e0e0e",
+                    "surface-container-low": "#131313",
+                    "primary-container": "#ff7a2f",
+                    "error": "#ff7351",
+                    "outline": "#767575",
+                    "tertiary": "#ffc562",
+                    "tertiary-fixed-dim": "#eba60f",
+                    "on-secondary-fixed-variant": "#0040cd",
+                    "on-surface-variant": "#adaaaa",
+                    "on-tertiary-fixed-variant": "#5e4000"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Lexend"],
+                    "display": ["Lexend"],
+                    "body": ["Lexend"],
+                    "label": ["Lexend"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .neon-pulse-glow {
+            box-shadow: 0 0 20px rgba(126, 152, 255, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary/30 selection:text-white">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-black/80 backdrop-blur-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a determined elite athlete in a dark gym setting with dramatic orange and blue cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4gllQUO1GQjZA89EN_1Wfh1gjNJEuAEDgTTAphjpAqTk28mYi_nGF1N8ANr8AxjVu0mrhhkjRt5jwJOxaPsIT4WNY7JFRKSO88KnDet5phFlUTFRSQKR_eY-jbrbpmO3jEwgqIzLDcHX_xoNAWooNDDuomCWEl3_jJzNS74RkFO_W5ZGJh1_xkUs4dXr_KXQfwfBiBKoNY3WKGqjbSzPQcjTFTMRP61Z1XdSPpQDHA7Hdw_VlO6lQbXem3_SEJP1AVtaK7iTQAWQ"/>
+</div>
+<span class="font-lexend tracking-tighter uppercase font-black text-2xl italic text-[#FF6B00]">KINETIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#adaaaa] hover:text-[#7e98ff] transition-colors scale-95 duration-150 active:opacity-80">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</button>
+<button class="text-[#adaaaa] hover:text-[#7e98ff] transition-colors scale-95 duration-150 active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-8 max-w-5xl mx-auto">
+<!-- Hero Profile Section -->
+<section class="relative mb-12">
+<div class="flex flex-col md:flex-row items-end gap-6 mb-8">
+<h1 class="text-[3.5rem] font-display font-black tracking-tighter leading-none uppercase text-white -ml-1">
+                    ALEX<br/><span class="text-secondary">RIDER</span>
+</h1>
+<div class="mb-2 bg-surface-container-high px-4 py-1 rounded-full border border-outline-variant/10">
+<span class="text-secondary text-xs font-bold tracking-widest uppercase">ELITE LEVEL 7</span>
+</div>
+</div>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-4 md:grid-cols-6 gap-4">
+<!-- Main Metric -->
+<div class="col-span-4 md:col-span-3 bg-surface-container-low p-8 rounded-xl flex flex-col justify-between min-h-[220px] relative overflow-hidden">
+<div class="absolute -right-10 -top-10 opacity-10">
+<span class="material-symbols-outlined text-[12rem]" data-icon="auto_graph">auto_graph</span>
+</div>
+<div>
+<span class="text-on-surface-variant text-[0.75rem] font-bold tracking-widest uppercase">PERFORMANCE INDEX</span>
+<div class="text-[4.5rem] font-display font-black leading-none mt-2">94.2</div>
+</div>
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span>+4.2% THIS WEEK</span>
+</div>
+</div>
+<!-- Secondary Metrics -->
+<div class="col-span-2 md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/5">
+<span class="text-on-surface-variant text-[0.75rem] font-bold tracking-widest uppercase">WORKOUTS</span>
+<div class="text-3xl font-display font-bold mt-2">142</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/5">
+<span class="text-on-surface-variant text-[0.75rem] font-bold tracking-widest uppercase">STREAK</span>
+<div class="text-3xl font-display font-bold mt-2">18 DAYS</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/5">
+<span class="text-on-surface-variant text-[0.75rem] font-bold tracking-widest uppercase">CALORIES</span>
+<div class="text-3xl font-display font-bold mt-2">48.5K</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/5">
+<span class="text-on-surface-variant text-[0.75rem] font-bold tracking-widest uppercase">HOURS</span>
+<div class="text-3xl font-display font-bold mt-2">216</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Goals & Badges Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-20">
+<!-- Goals List -->
+<div>
+<h2 class="text-2xl font-display font-black tracking-tighter uppercase mb-8 border-l-4 border-secondary pl-4">CURRENT OBJECTIVES</h2>
+<div class="space-y-6">
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-bold text-lg uppercase tracking-tight">STRENGTH PEAK</h3>
+<p class="text-on-surface-variant text-sm uppercase tracking-wide">Deadlift 220kg PR</p>
+</div>
+<span class="text-primary font-bold">85%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-secondary">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-bold text-lg uppercase tracking-tight">ENDURANCE VO2</h3>
+<p class="text-on-surface-variant text-sm uppercase tracking-wide">5K Run &lt; 20 mins</p>
+</div>
+<span class="text-secondary font-bold">60%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 60%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Badges -->
+<div>
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-display font-black tracking-tighter uppercase border-l-4 border-[#FF6B00] pl-4">RECENT BADGES</h2>
+<button class="text-secondary text-[0.7rem] font-black tracking-widest uppercase hover:underline">VIEW ALL</button>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container-highest aspect-square rounded-full flex flex-col items-center justify-center p-4 text-center group cursor-pointer hover:scale-105 transition-transform border border-outline-variant/10">
+<span class="material-symbols-outlined text-tertiary text-4xl mb-2" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+<span class="text-[0.6rem] font-bold uppercase tracking-tighter">IRON WILL</span>
+</div>
+<div class="bg-surface-container-highest aspect-square rounded-full flex flex-col items-center justify-center p-4 text-center group cursor-pointer hover:scale-105 transition-transform border border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary text-4xl mb-2" data-icon="rocket_launch" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+<span class="text-[0.6rem] font-bold uppercase tracking-tighter">FAST START</span>
+</div>
+<div class="bg-surface-container-highest aspect-square rounded-full flex flex-col items-center justify-center p-4 text-center group cursor-pointer hover:scale-105 transition-transform border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary text-4xl mb-2" data-icon="cycle" style="font-variation-settings: 'FILL' 1;">cycle</span>
+<span class="text-[0.6rem] font-bold uppercase tracking-tighter">CONSISTENT</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Daily Insights Card -->
+<section class="mt-20">
+<div class="bg-surface-variant/40 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/10 relative overflow-hidden neon-pulse-glow">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex-1">
+<div class="flex items-center gap-2 text-secondary mb-4">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-bold text-xs tracking-[0.2em] uppercase">AI RECOMMENDATION</span>
+</div>
+<h3 class="text-3xl font-display font-black tracking-tighter uppercase mb-4">OPTIMAL RECOVERY DETECTED</h3>
+<p class="text-on-surface-variant max-w-md">Your resting heart rate has dropped by 4bpm. Today is a prime opportunity for a High-Intensity session to push your aerobic ceiling.</p>
+</div>
+<button class="px-8 py-4 bg-primary-container text-on-primary-fixed font-black uppercase tracking-widest rounded-full hover:scale-105 active:scale-95 transition-all">
+                        START SESSION
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#131313]/90 backdrop-blur-2xl shadow-[0_-10px_20px_rgba(255,107,0,0.05)] rounded-t-[3rem]">
+<div class="flex flex-col items-center justify-center text-[#adaaaa] p-2 hover:text-white transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="fitness_center">fitness_center</span>
+<span class="font-lexend text-[10px] font-bold tracking-widest uppercase">TRAINING</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#adaaaa] p-2 hover:text-white transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="explore">explore</span>
+<span class="font-lexend text-[10px] font-bold tracking-widest uppercase">EXPLORE</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#adaaaa] p-2 hover:text-white transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="speed">speed</span>
+<span class="font-lexend text-[10px] font-bold tracking-widest uppercase">ACTIVITY</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#adaaaa] p-2 hover:text-white transition-all cursor-pointer">
+<span class="material-symbols-outlined mb-1" data-icon="insights">insights</span>
+<span class="font-lexend text-[10px] font-bold tracking-widest uppercase">INSIGHTS</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#FF6B00] text-black rounded-full px-5 py-2 scale-110 -translate-y-2 transition-all cursor-pointer shadow-lg shadow-[#FF6B00]/20">
+<span class="material-symbols-outlined mb-1" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-lexend text-[10px] font-bold tracking-widest uppercase">PROFIL</span>
+</div>
+</nav>
+</body></html>

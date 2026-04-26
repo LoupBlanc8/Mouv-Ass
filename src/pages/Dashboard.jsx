@@ -114,146 +114,171 @@ export default function Dashboard() {
   return (
     <div className="page">
       <motion.div variants={container} initial="hidden" animate="show">
-        {/* Header */}
-        <motion.div variants={item} className="page-header" style={{ marginBottom: 'var(--space-4)' }}>
+        {/* Editorial Header */}
+        <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
           <div>
-            <p className="label-sm text-primary">{greeting}</p>
-            <h1 className="headline-md">{prenom} 👊</h1>
+            <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
+              {greeting.toUpperCase()}<br />
+              <span style={{ color: 'var(--primary)' }}>{prenom.toUpperCase()} 👊</span>
+            </h1>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <Flame size={18} className="text-warning" />
-            <span className="title-md">{workoutCount}</span>
+          <div style={{ marginBottom: '4px', background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+            <Flame size={20} style={{ color: 'var(--primary)' }} />
+            <span className="label-md" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{workoutCount} SÉANCES</span>
           </div>
         </motion.div>
 
-        {/* XP Progress Bar */}
-        <motion.div variants={item} className="card mb-6" style={{ padding: 'var(--space-4)', position: 'relative', overflow: 'hidden', border: '1px solid rgba(0, 229, 255, 0.2)' }}>
-          <div style={{ position: 'absolute', top: -30, right: -30, width: 100, height: 100, background: 'radial-gradient(circle, rgba(124, 77, 255, 0.15) 0%, transparent 70%)', borderRadius: '50%' }} />
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Trophy size={18} style={{ color: '#00E5FF' }} />
-              <span className="title-md" style={{ fontFamily: 'Space Grotesk' }}>{xpData.currentRank}</span>
-            </div>
-            <span className="label-sm" style={{ color: '#00E5FF', fontWeight: 700 }}>{profile?.xp || 0} XP</span>
-          </div>
-          <div className="progress-bar mb-2" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.05)' }}>
-            <div className="progress-bar__fill" style={{ width: `${xpData.progress}%`, background: 'linear-gradient(90deg, #00E5FF, #7C4DFF)', boxShadow: '0 0 10px rgba(0, 229, 255, 0.5)' }} />
-          </div>
-          {xpData.nextRank && (
-            <p className="label-sm text-right" style={{ color: '#adaaaa' }}>Plus que {xpData.xpToNext} XP pour <span style={{ color: '#fff' }}>{xpData.nextRank}</span></p>
-          )}
-        </motion.div>
-
-        {/* Week Progress */}
-        <motion.div variants={item} className="flex gap-2 mb-6" style={{ justifyContent: 'space-between' }}>
-          {JOURS.map((j, i) => {
-            const isToday = i === jourSemaine;
-            const isTrainingDay = (profile?.jours_semaine || []).includes(i);
-            return (
-              <div key={j} style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-1)',
-              }}>
-                <span className="label-sm" style={{ color: isToday ? 'var(--primary)' : 'var(--on-surface-variant)', fontSize: '0.625rem' }}>{j}</span>
-                <div style={{
-                  width: 36, height: 36, borderRadius: 'var(--radius-lg)',
-                  background: isToday ? 'linear-gradient(135deg, var(--primary), var(--primary-dim))' : isTrainingDay ? 'var(--surface-container-highest)' : 'var(--surface-container)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: isToday ? 'var(--on-primary)' : 'var(--on-surface-variant)',
-                  fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '0.8125rem',
-                  boxShadow: isToday ? '0 0 20px rgba(129,236,255,0.25)' : 'none'
-                }}>{today.getDate() - jourSemaine + i}</div>
+        {/* Bento Grid Layout */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-6)', marginBottom: 'var(--space-10)' }}>
+          
+          {/* Top Section: XP & Week Progress */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-6)' }}>
+            {/* XP Progress Card */}
+            <motion.div variants={item} style={{ background: 'var(--surface-container-low)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', position: 'relative', overflow: 'hidden', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+              <div style={{ position: 'absolute', top: '-20%', right: '-10%', opacity: 0.1, color: 'var(--secondary)' }}>
+                <Trophy size={160} />
               </div>
-            );
-          })}
-        </motion.div>
-
-        {/* Today Session Card */}
-        <motion.div variants={item}>
-          <p className="section-label">Séance du jour</p>
-          {todaySession ? (
-            <div className="card card--glow-primary" style={{ marginBottom: 'var(--space-6)' }}>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="title-md">{todaySession.nom}</h3>
-                  <span className="body-sm">{todaySession.duree_estimee} min · {todaySession.session_exercises?.length || 0} exercices</span>
+              <div className="flex items-center justify-between mb-4 relative z-10">
+                <div className="flex items-center gap-2">
+                  <Trophy size={20} style={{ color: 'var(--secondary)' }} />
+                  <span className="title-md" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>{xpData.currentRank}</span>
                 </div>
-                <div className="chip chip--primary"><Dumbbell size={14} /> {todaySession.type_session}</div>
+                <span className="label-md" style={{ color: 'var(--secondary)', fontWeight: 700 }}>{profile?.xp || 0} XP</span>
               </div>
-              <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
-                {(todaySession.session_exercises || []).slice(0, 4).map(se => (
-                  <span key={se.id} className="chip chip--sm">{se.exercises?.nom}</span>
-                ))}
-                {(todaySession.session_exercises || []).length > 4 && <span className="chip chip--sm">+{todaySession.session_exercises.length - 4}</span>}
+              <div className="progress-bar mb-3 relative z-10" style={{ height: 8, backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                <div className="progress-bar__fill animate-pulse-glow" style={{ width: `${xpData.progress}%`, background: 'var(--secondary)' }} />
               </div>
-              <button className="btn btn--primary btn--full" style={{ marginTop: 'var(--space-5)' }} onClick={() => navigate('/workout')}>
-                Commencer <ChevronRight size={16} />
-              </button>
-            </div>
-          ) : (
-            <div className="card" style={{ marginBottom: 'var(--space-6)', textAlign: 'center', padding: 'var(--space-8) var(--space-6)' }}>
-              <Trophy size={32} className="text-muted" style={{ marginBottom: 'var(--space-3)', opacity: 0.4 }} />
-              <p className="body-md text-muted">Jour de repos</p>
-              <p className="body-sm">Profite pour bien récupérer 🧘</p>
-            </div>
-          )}
-        </motion.div>
+              {xpData.nextRank && (
+                <p className="label-sm text-right relative z-10" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase' }}>PLUS QUE {xpData.xpToNext} XP POUR <span style={{ color: 'var(--on-surface)' }}>{xpData.nextRank}</span></p>
+              )}
+            </motion.div>
 
-        {/* Macros Summary */}
-        {macros && (
+            {/* Week Progress */}
+            <motion.div variants={item} style={{ background: 'var(--surface-container)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div className="flex gap-2" style={{ justifyContent: 'space-between' }}>
+                {JOURS.map((j, i) => {
+                  const isToday = i === jourSemaine;
+                  const isTrainingDay = (profile?.jours_semaine || []).includes(i);
+                  return (
+                    <div key={j} style={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)',
+                    }}>
+                      <span className="label-sm" style={{ color: isToday ? 'var(--primary)' : 'var(--on-surface-variant)', fontSize: '0.625rem', fontWeight: 'bold' }}>{j.toUpperCase()}</span>
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 'var(--radius-lg)',
+                        background: isToday ? 'var(--primary)' : isTrainingDay ? 'var(--surface-container-highest)' : 'transparent',
+                        border: !isToday && !isTrainingDay ? '1px solid rgba(var(--outline-variant), 0.2)' : 'none',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: isToday ? 'var(--on-primary)' : 'var(--on-surface-variant)',
+                        fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.875rem',
+                        boxShadow: isToday ? '0 0 20px rgba(var(--primary-rgb), 0.3)' : 'none'
+                      }}>{today.getDate() - jourSemaine + i}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Today Session Card */}
           <motion.div variants={item}>
-            <p className="section-label">Nutrition du jour</p>
-            <div className="card" style={{ marginBottom: 'var(--space-6)' }}>
-              <div className="flex items-center justify-between">
-                <ProgressRing size={90} stroke={7} progress={(consumedCals / macros.calories) * 100}>
-                  <div style={{ textAlign: 'center', marginTop: -4 }}>
-                    <span className="title-lg text-primary">{consumedCals}</span>
-                    <span className="label-sm text-muted" style={{ display: 'block' }}>/ {macros.calories}</span>
+            <h2 className="title-lg" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>SÉANCE DU JOUR</h2>
+            {todaySession ? (
+              <div className="card card--glow-primary" style={{ padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--primary-rgb), 0.2)' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="display-sm" style={{ textTransform: 'uppercase', marginBottom: 'var(--space-2)' }}>{todaySession.nom}</h3>
+                    <span className="label-md" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{todaySession.duree_estimee} MIN • {todaySession.session_exercises?.length || 0} EXERCICES</span>
                   </div>
-                </ProgressRing>
-                <div className="flex flex-col gap-3" style={{ flex: 1, marginLeft: 'var(--space-6)' }}>
-                  {[
-                    { label: 'Protéines', consumed: consumedPro, val: macros.proteines, unit: 'g', color: 'var(--primary)' },
-                    { label: 'Glucides', consumed: consumedGlu, val: macros.glucides, unit: 'g', color: 'var(--secondary)' },
-                    { label: 'Lipides', consumed: consumedLip, val: macros.lipides, unit: 'g', color: 'var(--tertiary)' },
-                  ].map(m => (
-                    <div key={m.label}>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="label-sm text-muted">{m.label}</span>
-                        <span className="body-sm" style={{ color: m.color, fontWeight: 600 }}>{m.consumed}/{m.val}{m.unit}</span>
+                  <div className="chip" style={{ background: 'var(--primary-container)', color: 'var(--on-primary-container)', padding: 'var(--space-2) var(--space-4)' }}>
+                    <Dumbbell size={16} /> <span style={{ fontWeight: 'bold' }}>{todaySession.type_session}</span>
+                  </div>
+                </div>
+                <div className="flex gap-2 mb-8" style={{ flexWrap: 'wrap' }}>
+                  {(todaySession.session_exercises || []).slice(0, 4).map(se => (
+                    <span key={se.id} className="chip chip--sm" style={{ background: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>{se.exercises?.nom}</span>
+                  ))}
+                  {(todaySession.session_exercises || []).length > 4 && <span className="chip chip--sm">+{todaySession.session_exercises.length - 4}</span>}
+                </div>
+                <button className="btn btn--primary btn--full" style={{ padding: 'var(--space-4)', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }} onClick={() => navigate('/workout')}>
+                  DÉMARRER LA SESSION <ChevronRight size={20} />
+                </button>
+              </div>
+            ) : (
+              <div style={{ background: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', textAlign: 'center', padding: 'var(--space-10) var(--space-6)', border: '1px dashed rgba(var(--outline-variant), 0.3)' }}>
+                <Trophy size={48} style={{ color: 'var(--on-surface-variant)', marginBottom: 'var(--space-4)', opacity: 0.5, margin: '0 auto' }} />
+                <p className="title-lg" style={{ textTransform: 'uppercase', color: 'var(--on-surface-variant)' }}>JOUR DE REPOS</p>
+                <p className="body-md" style={{ color: 'var(--on-surface-variant)', marginTop: 'var(--space-2)' }}>La récupération fait partie de l'entraînement.</p>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Metrics Grid: Nutrition & Hydration */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-6)' }}>
+            {/* Macros Summary */}
+            {macros && (
+              <motion.div variants={item}>
+                <h2 className="title-lg" style={{ borderLeft: '4px solid var(--secondary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>NUTRITION</h2>
+                <div style={{ background: 'var(--surface-container)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+                  <div className="flex items-center justify-between">
+                    <ProgressRing size={100} stroke={8} progress={(consumedCals / macros.calories) * 100}>
+                      <div style={{ textAlign: 'center', marginTop: -4 }}>
+                        <span className="headline-md" style={{ color: 'var(--primary)' }}>{consumedCals}</span>
+                        <span className="label-sm" style={{ display: 'block', color: 'var(--on-surface-variant)' }}>/ {macros.calories}</span>
                       </div>
-                      <div className="progress-bar" style={{ height: 3 }}>
-                        <div className="progress-bar__fill" style={{ width: `${Math.min(100, (m.consumed / m.val) * 100)}%`, background: m.color }} />
+                    </ProgressRing>
+                    <div className="flex flex-col gap-4" style={{ flex: 1, marginLeft: 'var(--space-8)' }}>
+                      {[
+                        { label: 'PRO', consumed: consumedPro, val: macros.proteines, color: 'var(--primary)' },
+                        { label: 'GLU', consumed: consumedGlu, val: macros.glucides, color: 'var(--secondary)' },
+                        { label: 'LIP', consumed: consumedLip, val: macros.lipides, color: 'var(--tertiary)' },
+                      ].map(m => (
+                        <div key={m.label}>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>{m.label}</span>
+                            <span className="label-sm" style={{ color: m.color, fontWeight: 700 }}>{m.consumed}/{m.val}g</span>
+                          </div>
+                          <div className="progress-bar" style={{ height: 4, backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                            <div className="progress-bar__fill" style={{ width: `${Math.min(100, (m.consumed / m.val) * 100)}%`, background: m.color }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Hydration */}
+            <motion.div variants={item}>
+              <h2 className="title-lg" style={{ borderLeft: '4px solid #00E5FF', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>HYDRATATION</h2>
+              <div style={{ background: 'var(--surface-container)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: macros ? '100%' : 'auto' }}>
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div style={{ padding: 'var(--space-2)', background: 'rgba(0, 229, 255, 0.1)', borderRadius: 'var(--radius-full)' }}>
+                        <Droplets size={24} style={{ color: '#00E5FF' }} />
+                      </div>
+                      <div>
+                        <span className="headline-md">{(hydration.eau_ml / 1000).toFixed(1)}L</span>
+                        <span className="label-md" style={{ color: 'var(--on-surface-variant)', marginLeft: '4px' }}>/ {(hydration.objectif_ml / 1000).toFixed(1)}L</span>
                       </div>
                     </div>
-                  ))}
+                    <span className="title-md" style={{ color: '#00E5FF' }}>{Math.round((hydration.eau_ml / hydration.objectif_ml) * 100)}%</span>
+                  </div>
+                  <div className="progress-bar mb-6" style={{ height: 8, backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                    <div className="progress-bar__fill" style={{ width: `${Math.min(100, (hydration.eau_ml / hydration.objectif_ml) * 100)}%`, background: '#00E5FF', boxShadow: '0 0 10px rgba(0, 229, 255, 0.5)' }} />
+                  </div>
+                </div>
+                <div className="flex gap-2 justify-center mt-auto">
+                  <button className="btn btn--sm" style={{ flex: 1, background: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)' }} onClick={() => addWater(-250)}><Minus size={16} /> 250ML</button>
+                  <button className="btn btn--sm" style={{ flex: 1, background: 'rgba(0, 229, 255, 0.1)', color: '#00E5FF', border: '1px solid rgba(0, 229, 255, 0.2)' }} onClick={() => addWater(250)}><Plus size={16} /> 250ML</button>
+                  <button className="btn btn--sm" style={{ flex: 1, background: '#00E5FF', color: '#000', border: 'none' }} onClick={() => addWater(500)}><Plus size={16} /> 500ML</button>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Hydration */}
-        <motion.div variants={item}>
-          <p className="section-label">Hydratation</p>
-          <div className="card" style={{ marginBottom: 'var(--space-6)' }}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Droplets size={20} className="text-primary" />
-                <span className="title-md">{(hydration.eau_ml / 1000).toFixed(1)}L</span>
-                <span className="body-sm text-muted">/ {(hydration.objectif_ml / 1000).toFixed(1)}L</span>
-              </div>
-              <span className="label-md text-primary">{Math.round((hydration.eau_ml / hydration.objectif_ml) * 100)}%</span>
-            </div>
-            <div className="progress-bar mb-4">
-              <div className="progress-bar__fill" style={{ width: `${Math.min(100, (hydration.eau_ml / hydration.objectif_ml) * 100)}%` }} />
-            </div>
-            <div className="flex gap-2 justify-center">
-              <button className="btn btn--secondary btn--sm" onClick={() => addWater(-250)}><Minus size={14} /> 250ml</button>
-              <button className="btn btn--primary btn--sm" onClick={() => addWater(250)}><Plus size={14} /> 250ml</button>
-              <button className="btn btn--primary btn--sm" onClick={() => addWater(500)}><Plus size={14} /> 500ml</button>
-            </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </div>
   );

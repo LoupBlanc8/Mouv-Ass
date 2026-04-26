@@ -52,31 +52,40 @@ export default function Stats() {
   return (
     <div className="page" style={{ paddingBottom: 'var(--space-8)' }}>
       <motion.div variants={container} initial="hidden" animate="show">
-        <motion.div variants={item} className="page-header">
-          <h1 className="headline-md">Statistiques</h1>
+        <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
+          <div>
+            <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
+              KINETIC<br />
+              <span style={{ color: 'var(--primary)' }}>ANALYTICS</span>
+            </h1>
+          </div>
         </motion.div>
 
-        {/* Key Metrics */}
+        {/* Key Metrics Bento */}
         <motion.div variants={item} className="flex gap-4 mb-6">
-          <div className="card card--elevated" style={{ flex: 1, padding: 'var(--space-4)', textAlign: 'center' }}>
-            <Calendar className="text-primary mx-auto mb-2" size={24} />
-            <h3 className="display-sm text-primary">{totalWorkouts}</h3>
-            <p className="label-sm text-muted">Séances (30j)</p>
+          <div className="card" style={{ flex: 1, padding: 'var(--space-6)', textAlign: 'center', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+            <div style={{ width: '48px', height: '48px', margin: '0 auto var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'rgba(var(--primary-rgb), 0.1)' }}>
+              <Calendar className="text-primary" size={24} />
+            </div>
+            <h3 className="display-sm text-primary" style={{ margin: 0, lineHeight: 1 }}>{totalWorkouts}</h3>
+            <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 'var(--space-2)' }}>SÉANCES (30J)</p>
           </div>
-          <div className="card card--elevated" style={{ flex: 1, padding: 'var(--space-4)', textAlign: 'center' }}>
-            <Activity className="text-secondary mx-auto mb-2" size={24} />
-            <h3 className="display-sm text-secondary">{Math.round(totalVolume / 1000)}k</h3>
-            <p className="label-sm text-muted">Tonnage (kg)</p>
+          <div className="card" style={{ flex: 1, padding: 'var(--space-6)', textAlign: 'center', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+            <div style={{ width: '48px', height: '48px', margin: '0 auto var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: 'rgba(var(--secondary-rgb), 0.1)' }}>
+              <Activity className="text-secondary" size={24} />
+            </div>
+            <h3 className="display-sm text-secondary" style={{ margin: 0, lineHeight: 1 }}>{Math.round(totalVolume / 1000)}k</h3>
+            <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 'var(--space-2)' }}>TONNAGE (KG)</p>
           </div>
         </motion.div>
 
-        {/* Volume Chart */}
-        <motion.div variants={item} className="card mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="title-md">Volume d'entraînement</h3>
-            <TrendingUp size={18} className="text-primary" />
+        {/* Volume Chart Bento */}
+        <motion.div variants={item} className="card mb-6" style={{ background: 'var(--surface-container-low)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="title-lg" style={{ textTransform: 'uppercase', margin: 0 }}>VOLUME GLOBAL</h3>
+            <TrendingUp size={24} className="text-primary" />
           </div>
-          <div style={{ height: 200, width: '100%' }}>
+          <div style={{ height: 220, width: '100%' }}>
             {volumeChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={volumeChartData}>
@@ -86,40 +95,41 @@ export default function Stats() {
                       <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" stroke="var(--on-surface-variant)" fontSize={12} tickLine={false} axisLine={false} />
+                  <XAxis dataKey="date" stroke="var(--on-surface-variant)" fontSize={12} tickLine={false} axisLine={false} tickMargin={10} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--surface-container-highest)', border: 'none', borderRadius: '8px' }}
-                    itemStyle={{ color: 'var(--primary)' }}
+                    contentStyle={{ backgroundColor: 'var(--surface-container-highest)', border: '1px solid rgba(var(--outline-variant), 0.2)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface)' }}
+                    itemStyle={{ color: 'var(--primary)', fontWeight: 'bold' }}
                   />
-                  <Area type="monotone" dataKey="volume" stroke="var(--primary)" strokeWidth={3} fillOpacity={1} fill="url(#colorVolume)" />
+                  <Area type="monotone" dataKey="volume" stroke="var(--primary)" strokeWidth={3} fillOpacity={1} fill="url(#colorVolume)" activeDot={{ r: 6, fill: 'var(--primary)', stroke: 'var(--surface)', strokeWidth: 2 }} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-muted body-sm">
-                Pas assez de données
+              <div className="flex items-center justify-center h-full" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.875rem' }}>
+                PAS ASSEZ DE DONNÉES
               </div>
             )}
           </div>
         </motion.div>
 
-        {/* Consistency */}
-        <motion.div variants={item} className="card card--glow-secondary mb-6">
-          <h3 className="title-md mb-4">Adhérence au programme</h3>
-          <div className="flex justify-between items-end mb-2">
-            <span className="display-sm">
+        {/* Consistency Bento */}
+        <motion.div variants={item} className="card card--glow-secondary mb-6" style={{ background: 'var(--surface-container)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--secondary-rgb), 0.2)' }}>
+          <h3 className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 'var(--space-4)' }}>ADHÉRENCE AU PROGRAMME</h3>
+          <div className="flex justify-between items-end mb-4">
+            <span className="display-sm" style={{ color: 'var(--on-surface)', lineHeight: 1 }}>
               {profile?.jours_semaine?.length > 0 
                 ? Math.min(100, Math.round((totalWorkouts / (profile.jours_semaine.length * 4)) * 100)) 
                 : 0}%
             </span>
-            <Trophy size={24} className="text-secondary" />
+            <Trophy size={32} className="text-secondary" />
           </div>
-          <div className="progress-bar" style={{ height: 6 }}>
+          <div className="progress-bar" style={{ height: 8, backgroundColor: 'rgba(255,255,255,0.05)' }}>
             <div className="progress-bar__fill" style={{ 
               width: `${profile?.jours_semaine?.length > 0 ? Math.min(100, (totalWorkouts / (profile.jours_semaine.length * 4)) * 100) : 0}%`, 
-              background: 'linear-gradient(90deg, var(--secondary), var(--primary))' 
+              background: 'linear-gradient(90deg, var(--secondary), var(--primary))',
+              boxShadow: '0 0 10px rgba(var(--secondary-rgb), 0.5)'
             }} />
           </div>
-          <p className="body-sm text-muted mt-3">Basé sur ton objectif de {profile?.jours_semaine?.length || 0} séances par semaine.</p>
+          <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginTop: 'var(--space-4)' }}>Basé sur ton objectif de <strong style={{ color: 'var(--on-surface)' }}>{profile?.jours_semaine?.length || 0}</strong> séances par semaine.</p>
         </motion.div>
 
       </motion.div>

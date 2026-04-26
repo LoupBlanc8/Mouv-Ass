@@ -113,125 +113,145 @@ export default function Nutrition() {
   return (
     <div className="page" style={{ paddingBottom: 'var(--space-8)' }}>
       <motion.div variants={container} initial="hidden" animate="show">
-        <motion.div variants={item} className="page-header">
-          <h1 className="headline-md">Nutrition</h1>
-          <span className="chip chip--secondary">{isTrainingDay ? "Jour d'entraînement" : "Jour de repos"}</span>
+        {/* Editorial Header */}
+        <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
+          <div>
+            <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
+              NUTRITION<br />
+              <span style={{ color: 'var(--primary)' }}>KINETIC</span>
+            </h1>
+          </div>
+          <div style={{ marginBottom: '4px', background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+            <span className="label-md" style={{ color: isTrainingDay ? 'var(--primary)' : 'var(--on-surface-variant)', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              {isTrainingDay ? "JOUR D'ENTRAÎNEMENT" : "JOUR DE REPOS"}
+            </span>
+          </div>
         </motion.div>
 
-        {/* Macros Summary */}
-        <motion.div variants={item} className="card card--glow-primary mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Flame className="text-primary" size={24} />
+        {/* Macros Summary Bento */}
+        <motion.div variants={item} className="card card--glow-primary" style={{ padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--primary-rgb), 0.2)', marginBottom: 'var(--space-10)' }}>
+          <div className="flex items-center gap-3 mb-6">
+            <Flame className="text-primary" size={32} />
             <div>
-              <p className="label-sm text-muted">Objectif Quotidien</p>
-              <h2 className="title-lg">{macros.calories} kcal</h2>
+              <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>OBJECTIF QUOTIDIEN</p>
+              <h2 className="display-sm" style={{ margin: 0, lineHeight: 1 }}>{macros.calories} <span style={{ fontSize: '1.25rem', color: 'var(--on-surface-variant)' }}>KCAL</span></h2>
             </div>
           </div>
           
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             <div style={{ flex: 1 }}>
-              <div className="flex justify-between mb-1">
-                <span className="body-sm text-muted">Protéines</span>
-                <span className="body-sm" style={{ fontWeight: 600 }}>{macros.proteines}g</span>
+              <div className="flex justify-between mb-2">
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>PRO</span>
+                <span className="label-md" style={{ fontWeight: 700, color: 'var(--primary)' }}>{macros.proteines}g</span>
               </div>
-              <div className="progress-bar"><div className="progress-bar__fill" style={{ width: '100%', background: 'var(--primary)' }} /></div>
+              <div className="progress-bar" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.05)' }}><div className="progress-bar__fill" style={{ width: '100%', background: 'var(--primary)', boxShadow: '0 0 10px rgba(var(--primary-rgb), 0.5)' }} /></div>
             </div>
             <div style={{ flex: 1 }}>
-              <div className="flex justify-between mb-1">
-                <span className="body-sm text-muted">Glucides</span>
-                <span className="body-sm" style={{ fontWeight: 600 }}>{macros.glucides}g</span>
+              <div className="flex justify-between mb-2">
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>GLU</span>
+                <span className="label-md" style={{ fontWeight: 700, color: 'var(--secondary)' }}>{macros.glucides}g</span>
               </div>
-              <div className="progress-bar"><div className="progress-bar__fill" style={{ width: '100%', background: 'var(--secondary)' }} /></div>
+              <div className="progress-bar" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.05)' }}><div className="progress-bar__fill" style={{ width: '100%', background: 'var(--secondary)', boxShadow: '0 0 10px rgba(var(--secondary-rgb), 0.5)' }} /></div>
             </div>
             <div style={{ flex: 1 }}>
-              <div className="flex justify-between mb-1">
-                <span className="body-sm text-muted">Lipides</span>
-                <span className="body-sm" style={{ fontWeight: 600 }}>{macros.lipides}g</span>
+              <div className="flex justify-between mb-2">
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>LIP</span>
+                <span className="label-md" style={{ fontWeight: 700, color: 'var(--tertiary)' }}>{macros.lipides}g</span>
               </div>
-              <div className="progress-bar"><div className="progress-bar__fill" style={{ width: '100%', background: 'var(--tertiary)' }} /></div>
+              <div className="progress-bar" style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.05)' }}><div className="progress-bar__fill" style={{ width: '100%', background: 'var(--tertiary)', boxShadow: '0 0 10px rgba(var(--tertiary-rgb), 0.5)' }} /></div>
             </div>
           </div>
         </motion.div>
 
         {/* Meals List */}
-        <motion.div variants={item}>
-          <div className="flex justify-between items-center mb-4">
-            <p className="section-label">Plan Alimentaire Suggéré</p>
-            <span className="label-sm text-muted">Cliquez pour voir les ingrédients</span>
+        <motion.div variants={item} style={{ marginBottom: 'var(--space-10)' }}>
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="title-lg" style={{ borderLeft: '4px solid var(--secondary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', margin: 0 }}>PLAN ALIMENTAIRE</h2>
+            <span className="label-sm text-muted" style={{ textTransform: 'uppercase' }}>CLIQUEZ POUR DÉTAILS</span>
           </div>
-          {meals.map((meal) => {
-            const isConsumed = logs.some(l => l.meal_id === meal.id && l.consomme);
-            const isExpanded = expandedMeal === meal.id;
-            const mCals = Math.round(macros.calories * meal.ratio);
-            const mPro = Math.round(macros.proteines * meal.ratio);
-            const mGlu = Math.round(macros.glucides * meal.ratio);
-            const mLip = Math.round(macros.lipides * meal.ratio);
 
-            return (
-              <div key={meal.id} className={`card mb-3 ${isConsumed ? 'card--recessed' : 'card--elevated'}`} 
-                   style={{ padding: 'var(--space-4)', transition: 'all 0.3s', cursor: 'pointer' }}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+            {meals.map((meal) => {
+              const isConsumed = logs.some(l => l.meal_id === meal.id && l.consomme);
+              const isExpanded = expandedMeal === meal.id;
+              const mCals = Math.round(macros.calories * meal.ratio);
+              const mPro = Math.round(macros.proteines * meal.ratio);
+              const mGlu = Math.round(macros.glucides * meal.ratio);
+              const mLip = Math.round(macros.lipides * meal.ratio);
+
+              return (
+                <div key={meal.id} style={{ 
+                     background: isConsumed ? 'var(--surface-container)' : 'var(--surface-container-low)', 
+                     border: '1px solid',
+                     borderColor: isConsumed ? 'rgba(var(--primary-rgb), 0.3)' : 'rgba(var(--outline-variant), 0.1)',
+                     borderRadius: 'var(--radius-xl)',
+                     padding: 'var(--space-6)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer',
+                     opacity: isConsumed ? 0.7 : 1
+                   }}
                    onClick={() => setExpandedMeal(isExpanded ? null : meal.id)}>
-                
-                <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                  <button onClick={(e) => toggleMeal(e, meal.id)} style={{ background: 'none', border: 'none', color: isConsumed ? 'var(--primary)' : 'var(--outline)', cursor: 'pointer', marginRight: 'var(--space-4)', marginTop: '2px' }}>
-                    {isConsumed ? <CheckCircle2 size={24} /> : <Circle size={24} />}
-                  </button>
                   
-                  <div style={{ flex: 1 }}>
-                    <p className="label-sm text-muted mb-1">{meal.type}</p>
-                    <h3 className="title-md" style={{ textDecoration: isConsumed ? 'line-through' : 'none', color: isConsumed ? 'var(--on-surface-variant)' : 'var(--on-surface)' }}>
-                      {meal.nom}
-                    </h3>
-                    <div className="flex gap-3 mt-1">
-                      <span className="label-sm text-primary">{mCals} kcal</span>
-                      <span className="label-sm text-muted">P:{mPro}g G:{mGlu}g L:{mLip}g</span>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <button onClick={(e) => toggleMeal(e, meal.id)} style={{ background: 'none', border: 'none', color: isConsumed ? 'var(--primary)' : 'var(--on-surface-variant)', cursor: 'pointer', marginRight: 'var(--space-6)', padding: 0, display: 'flex' }}>
+                      {isConsumed ? <CheckCircle2 size={32} /> : <Circle size={32} />}
+                    </button>
+                    
+                    <div style={{ flex: 1 }}>
+                      <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>{meal.type}</p>
+                      <h3 className="title-lg" style={{ textDecoration: isConsumed ? 'line-through' : 'none', color: isConsumed ? 'var(--on-surface-variant)' : 'var(--on-surface)', textTransform: 'uppercase', margin: 0 }}>
+                        {meal.nom}
+                      </h3>
+                    </div>
+                    
+                    <div style={{ textAlign: 'right' }}>
+                      <span className="title-md" style={{ color: 'var(--primary)', display: 'block' }}>{mCals} <span style={{ fontSize: '0.75rem' }}>KCAL</span></span>
+                      <span className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>P:{mPro} G:{mGlu} L:{mLip}</span>
                     </div>
                   </div>
-                </div>
 
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0, marginTop: 0 }}
-                      animate={{ height: 'auto', opacity: 1, marginTop: 16 }}
-                      exit={{ height: 0, opacity: 0, marginTop: 0 }}
-                      style={{ overflow: 'hidden' }}
-                    >
-                      <div className="card card--glass" style={{ padding: 'var(--space-3)', background: 'rgba(255,255,255,0.03)' }}>
-                        <div className="flex items-start gap-2 mb-3">
-                          <Info size={16} className="text-muted" style={{ marginTop: '2px', flexShrink: 0 }} />
-                          <p className="body-sm text-muted">{meal.desc}</p>
-                        </div>
-                        
-                        {meal.options && meal.options.length > 0 && (
-                          <div>
-                            <p className="label-sm text-muted mb-2">Alternatives ({mCals} kcal)</p>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
-                              {meal.options.map((opt, idx) => (
-                                <div key={idx} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', height: '100px' }}>
-                                  <img src={opt.image} alt={opt.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', padding: '24px 8px 8px 8px' }}>
-                                    <span className="label-sm text-white" style={{ display: 'block', textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: '10px' }}>{opt.nom}</span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                        animate={{ height: 'auto', opacity: 1, marginTop: 24 }}
+                        exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <div style={{ padding: 'var(--space-4)', background: 'var(--surface-container-highest)', borderRadius: 'var(--radius-lg)' }}>
+                          <div className="flex items-start gap-3 mb-4">
+                            <Info size={18} style={{ color: 'var(--secondary)', marginTop: '2px', flexShrink: 0 }} />
+                            <p className="body-md" style={{ color: 'var(--on-surface)', lineHeight: 1.5 }}>{meal.desc}</p>
                           </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                          
+                          {meal.options && meal.options.length > 0 && (
+                            <div>
+                              <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', marginBottom: 'var(--space-3)', fontWeight: 'bold' }}>Alternatives suggérées</p>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 'var(--space-2)' }}>
+                                {meal.options.map((opt, idx) => (
+                                  <div key={idx} style={{ position: 'relative', borderRadius: 'var(--radius-md)', overflow: 'hidden', height: '120px', border: '1px solid rgba(var(--outline-variant), 0.2)' }}>
+                                    <img src={opt.image} alt={opt.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)', padding: '32px 12px 12px 12px' }}>
+                                      <span className="label-sm text-white" style={{ display: 'block', textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontWeight: 'bold', lineHeight: 1.2 }}>{opt.nom}</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* Advice based on objective */}
-        <motion.div variants={item} className="mt-6">
-          <div className="card card--glass" style={{ borderLeft: '4px solid var(--primary)' }}>
-            <h4 className="title-md mb-2">Conseil Nutrition</h4>
-            <p className="body-sm text-muted">
+        <motion.div variants={item} className="mt-8">
+          <div style={{ background: 'var(--surface-container-low)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', borderLeft: '4px solid var(--primary)', borderRight: '1px solid rgba(var(--outline-variant), 0.1)', borderTop: '1px solid rgba(var(--outline-variant), 0.1)', borderBottom: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+            <h4 className="title-md" style={{ textTransform: 'uppercase', marginBottom: 'var(--space-2)' }}>CONSEIL NUTRITION</h4>
+            <p className="body-md" style={{ color: 'var(--on-surface-variant)' }}>
               {profile?.objectif === 'perte_poids' ? "Privilégie les aliments à faible densité calorique pour augmenter le volume de tes repas sans exploser ton compteur." :
                profile?.objectif === 'prise_masse' ? "N'hésite pas à utiliser des aliments denses en calories (oléagineux, huiles, beurre de cacahuète) si tu as du mal à atteindre ton quota." :
                "Maintiens une hydratation constante et répartis tes protéines de manière équitable sur l'ensemble de tes repas pour optimiser la synthèse protéique."}
