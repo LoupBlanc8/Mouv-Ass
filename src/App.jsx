@@ -11,6 +11,8 @@ import Nutrition from './pages/Nutrition';
 import Academy from './pages/Academy';
 import Stats from './pages/Stats';
 import Profile from './pages/Profile';
+import Landing from './pages/Landing';
+
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -70,6 +72,7 @@ function App() {
         <AuthProvider>
           <div className="app-shell">
           <Routes>
+            <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/onboarding" element={
               <ProtectedRoute><Onboarding /></ProtectedRoute>

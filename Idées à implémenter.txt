@@ -1,0 +1,19 @@
+- Jeux sportif (roulette qui donne un exercice aléatoire à faire à l'instantes)
+- Académie qui ne finit jamais, quand la difficulté est au max l'utilisateur devra faire/pousser 0.5kilos de plus a chaque fois
+Aussi mieux répartir l'académie avec plusieurs sous onglet ( par exemple catégorie développer couché pour le programme muscul, une autre catégorie squat, etc...)
+- Dans l'onglet nutrition toujours proposer un plat halal, et des recettes afin de pouvoir les cuisiners nous même
+En plus ajouter une options qui permet aux gens de saisir tous les aliments que les utilisateurs ont afin de proposer des recettes en fonctions de leurs aliments
+- Un bouton pour refaire un programme/changer de programme
+- programme sèche
+- expliquer les différents programmes avec un vocabulaire plus facile a comprendre
+- Rendre fonctionnel l'onglet social et l'onglet rank avec les vrai personnes inscrites sur l'application pas de faux comptes
+- faire en sorte que quand on fini une séance l'xp soit prise en compte correctement (actuellement elle s'affiche mais quand on reva dans accueil elle n'est pas prise en compte)
+- faire en sorte qu'on gagne de l'xp a la fin de la séance qui si on a fait au moins + de 3 exercices et rendre proportionnel au nombre d'exercices l'xp gagné
+- Pour ce qui est de l'onglet profil, les thèmes faire une option totalement personnalisable par l'utilisateur ( il pourra choisir la couleur principale, secondaire, etc...) faire en sorte qu'on puissent ajouter une photo de profil.
+- Un suivie journalier et changer les plats tous les jours pour pas que ce soit redondant
+- Faire une page d'accueil (petit site) avant d'accéder à l'app
+- Dans l'onglet académie faire un autre onglet 'quêtes journalière' pour donner envie à l'utilisateur de revenir chaque jours avec un système de streak qui apparaitra dans l'onglet rank pour celui qui détient le record de streak.
+- Dans l'onglet rank le message 'Votre Position' est mal calibré il faut régler ça
+- Pour ce qui est du sport si il fait en salle l'utilisateur devra renseigner sa charge max sur CHAQUES EXERCICES afin de savoir selon son objectifs définir sa charge de travail qui augmentera par la suite selon ses performances.
+Ajouter une estimations des kcal brulés par exercices en prenant en compte la forme de la personne
+- Ajouter un onglet apprentisage qui réportorira des vidéos explicatives de tous les exercices afin de bien les réaliser.

@@ -122,9 +122,17 @@ export default function Dashboard() {
               <span style={{ color: 'var(--primary)' }}>{prenom.toUpperCase()} 👊</span>
             </h1>
           </div>
-          <div style={{ marginBottom: '4px', background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <Flame size={20} style={{ color: 'var(--primary)' }} />
-            <span className="label-md" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{workoutCount} SÉANCES</span>
+          <div style={{ marginBottom: '4px', display: 'flex', gap: 'var(--space-2)' }}>
+            {(profile?.streak_current || 0) > 0 && (
+              <div style={{ background: 'rgba(255,107,0,0.1)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(255,107,0,0.2)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                <span style={{ fontSize: '1rem' }}>🔥</span>
+                <span className="label-md" style={{ color: '#FF6B00', fontWeight: 'bold' }}>{profile.streak_current}J</span>
+              </div>
+            )}
+            <div style={{ background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <Flame size={20} style={{ color: 'var(--primary)' }} />
+              <span className="label-md" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{workoutCount} SÉANCES</span>
+            </div>
           </div>
         </motion.div>
 

@@ -1,6 +1,42 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+}
+
+function adjustColor(hex, amount) {
+  if (!hex) return hex;
+  return '#' + hex.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+}
+
+export function applyThemeVariables(colors) {
+  if (!colors) return;
+  
+  // 1. primary_color devient la couleur d'Arrière-plan (Background)
+  if (colors.primary_color) {
+    document.documentElement.style.setProperty('--user-bg', colors.primary_color);
+    document.documentElement.style.setProperty('--user-bg-lowest', adjustColor(colors.primary_color, -10));
+    document.documentElement.style.setProperty('--user-bg-low', adjustColor(colors.primary_color, 5));
+    document.documentElement.style.setProperty('--user-bg-container', adjustColor(colors.primary_color, 12));
+    document.documentElement.style.setProperty('--user-bg-high', adjustColor(colors.primary_color, 24));
+  }
+  
+  // 2. secondary_color devient la couleur du Texte (Text)
+  if (colors.secondary_color) {
+    document.documentElement.style.setProperty('--user-text', colors.secondary_color);
+    document.documentElement.style.setProperty('--user-text-dim', adjustColor(colors.secondary_color, -60));
+  }
+  
+  // 3. accent_color devient l'Accentuation principale (Néons, Boutons, etc.)
+  if (colors.accent_color) {
+    document.documentElement.style.setProperty('--user-accent', colors.accent_color);
+    document.documentElement.style.setProperty('--user-accent-rgb', hexToRgb(colors.accent_color));
+    document.documentElement.style.setProperty('--user-accent-dim', adjustColor(colors.accent_color, -40));
+  }
+}
+
 const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
@@ -108,6 +144,15 @@ export function AuthProvider({ children }) {
 
       setProfile(data ? { ...data, pathologies, conditions } : null);
 
+      // Appliquer les couleurs personnalisées au chargement
+      if (data) {
+        applyThemeVariables({
+          primary_color: data.primary_color,
+          secondary_color: data.secondary_color,
+          accent_color: data.accent_color
+        });
+      }
+
       if (data?.onboarding_complete) {
         console.log('[Auth] Onboarding complete, loading program...');
         await loadProgram(userId);
@@ -164,6 +209,10 @@ export function AuthProvider({ children }) {
       .single();
 
     if (error) throw error;
+    
+    // Appliquer les couleurs en live si elles sont modifiées
+    applyThemeVariables(updates);
+
     setProfile(prev => ({ ...prev, ...data }));
     return data;
   }

@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, RotateCcw, Check, ChevronRight, Timer, Dumbbell, ChevronDown, Zap, Repeat, X } from 'lucide-react';
-import { addXP } from '../utils/gamification';
+import { Play, Pause, RotateCcw, Check, ChevronRight, Timer, Dumbbell, ChevronDown, Zap, Repeat, X, Dice5, Flame, RefreshCw } from 'lucide-react';
+import { addXP, calculateSessionXP, updateStreak } from '../utils/gamification';
+import { estimateKcalBurned } from '../utils/loadCalculator';
+import ExerciseRoulette from '../components/ui/ExerciseRoulette';
 
 const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
@@ -50,7 +53,8 @@ function getExerciseImage(nom) {
 }
 
 export default function Workout() {
-  const { profile, user, program, sessions } = useAuth();
+  const navigate = useNavigate();
+  const { profile, user, program, sessions, refreshProfile, refreshProgram } = useAuth();
   const [selectedDay, setSelectedDay] = useState(new Date().getDay());
   const [activeWorkout, setActiveWorkout] = useState(null);
   const [currentExIdx, setCurrentExIdx] = useState(0);
@@ -62,10 +66,22 @@ export default function Workout() {
   const [reps, setReps] = useState('');
   const [sessionStartTime, setSessionStartTime] = useState(null);
   const [xpEarned, setXpEarned] = useState(null);
+  const [totalKcal, setTotalKcal] = useState(0);
+  const [streakInfo, setStreakInfo] = useState(null);
+  const [showRoulette, setShowRoulette] = useState(false);
+  const [allExercises, setAllExercises] = useState([]);
+  const [regenerating, setRegenerating] = useState(false);
   const timerRef = useRef(null);
 
   // Replace modal state
   const [replaceModal, setReplaceModal] = useState({ open: false, sessionExercise: null, alternatives: [], loading: false });
+
+  // Load all exercises for roulette
+  useEffect(() => {
+    supabase.from('exercises').select('*').then(({ data }) => {
+      if (data) setAllExercises(data);
+    });
+  }, []);
 
   const todaySession = sessions.find(s => s.jour_semaine === selectedDay);
 
@@ -160,9 +176,21 @@ export default function Workout() {
     const durationSeconds = Math.floor((endTime - sessionStartTime) / 1000);
     const totalVolume = finalLogs.reduce((sum, l) => sum + (l.poids_kg * l.reps), 0);
     
-    // Add XP
-    const xpResult = await addXP(user.id, 100);
-    setXpEarned(100);
+    // Calculate XP based on actual performance (min 3 exercises)
+    const xpAmount = calculateSessionXP(finalLogs);
+    if (xpAmount > 0) {
+      await addXP(user.id, xpAmount);
+    }
+    setXpEarned(xpAmount);
+
+    // Update streak
+    const streak = await updateStreak(user.id);
+    setStreakInfo(streak);
+
+    // Estimate total kcal
+    const durationMinutes = durationSeconds / 60;
+    const kcal = estimateKcalBurned(profile?.poids_kg || 70, durationMinutes, 'hypertrophie', profile?.niveau);
+    setTotalKcal(kcal);
     
     // Save to workout_logs with volume
     if (finalLogs.length > 0) {
@@ -179,7 +207,6 @@ export default function Workout() {
       }));
       await supabase.from('workout_logs').insert(toInsert);
       
-      // Also save to exercise_logs for new schema
       const exerciseLogsInsert = finalLogs.map(l => ({
         user_id: user.id,
         exercise_nom: l.exercise_nom || 'Unknown',
@@ -189,10 +216,30 @@ export default function Workout() {
       }));
       await supabase.from('exercise_logs').insert(exerciseLogsInsert);
     }
+
+    // Refresh profile to sync XP/streak in global state
+    await refreshProfile();
     
     setTimeout(() => {
       setActiveWorkout(null);
-    }, 3000); // Wait a bit to show success screen
+    }, 4000);
+  }
+
+  async function handleRegenerate() {
+    if (regenerating) return;
+    setRegenerating(true);
+    try {
+      // Deactivate current program
+      if (program) {
+        await supabase.from('programs').update({ actif: false }).eq('id', program.id);
+      }
+      await refreshProgram();
+      // Redirect to onboarding to regenerate
+      window.location.href = '/onboarding';
+    } catch (err) {
+      console.error(err);
+      setRegenerating(false);
+    }
   }
 
   const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } };
@@ -203,8 +250,29 @@ export default function Workout() {
     const ex = activeWorkout.session_exercises[currentExIdx];
     const exercise = ex?.exercises;
     
+    // Si la session ne contient aucun exercice
+    if (!ex && xpEarned === null) {
+      return (
+        <div className="page" style={{ 
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
+          minHeight: '80vh', backgroundColor: 'var(--surface)', padding: 'var(--space-6)', textAlign: 'center' 
+        }}>
+          <h2 className="title-lg" style={{ color: 'var(--error)', marginBottom: 'var(--space-4)' }}>Séance Vide</h2>
+          <p className="body-md" style={{ color: 'var(--on-surface-variant)', marginBottom: 'var(--space-6)' }}>
+            Il n'y a aucun exercice assigné à cette séance. C'est probablement dû à une ancienne génération de programme.
+          </p>
+          <button className="btn btn--primary" onClick={handleRegenerate} disabled={regenerating} style={{ padding: '16px', borderRadius: 'var(--radius-xl)' }}>
+            {regenerating ? 'Regénération...' : 'Regénérer mon programme'}
+          </button>
+          <button className="btn btn--sm" style={{ marginTop: 'var(--space-4)', backgroundColor: 'transparent', color: 'var(--on-surface-variant)' }} onClick={() => setActiveWorkout(null)}>
+            Retour au tableau de bord
+          </button>
+        </div>
+      );
+    }
+    
     // Si l'entraînement vient d'être terminé et on affiche le succès
-    if (xpEarned) {
+    if (xpEarned !== null) {
       return (
         <div className="page" style={{ 
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
@@ -215,7 +283,7 @@ export default function Workout() {
             animate={{ scale: 1, opacity: 1 }} 
             className="card"
             style={{ 
-              textAlign: 'center', 
+              textAlign: 'center', width: '100%', maxWidth: 400,
               background: 'linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--secondary-rgb), 0.1))',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(var(--primary-rgb), 0.2)',
@@ -228,11 +296,34 @@ export default function Workout() {
             }}>
               <Check size={40} color="var(--primary)" />
             </div>
-            <h2 className="display-sm" style={{ color: 'var(--on-surface)', marginBottom: 'var(--space-2)' }}>Entraînement Terminé !</h2>
-            <div className="flex items-center justify-center gap-2 mb-6 text-primary">
-              <Zap size={20} fill="var(--primary)" />
-              <span className="title-lg">+{xpEarned} XP</span>
+            <h2 className="display-sm" style={{ color: 'var(--on-surface)', marginBottom: 'var(--space-4)' }}>Entraînement Terminé !</h2>
+            
+            {/* Stats row */}
+            <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-4)' }}>
+              <div style={{ flex: 1, background: 'var(--surface-container-high)', padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)' }}>
+                <Zap size={18} style={{ color: 'var(--primary)', marginBottom: 4 }} />
+                <div className="title-md" style={{ color: 'var(--primary)' }}>+{xpEarned}</div>
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>XP</span>
+              </div>
+              <div style={{ flex: 1, background: 'var(--surface-container-high)', padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)' }}>
+                <Flame size={18} style={{ color: '#FF6B00', marginBottom: 4 }} />
+                <div className="title-md" style={{ color: '#FF6B00' }}>~{totalKcal}</div>
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>KCAL</span>
+              </div>
+              {streakInfo && (
+                <div style={{ flex: 1, background: 'var(--surface-container-high)', padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)' }}>
+                  <Flame size={18} style={{ color: '#FF4081', marginBottom: 4 }} />
+                  <div className="title-md" style={{ color: '#FF4081' }}>{streakInfo.streak}🔥</div>
+                  <span className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>STREAK</span>
+                </div>
+              )}
             </div>
+
+            {xpEarned === 0 && (
+              <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginBottom: 'var(--space-4)' }}>
+                Fais au moins 3 exercices pour gagner de l'XP !
+              </p>
+            )}
           </motion.div>
         </div>
       );
@@ -383,6 +474,9 @@ export default function Workout() {
             <Dumbbell size={48} style={{ color: 'var(--outline)', marginBottom: 'var(--space-4)', opacity: 0.5 }} />
             <h3 className="title-lg mb-2">Pas encore de programme</h3>
             <p className="body-md text-muted">Complète l'onboarding pour générer ton programme personnalisé.</p>
+            <button className="btn btn--primary" style={{ marginTop: 'var(--space-6)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }} onClick={() => navigate('/onboarding')}>
+              Créer mon programme
+            </button>
           </motion.div>
         ) : (
           <>
@@ -413,39 +507,64 @@ export default function Workout() {
                     <div className="chip" style={{ background: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)', fontWeight: 'bold' }}>{todaySession.session_exercises?.length || 0} EX.</div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                    {(todaySession.session_exercises || []).map((se, i) => (
-                      <div key={se.id} style={{ 
-                        background: 'var(--surface-container)', 
-                        border: '1px solid rgba(var(--outline-variant), 0.1)',
-                        borderRadius: 'var(--radius-lg)',
-                        overflow: 'hidden'
-                      }}>
-                        <div className="flex" style={{ height: '80px' }}>
-                          <div style={{ width: '80px', flexShrink: 0, backgroundImage: `url(${getExerciseImage(se.exercises?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRight: '1px solid rgba(var(--outline-variant), 0.1)' }} />
-                          <div className="flex items-center justify-between" style={{ padding: 'var(--space-4)', flex: 1 }}>
-                            <div>
-                              <p className="title-md" style={{ textTransform: 'uppercase', margin: 0 }}>{se.exercises?.nom}</p>
-                              <p className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes}S REPOS</p>
+                  {(!todaySession.session_exercises || todaySession.session_exercises.length === 0) ? (
+                    <div className="card text-center" style={{ padding: 'var(--space-8) var(--space-4)', background: 'var(--surface-container-low)', border: '1px solid rgba(var(--error), 0.2)', borderRadius: 'var(--radius-xl)' }}>
+                      <div style={{ backgroundColor: 'rgba(var(--error), 0.1)', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-4)' }}>
+                        <RefreshCw size={24} style={{ color: 'var(--error)' }} />
+                      </div>
+                      <h3 className="title-md mb-2" style={{ color: 'var(--on-surface)' }}>Programme à mettre à jour</h3>
+                      <p className="body-sm mb-6" style={{ color: 'var(--on-surface-variant)', maxWidth: '280px', margin: '0 auto var(--space-6)' }}>
+                        Les données de ton programme Street Workout doivent être recalculées pour correspondre à la nouvelle base d'exercices.
+                      </p>
+                      <button className="btn btn--primary" onClick={handleRegenerate} disabled={regenerating} style={{ padding: 'var(--space-3) var(--space-6)' }}>
+                        {regenerating ? 'Initialisation...' : 'Mettre à jour mon programme'}
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                      {(todaySession.session_exercises || []).map((se, i) => (
+                        <div key={se.id} style={{ 
+                          background: 'var(--surface-container)', 
+                          border: '1px solid rgba(var(--outline-variant), 0.1)',
+                          borderRadius: 'var(--radius-lg)',
+                          overflow: 'hidden'
+                        }}>
+                          <div className="flex" style={{ height: '80px' }}>
+                            <div style={{ width: '80px', flexShrink: 0, backgroundImage: `url(${getExerciseImage(se.exercises?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRight: '1px solid rgba(var(--outline-variant), 0.1)' }} />
+                            <div className="flex items-center justify-between" style={{ padding: 'var(--space-4)', flex: 1 }}>
+                              <div>
+                                <p className="title-md" style={{ textTransform: 'uppercase', margin: 0 }}>{se.exercises?.nom}</p>
+                                <p className="label-sm" style={{ color: 'var(--on-surface-variant)', fontWeight: 'bold' }}>{se.series} × {se.reps_min}-{se.reps_max} · {se.repos_secondes || 90}S REPOS</p>
+                              </div>
+                              <button onClick={() => handleReplaceClick(se)} className="btn btn--sm" style={{ padding: '8px', backgroundColor: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)', color: 'var(--on-surface)', borderRadius: 'var(--radius-md)' }}>
+                                <Repeat size={18} />
+                              </button>
                             </div>
-                            <button onClick={() => handleReplaceClick(se)} className="btn btn--sm" style={{ padding: '8px', backgroundColor: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)', color: 'var(--on-surface)', borderRadius: 'var(--radius-md)' }}>
-                              <Repeat size={18} />
-                            </button>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
 
-                  <button className="btn btn--primary btn--full" style={{ marginTop: 'var(--space-8)', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }} onClick={startWorkout}>
-                    <Play size={20} /> Démarrer la séance
-                  </button>
+                  {(!todaySession.session_exercises || todaySession.session_exercises.length === 0) ? null : (
+                    <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-8)' }}>
+                      <button className="btn btn--primary btn--full" style={{ flex: 3, padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }} onClick={startWorkout}>
+                        <Play size={20} /> Démarrer la séance
+                      </button>
+                      <button onClick={() => setShowRoulette(true)} style={{ flex: 1, padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', background: 'linear-gradient(135deg, #00E5FF, #7C4DFF)', border: 'none', color: '#fff', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Exercice Surprise">
+                        <Dice5 size={22} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ) : (
               <motion.div variants={item} className="card" style={{ textAlign: 'center', padding: 'var(--space-10)', background: 'var(--surface-container-low)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
                 <p className="title-lg text-muted" style={{ textTransform: 'uppercase' }}>Jour de repos</p>
-                <p className="body-md text-muted">Récupération musculaire en cours.</p>
+                <p className="body-md text-muted" style={{ marginBottom: 'var(--space-6)' }}>Récupération musculaire en cours.</p>
+                <button onClick={() => setShowRoulette(true)} style={{ background: 'linear-gradient(135deg, #00E5FF, #7C4DFF)', border: 'none', color: '#fff', padding: '14px 28px', borderRadius: 999, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <Dice5 size={18} /> Exercice Surprise
+                </button>
               </motion.div>
             )}
           </>
@@ -497,6 +616,32 @@ export default function Workout() {
             )}
           </div>
         </div>
+      )}
+
+      {/* Roulette Overlay */}
+      <AnimatePresence>
+        {showRoulette && (
+          <ExerciseRoulette
+            exercises={allExercises}
+            profile={profile}
+            onClose={() => setShowRoulette(false)}
+            onStart={(ex) => { setShowRoulette(false); }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Regenerate button */}
+      {program && (
+        <motion.div variants={item} style={{ marginTop: 'var(--space-6)', marginBottom: 'var(--space-8)' }}>
+          <button onClick={handleRegenerate} disabled={regenerating} style={{
+            width: '100%', background: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)',
+            color: 'var(--on-surface-variant)', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)',
+            fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.85rem',
+          }}>
+            <RefreshCw size={16} /> {regenerating ? 'Régénération...' : 'Changer de programme'}
+          </button>
+        </motion.div>
       )}
     </div>
   );

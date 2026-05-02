@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -10,11 +10,17 @@ import { generateProgramSessions } from '../utils/programGenerator';
 const STEPS = 8;
 
 export default function Onboarding() {
-  const { user, updateProfile, refreshProfile, refreshProgram } = useAuth();
+  const { profile, user, updateProfile, refreshProfile, refreshProgram, signOut } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-
+  const [dataLoaded, setDataLoaded] = useState(false);
+  
+  async function handleLogout() {
+    await signOut();
+    navigate('/login');
+  }
+  
   // Form State
   const [formData, setFormData] = useState({
     prenom: '', nom: '', sexe: 'homme', age: 25, taille_cm: 175, poids_kg: 70,
@@ -23,7 +29,45 @@ export default function Onboarding() {
     use_whey: true, use_creatine: false
   });
 
+  // Load existing data if regenerating
+  useEffect(() => {
+    if (profile && !dataLoaded) {
+      const loadData = async () => {
+        // Fetch pathologies
+        const { data: pathData } = await supabase.from('user_pathologies').select('zone').eq('user_id', user.id);
+        const pathoZones = pathData?.map(p => p.zone) || [];
+
+        setFormData({
+          prenom: profile.prenom || '',
+          nom: profile.nom || '',
+          sexe: profile.sexe || 'homme',
+          age: profile.age || 25,
+          taille_cm: profile.taille_cm || 175,
+          poids_kg: profile.poids_kg || 70,
+          morphotype: profile.morphotype || '',
+          objectif: profile.objectif || '',
+          niveau: profile.niveau || 'debutant',
+          jours_semaine: profile.jours_semaine || [1, 3, 5],
+          duree_seance: profile.duree_seance || 60,
+          mode_entrainement: profile.mode_entrainement || 'salle',
+          pathologies: pathoZones,
+          points_faibles: profile.points_faibles || [],
+          use_whey: profile.use_whey ?? true,
+          use_creatine: profile.use_creatine ?? false
+        });
+
+        // If regenerating, jump to step 3 (Objectif)
+        if (profile.onboarding_complete) {
+          setStep(3);
+        }
+        setDataLoaded(true);
+      };
+      loadData();
+    }
+  }, [profile, user, dataLoaded]);
+
   const updateForm = (key, val) => setFormData(prev => ({ ...prev, [key]: val }));
+
 
   const imc = calculateIMC(formData.poids_kg, formData.taille_cm);
   const imcCat = getIMCCategory(imc);
@@ -59,6 +103,10 @@ export default function Onboarding() {
       if (errEx || !allEx || allEx.length === 0) throw new Error('Impossible de charger les exercices');
 
       const { sessionsData, sessionExercisesData, programType } = generateProgramSessions(formData, allEx);
+      
+      if (!sessionsData || sessionsData.length === 0) {
+        throw new Error("Désolé, nous n'avons pas pu générer de séances avec tes critères. Essaie de modifier tes jours ou ton objectif.");
+      }
 
       const { data: prog, error: errProg } = await supabase.from('programs').insert({
         user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: programType
@@ -195,11 +243,13 @@ export default function Onboarding() {
           <div className="flex flex-col gap-3 mb-6">
             {[
               { id: 'perte_poids', title: '🔥 Perte de poids' },
+              { id: 'seche', title: '✂️ Sèche (Définition musculaire)' },
               { id: 'prise_masse', title: '💪 Prise de masse' },
               { id: 'tonification', title: '✨ Tonification' },
               { id: 'endurance', title: '🏃 Endurance' },
               { id: 'street_workout', title: '🤸 Street Workout (Figures)' }
             ].map(o => (
+
               <div key={o.id} className={`card card--interactive ${formData.objectif === o.id ? 'card--selected' : ''}`} style={{ padding: 'var(--space-4)' }} onClick={() => updateForm('objectif', o.id)}>
                 <h3 className="title-md">{o.title}</h3>
               </div>
@@ -353,6 +403,16 @@ export default function Onboarding() {
 
   return (
     <div className="page" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Header with Logout */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 'var(--space-4)' }}>
+        <button onClick={handleLogout} style={{
+          background: 'none', border: 'none', color: 'var(--on-surface-variant)', 
+          fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4
+        }}>
+           Se déconnecter
+        </button>
+      </div>
+
       {/* Progress */}
       <div className="progress-bar mb-8 mt-4">
         <div className="progress-bar__fill" style={{ width: `${(step / STEPS) * 100}%`, transition: 'width 0.4s var(--ease-kinetic)' }} />

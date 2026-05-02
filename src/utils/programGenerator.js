@@ -7,8 +7,10 @@ export function generateProgramSessions(formData, allExercises) {
   
   // Define split strategy based on number of days and level
   let splitType = 'full_body';
-  if (numDays === 4) splitType = 'upper_lower';
+  if (formData.objectif === 'seche') splitType = 'seche';
+  else if (numDays === 4) splitType = 'upper_lower';
   else if (numDays >= 5) splitType = 'ppl';
+
   
   // --- STREET WORKOUT LOGIC ---
   // We assume street workout uses bodyweight logic from our new data
@@ -17,7 +19,6 @@ export function generateProgramSessions(formData, allExercises) {
   if (isStreetWorkout) {
     const swProg = formData.niveau === 'debutant' ? STREET_WORKOUT_PROGRAMS.debutant : STREET_WORKOUT_PROGRAMS.intermediaire;
     
-    // We try to match SW sessions to user's selected days
     formData.jours_semaine.forEach((jour, i) => {
       const sourceSession = swProg.sessions[i % swProg.sessions.length];
       
@@ -31,20 +32,49 @@ export function generateProgramSessions(formData, allExercises) {
       
       const sessionExList = [];
       sourceSession.exercices.forEach((ex, j) => {
-        // Find matching exercise in DB by name if possible, or fallback to random bodyweight
-        let dbEx = allExercises.find(e => e.nom.toLowerCase().includes(ex.nom.toLowerCase()));
+        // Fuzzy match: check if name is contained or vice versa
+        let dbEx = allExercises.find(e => 
+          e.nom.toLowerCase().includes(ex.nom.toLowerCase()) || 
+          ex.nom.toLowerCase().includes(e.nom.toLowerCase())
+        );
+
+        // Specific fallbacks for common SW exercises if not found
         if (!dbEx) {
-          // Fallback
-          dbEx = allExercises.find(e => e.equipement === 'aucun' || e.equipement === 'barre_traction');
+          const lowerNom = ex.nom.toLowerCase();
+          if (lowerNom.includes('pompe')) {
+            dbEx = allExercises.find(e => e.nom.toLowerCase() === 'pompes');
+          } else if (lowerNom.includes('squat')) {
+            dbEx = allExercises.find(e => e.nom.toLowerCase().includes('squat') && (e.materiel?.includes('aucun') || !e.materiel?.length));
+          } else if (lowerNom.includes('planche') || lowerNom.includes('gainage')) {
+            dbEx = allExercises.find(e => e.nom.toLowerCase().includes('planche') || e.nom.toLowerCase().includes('gainage'));
+          }
+        }
+
+        // Ultimate fallback: any exercise with 'aucun' or 'barre de traction' in materiel array
+        if (!dbEx) {
+          dbEx = allExercises.find(e => {
+            const mat = e.materiel || [];
+            const matArray = Array.isArray(mat) ? mat : [mat];
+            return matArray.some(m => {
+              const ml = m.toLowerCase();
+              return ml.includes('aucun') || ml.includes('traction') || ml.includes('poids du corps');
+            });
+          });
         }
         
         if (dbEx) {
+          // Handle string reps like "20s" or "max"
+          const isTimed = typeof ex.reps === 'string' && ex.reps.includes('s');
+          const numReps = isTimed ? 0 : (parseInt(ex.reps) || 10);
+
           sessionExList.push({
             exercise_id: dbEx.id,
             ordre: j,
             series: ex.series,
-            reps_min: typeof ex.reps === 'string' ? 0 : ex.reps, // If time-based like "20s", reps_min is 0 (or we handle it differently)
-            reps_max: typeof ex.reps === 'string' ? 0 : ex.reps
+            reps_min: numReps,
+            reps_max: numReps,
+            repos_secondes: ex.recup || 90,
+            notes: isTimed ? `Maintenir pendant ${ex.reps}` : ''
           });
         }
       });
@@ -52,6 +82,94 @@ export function generateProgramSessions(formData, allExercises) {
     });
     
     return { sessionsData: sessions, sessionExercisesData: sessionExercises, programType: 'street_workout' };
+  }
+
+  // --- SECHE SPECIALIZED LOGIC ---
+  if (splitType === 'seche') {
+    const secheSessions = [
+      { 
+        nom: 'Force - Haut du Corps', type_session: 'musculation', duree_estimee: 60,
+        exercices: [
+          { nom: 'Développé couché', series: 3, reps: '6-8', recup: 120 },
+          { nom: 'Tractions', series: 3, reps: '8-10', recup: 90 },
+          { nom: 'Développé militaire', series: 3, reps: '8-10', recup: 90 },
+          { nom: 'Rowing barre', series: 3, reps: '10-12', recup: 90 },
+          { nom: 'Dips', series: 3, reps: '10-12', recup: 60 }
+        ]
+      },
+      { 
+        nom: 'HIIT & Core', type_session: 'cardio', duree_estimee: 30,
+        exercices: [
+          { nom: 'Burpees', series: 4, reps: '30s', recup: 30 },
+          { nom: 'Mountain Climbers', series: 4, reps: '30s', recup: 30 },
+          { nom: 'Jumping Jacks', series: 4, reps: '30s', recup: 30 },
+          { nom: 'Planche', series: 3, reps: '45s', recup: 45 },
+          { nom: 'Russian Twists', series: 3, reps: '20', recup: 30 }
+        ]
+      },
+      { 
+        nom: 'Force - Bas du Corps', type_session: 'musculation', duree_estimee: 60,
+        exercices: [
+          { nom: 'Squat', series: 3, reps: '6-8', recup: 120 },
+          { nom: 'Soulevé de terre', series: 3, reps: '5', recup: 180 },
+          { nom: 'Fentes haltères', series: 3, reps: '10', recup: 90 },
+          { nom: 'Leg Curl', series: 3, reps: '12', recup: 60 },
+          { nom: 'Mollets debout', series: 4, reps: '15', recup: 45 }
+        ]
+      },
+      { 
+        nom: 'LISS (Basse Intensité)', type_session: 'cardio', duree_estimee: 45,
+        exercices: [
+          { nom: 'Marche rapide / Vélo', series: 1, reps: '45min', recup: 0 }
+        ]
+      },
+      { 
+        nom: 'Force - Full Body', type_session: 'musculation', duree_estimee: 70,
+        exercices: [
+          { nom: 'Presse à jambes', series: 3, reps: '10-12', recup: 90 },
+          { nom: 'Pompes', series: 3, reps: 'Max', recup: 60 },
+          { nom: 'Tirage poitrine', series: 3, reps: '10-12', recup: 60 },
+          { nom: 'Gobelet Squat', series: 3, reps: '12-15', recup: 60 },
+          { nom: 'Gainage dynamique', series: 3, reps: '60s', recup: 45 }
+        ]
+      }
+    ];
+
+    formData.jours_semaine.forEach((jour, i) => {
+      const sourceSession = secheSessions[i % secheSessions.length];
+      sessions.push({
+        jour_semaine: jour,
+        nom: sourceSession.nom,
+        type_session: sourceSession.type_session,
+        duree_estimee: sourceSession.duree_estimee
+      });
+
+      const sessionExList = [];
+      sourceSession.exercices.forEach((ex, j) => {
+        let dbEx = allExercises.find(e => 
+          e.nom.toLowerCase().includes(ex.nom.toLowerCase()) || 
+          ex.nom.toLowerCase().includes(e.nom.toLowerCase())
+        );
+
+        if (dbEx) {
+          const isTimed = typeof ex.reps === 'string' && (ex.reps.includes('s') || ex.reps.includes('min'));
+          const numReps = isTimed ? 0 : (parseInt(ex.reps) || 10);
+
+          sessionExList.push({
+            exercise_id: dbEx.id,
+            ordre: j,
+            series: ex.series,
+            reps_min: numReps,
+            reps_max: numReps === 0 ? 0 : (numReps + 2),
+            repos_secondes: ex.recup,
+            notes: isTimed ? `Maintenir pendant ${ex.reps}` : ''
+          });
+        }
+      });
+      sessionExercises.push(sessionExList);
+    });
+
+    return { sessionsData: sessions, sessionExercisesData: sessionExercises, programType: 'seche' };
   }
   // --- END STREET WORKOUT LOGIC ---
 

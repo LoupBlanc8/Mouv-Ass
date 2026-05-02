@@ -9,39 +9,40 @@
    ============================================ */
 :root {
   /* Surface Hierarchy */
-  --surface: #0e0e0e;
-  --surface-dim: #0e0e0e;
-  --surface-bright: #2c2c2c;
-  --surface-container-lowest: #000000;
-  --surface-container-low: #131313;
-  --surface-container: #1a1a1a;
-  --surface-container-high: #20201f;
-  --surface-container-highest: #262626;
-  --surface-variant: #262626;
+  --surface: var(--user-bg, #0e0e0e);
+  --surface-dim: var(--user-bg, #0e0e0e);
+  --surface-bright: var(--user-bg-high, #2c2c2c);
+  --surface-container-lowest: var(--user-bg-lowest, #000000);
+  --surface-container-low: var(--user-bg-low, #131313);
+  --surface-container: var(--user-bg-container, #1a1a1a);
+  --surface-container-high: var(--user-bg-high, #20201f);
+  --surface-container-highest: var(--user-bg-high, #262626);
+  --surface-variant: var(--user-bg-high, #262626);
 
-  /* Primary: Vibrant Orange */
-  --primary: #ff9159;
-  --primary-rgb: 255, 145, 89;
-  --primary-container: #ff7a2f;
-  --primary-dim: #ff7524;
-  --on-primary: #531e00;
-  --on-primary-container: #401500;
+  /* Primary: Vibrant Accent */
+  --primary: var(--user-accent, #00E5FF);
+  --primary-rgb: var(--user-accent-rgb, 0, 229, 255);
+  --primary-container: var(--user-accent-dim, #00b3cc);
+  --primary-dim: var(--user-accent-dim, #008ba3);
+  --on-primary: #000000;
+  --on-primary-container: #00333d;
 
-  /* Secondary: Deep Energetic Blue */
-  --secondary: #7e98ff;
-  --secondary-container: #034ae7;
-  --secondary-dim: #3766ff;
-  --on-secondary: #00185d;
+  /* Secondary: Removed customizability for secondary, falls back to static or uses accent */
+  --secondary: #7C4DFF;
+  --secondary-container: #5a32cc;
+  --secondary-dim: #3e2099;
+  --secondary-rgb: 124, 77, 255;
+  --on-secondary: #ffffff;
 
-  /* Tertiary: Gold */
-  --tertiary: #ffc562;
-  --tertiary-container: #fbb423;
-  --tertiary-dim: #eba60f;
+  /* Tertiary/Accent: Gold */
+  --tertiary: #FFD700;
+  --tertiary-container: #ccac00;
+  --tertiary-dim: #998100;
 
   /* Text */
-  --on-surface: #ffffff;
-  --on-surface-variant: #adaaaa;
-  --on-background: #ffffff;
+  --on-surface: var(--user-text, #ffffff);
+  --on-surface-variant: var(--user-text-dim, #adaaaa);
+  --on-background: var(--user-text, #ffffff);
 
   /* Status */
   --error: #ff7351;
@@ -95,35 +96,36 @@
    LIGHT THEME (Volt Performance)
    ============================================ */
 :root[data-theme="light"] {
-  --surface: #f9f5ff;
-  --surface-dim: #d2d0ff;
-  --surface-bright: #f9f5ff;
-  --surface-container-lowest: #ffffff;
-  --surface-container-low: #f2efff;
-  --surface-container: #e9e5ff;
-  --surface-container-high: #e2dfff;
-  --surface-container-highest: #dcd9ff;
-  --surface-variant: #dcd9ff;
+  --surface: var(--user-bg, #f9f5ff);
+  --surface-dim: var(--user-bg, #d2d0ff);
+  --surface-bright: var(--user-bg-high, #f9f5ff);
+  --surface-container-lowest: var(--user-bg-lowest, #ffffff);
+  --surface-container-low: var(--user-bg-low, #f2efff);
+  --surface-container: var(--user-bg-container, #e9e5ff);
+  --surface-container-high: var(--user-bg-high, #e2dfff);
+  --surface-container-highest: var(--user-bg-high, #dcd9ff);
+  --surface-variant: var(--user-bg-high, #dcd9ff);
 
-  --primary: #0049e6;
-  --primary-rgb: 0, 73, 230;
-  --primary-container: #829bff;
-  --primary-dim: #0040cb;
+  --primary: var(--user-accent, #0049e6);
+  --primary-rgb: var(--user-accent-rgb, 0, 73, 230);
+  --primary-container: var(--user-accent-dim, #829bff);
+  --primary-dim: var(--user-accent-dim, #0040cb);
   --on-primary: #f2f1ff;
   --on-primary-container: #001a63;
 
   --secondary: #514eb6;
   --secondary-container: #cfcdff;
   --secondary-dim: #4541a9;
+  --secondary-rgb: 81, 78, 182;
   --on-secondary: #f4f1ff;
 
   --tertiary: #913983;
   --tertiary-container: #f790e0;
   --tertiary-dim: #832c76;
 
-  --on-surface: #2b2a51;
-  --on-surface-variant: #585781;
-  --on-background: #2b2a51;
+  --on-surface: var(--user-text, #2b2a51);
+  --on-surface-variant: var(--user-text-dim, #585781);
+  --on-background: var(--user-text, #2b2a51);
 
   --error: #b41340;
   --error-container: #f74b6d;
