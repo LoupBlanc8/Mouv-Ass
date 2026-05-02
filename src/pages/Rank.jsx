@@ -215,19 +215,22 @@ export default function Rank() {
       </AnimatePresence>
 
       {/* Sticky Bottom Card for Current User */}
-      <div style={{
-        position: 'fixed',
-        bottom: '80px',
-        left: 0, right: 0,
-        padding: 'var(--space-4)',
-        background: 'rgba(14, 14, 14, 0.85)',
+      <div className="rank-position-bar" style={{
+        position: 'sticky',
+        bottom: 0,
+        marginLeft: 'calc(-1 * var(--space-6))',
+        marginRight: 'calc(-1 * var(--space-6))',
+        marginBottom: 'calc(-1 * var(--space-24) - 80px)',
+        padding: 'var(--space-4) var(--space-6)',
+        background: 'rgba(14, 14, 14, 0.92)',
         backdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(255,255,255,0.05)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
         zIndex: 10
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '100%', margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--primary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--on-primary-container)', fontWeight: 'bold' }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--primary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--on-primary-container)', fontWeight: 'bold', fontSize: '0.9rem' }}>
               #{myRank || '?'}
             </div>
             <div>
