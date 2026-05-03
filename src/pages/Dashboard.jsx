@@ -122,14 +122,15 @@ export default function Dashboard() {
           marginBottom: 'var(--space-10)'
         }}>
           <div>
-            <h1 className="display-sm" style={{ 
+            <h1 className="title-lg" style={{ 
               textTransform: 'uppercase', 
-              lineHeight: 0.9, 
+              lineHeight: 1.1, 
               margin: 0,
-              fontSize: '1.8rem' // Better mobile scale
+              fontSize: '1.5rem',
+              letterSpacing: '-0.02em'
             }}>
-              {greeting.toUpperCase()}<br />
-              <span style={{ color: 'var(--primary)' }}>{prenom.toUpperCase()} 👊</span>
+              <span className="body-sm text-muted" style={{ display: 'block', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '2px' }}>{greeting.toUpperCase()}</span>
+              <span style={{ color: 'var(--primary)', fontWeight: 900 }}>{prenom.toUpperCase()} 👊</span>
             </h1>
           </div>
           <div style={{ display: 'flex', gap: 'var(--space-2)', flexShrink: 0 }}>
@@ -180,25 +181,29 @@ export default function Dashboard() {
             </motion.div>
 
             {/* Week Progress */}
-            <motion.div variants={item} style={{ background: 'var(--surface-container)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div className="flex gap-2" style={{ justifyContent: 'space-between' }}>
+            <motion.div variants={item} style={{ background: 'var(--surface-container)', padding: 'var(--space-5)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+              <div className="full-bleed-scroll gap-3" style={{ justifyContent: 'space-between' }}>
                 {JOURS.map((j, i) => {
                   const isToday = i === jourSemaine;
                   const isTrainingDay = (profile?.jours_semaine || []).includes(i);
+                  const d = new Date(today);
+                  d.setDate(today.getDate() - jourSemaine + i);
                   return (
-                    <div key={j} style={{
+                    <div key={i} style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)',
+                      flex: 1, minWidth: '42px'
                     }}>
-                      <span className="label-sm" style={{ color: isToday ? 'var(--primary)' : 'var(--on-surface-variant)', fontSize: '0.625rem', fontWeight: 'bold' }}>{j.toUpperCase()}</span>
+                      <span className="label-sm" style={{ color: isToday ? 'var(--primary)' : 'var(--on-surface-variant)', fontSize: '0.6rem', fontWeight: 800 }}>{j.toUpperCase()}</span>
                       <div style={{
-                        width: 40, height: 40, borderRadius: 'var(--radius-lg)',
+                        width: 38, height: 38, borderRadius: 'var(--radius-full)',
                         background: isToday ? 'var(--primary)' : isTrainingDay ? 'var(--surface-container-highest)' : 'transparent',
                         border: !isToday && !isTrainingDay ? '1px solid rgba(var(--outline-variant), 0.2)' : 'none',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: isToday ? 'var(--on-primary)' : 'var(--on-surface-variant)',
-                        fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.875rem',
-                        boxShadow: isToday ? '0 0 20px rgba(var(--primary-rgb), 0.3)' : 'none'
-                      }}>{today.getDate() - jourSemaine + i}</div>
+                        fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '0.85rem',
+                        boxShadow: isToday ? '0 0 15px rgba(var(--primary-rgb), 0.4)' : 'none',
+                        transition: 'all 0.3s ease'
+                      }}>{d.getDate()}</div>
                     </div>
                   );
                 })}
@@ -211,13 +216,13 @@ export default function Dashboard() {
             <h2 className="title-lg" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>SÉANCE DU JOUR</h2>
             {todaySession ? (
               <div className="card card--glow-primary" style={{ padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--primary-rgb), 0.2)' }}>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="display-sm" style={{ textTransform: 'uppercase', marginBottom: 'var(--space-2)' }}>{todaySession.nom}</h3>
-                    <span className="label-md" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{todaySession.duree_estimee} MIN • {todaySession.session_exercises?.length || 0} EXERCICES</span>
+                <div className="flex items-start justify-between mb-6 gap-4">
+                  <div style={{ flex: 1 }}>
+                    <h3 className="title-lg" style={{ textTransform: 'uppercase', marginBottom: 'var(--space-1)', fontSize: '1.4rem', lineHeight: 1.1 }}>{todaySession.nom}</h3>
+                    <span className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{todaySession.duree_estimee} MIN • {todaySession.session_exercises?.length || 0} EXERCICES</span>
                   </div>
-                  <div className="chip" style={{ background: 'var(--primary-container)', color: 'var(--on-primary-container)', padding: 'var(--space-2) var(--space-4)' }}>
-                    <Dumbbell size={16} /> <span style={{ fontWeight: 'bold' }}>{todaySession.type_session}</span>
+                  <div className="chip" style={{ background: 'var(--primary-container)', color: 'var(--on-primary-container)', padding: 'var(--space-2) var(--space-4)', flexShrink: 0 }}>
+                    <Dumbbell size={14} /> <span style={{ fontWeight: 'bold', fontSize: '0.75rem' }}>{todaySession.type_session}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 mb-8" style={{ flexWrap: 'wrap' }}>
