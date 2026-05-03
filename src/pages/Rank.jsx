@@ -104,7 +104,7 @@ export default function Rank() {
       </header>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-8)' }}>
+      <div className="full-bleed-scroll gap-2 mb-8" style={{ paddingBottom: 'var(--space-2)' }}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
             flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -114,7 +114,9 @@ export default function Rank() {
             fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem',
             borderWidth: 1, borderStyle: 'solid',
             borderColor: activeTab === tab.id ? 'rgba(var(--primary-rgb), 0.3)' : 'rgba(var(--outline-variant), 0.1)',
-            transition: 'all 0.25s ease'
+            transition: 'all 0.25s ease',
+            flexShrink: 0,
+            minWidth: '100px'
           }}>
             {tab.icon} {tab.label}
             {tab.count !== undefined && tab.count > 0 && (

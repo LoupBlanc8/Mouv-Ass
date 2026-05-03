@@ -660,7 +660,7 @@ export default function Workout() {
         ) : (
           <>
             {/* Day selector */}
-            <motion.div variants={item} className="flex gap-2 mb-8" style={{ overflowX: 'auto', paddingBottom: 'var(--space-2)' }}>
+            <motion.div variants={item} className="full-bleed-scroll gap-2 mb-8" style={{ paddingBottom: 'var(--space-2)' }}>
               {JOURS_FULL.map((j, i) => (
                 <button key={j} onClick={() => setSelectedDay(i)}
                   className={`chip ${selectedDay === i ? 'chip--primary' : ''}`}

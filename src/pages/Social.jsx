@@ -233,7 +233,7 @@ export default function Social() {
       </header>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-6)', overflowX: 'auto', paddingBottom: 2 }}>
+      <div className="full-bleed-scroll gap-2 mb-6" style={{ paddingBottom: 'var(--space-2)' }}>
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
             display: 'flex', alignItems: 'center', gap: 6,
