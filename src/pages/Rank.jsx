@@ -89,10 +89,18 @@ export default function Rank() {
   ];
 
   return (
-    <div className="page-container" style={{ paddingBottom: 'calc(var(--space-24) + 80px)' }}>
-      <header className="header" style={{ marginBottom: 'var(--space-6)' }}>
-        <h1 className="display-sm">Classement</h1>
-        <p className="body-md text-muted">Mesure-toi à l'élite. Données réelles.</p>
+    <div className="page" style={{ paddingBottom: 'calc(var(--space-24) + 80px)' }}>
+      <header style={{ marginBottom: 'var(--space-10)' }}>
+        <h1 className="display-sm" style={{ 
+          textTransform: 'uppercase', 
+          lineHeight: 0.9, 
+          margin: 0,
+          fontSize: '1.8rem'
+        }}>
+          Classement<br />
+          <span style={{ color: 'var(--primary)' }}>LÉGENDAIRE</span>
+        </h1>
+        <p className="body-sm text-muted" style={{ marginTop: 'var(--space-2)' }}>Mesure-toi à l'élite. Données réelles.</p>
       </header>
 
       {/* Tabs */}

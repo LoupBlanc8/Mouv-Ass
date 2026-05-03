@@ -155,16 +155,32 @@ export default function Nutrition() {
     <div className="page" style={{ paddingBottom: 'var(--space-8)' }}>
       <motion.div variants={container} initial="hidden" animate="show">
         {/* Editorial Header */}
-        <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
+        <motion.div variants={item} style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-start', 
+          marginBottom: 'var(--space-10)'
+        }}>
           <div>
-            <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
+            <h1 className="display-sm" style={{ 
+              textTransform: 'uppercase', 
+              lineHeight: 0.9, 
+              margin: 0,
+              fontSize: '1.8rem'
+            }}>
               NUTRITION<br />
               <span style={{ color: 'var(--primary)' }}>MOUV'BODY</span>
             </h1>
           </div>
-          <div style={{ marginBottom: '4px', background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
-            <span className="label-md" style={{ color: isTrainingDay ? 'var(--primary)' : 'var(--on-surface-variant)', fontWeight: 'bold', textTransform: 'uppercase' }}>
-              {isTrainingDay ? "JOUR D'ENTRAÎNEMENT" : "JOUR DE REPOS"}
+          <div style={{ 
+            background: 'var(--surface-container-high)', 
+            padding: 'var(--space-2) var(--space-4)', 
+            borderRadius: 'var(--radius-xl)', 
+            border: '1px solid rgba(var(--outline-variant), 0.1)',
+            flexShrink: 0
+          }}>
+            <span className="label-sm" style={{ color: isTrainingDay ? 'var(--primary)' : 'var(--on-surface-variant)', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              {isTrainingDay ? "TRAINING" : "REPOS"}
             </span>
           </div>
         </motion.div>

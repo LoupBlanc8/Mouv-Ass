@@ -1,4 +1,4 @@
-- Jeux sportif (roulette qui donne un exercice aléatoire à faire à l'instantes)
+- Jeux sportif (roulette qui donne un exercice aléatoire à faire à l'instantes) a synchroniser
 - Académie qui ne finit jamais, quand la difficulté est au max l'utilisateur devra faire/pousser 0.5kilos de plus a chaque fois
 Aussi mieux répartir l'académie avec plusieurs sous onglet ( par exemple catégorie développer couché pour le programme muscul, une autre catégorie squat, etc...)
 - Dans l'onglet nutrition toujours proposer un plat halal, et des recettes afin de pouvoir les cuisiners nous même
@@ -14,6 +14,6 @@ En plus ajouter une options qui permet aux gens de saisir tous les aliments que 
 - Faire une page d'accueil (petit site) avant d'accéder à l'app
 - Dans l'onglet académie faire un autre onglet 'quêtes journalière' pour donner envie à l'utilisateur de revenir chaque jours avec un système de streak qui apparaitra dans l'onglet rank pour celui qui détient le record de streak.
 - Dans l'onglet rank le message 'Votre Position' est mal calibré il faut régler ça
-- Pour ce qui est du sport si il fait en salle l'utilisateur devra renseigner sa charge max sur CHAQUES EXERCICES afin de savoir selon son objectifs définir sa charge de travail qui augmentera par la suite selon ses performances.
+- Pour ce qui est du sport si il fait en salle l'utilisateur devra renseigner sa charge max sur CHAQUES EXERCICES DU PROGRAMME afin de savoir selon ses objectifs définir sa charge de travail qui augmentera par la suite selon ses performances.
 Ajouter une estimations des kcal brulés par exercices en prenant en compte la forme de la personne
 - Ajouter un onglet apprentisage qui réportorira des vidéos explicatives de tous les exercices afin de bien les réaliser.

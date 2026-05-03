@@ -115,23 +115,41 @@ export default function Dashboard() {
     <div className="page">
       <motion.div variants={container} initial="hidden" animate="show">
         {/* Editorial Header */}
-        <motion.div variants={item} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)' }}>
+        <motion.div variants={item} style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-start', 
+          marginBottom: 'var(--space-10)'
+        }}>
           <div>
-            <h1 className="display-sm" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0 }}>
+            <h1 className="display-sm" style={{ 
+              textTransform: 'uppercase', 
+              lineHeight: 0.9, 
+              margin: 0,
+              fontSize: '1.8rem' // Better mobile scale
+            }}>
               {greeting.toUpperCase()}<br />
               <span style={{ color: 'var(--primary)' }}>{prenom.toUpperCase()} 👊</span>
             </h1>
           </div>
-          <div style={{ marginBottom: '4px', display: 'flex', gap: 'var(--space-2)' }}>
+          <div style={{ display: 'flex', gap: 'var(--space-2)', flexShrink: 0 }}>
             {(profile?.streak_current || 0) > 0 && (
-              <div style={{ background: 'rgba(255,107,0,0.1)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(255,107,0,0.2)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                <span style={{ fontSize: '1rem' }}>🔥</span>
-                <span className="label-md" style={{ color: '#FF6B00', fontWeight: 'bold' }}>{profile.streak_current}J</span>
+              <div style={{ background: 'rgba(255,107,0,0.1)', padding: 'var(--space-1) var(--space-2)', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,107,0,0.2)', display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+                <span style={{ fontSize: '0.8rem' }}>🔥</span>
+                <span className="label-sm" style={{ color: '#FF6B00', fontWeight: 'bold' }}>{profile.streak_current}J</span>
               </div>
             )}
-            <div style={{ background: 'var(--surface-container-high)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--outline-variant), 0.1)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-              <Flame size={20} style={{ color: 'var(--primary)' }} />
-              <span className="label-md" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{workoutCount} SÉANCES</span>
+            <div style={{ 
+              background: 'var(--surface-container-high)', 
+              padding: 'var(--space-2) var(--space-3)', 
+              borderRadius: 'var(--radius-xl)', 
+              border: '1px solid rgba(var(--outline-variant), 0.1)', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 'var(--space-2)' 
+            }}>
+              <Flame size={16} style={{ color: 'var(--primary)' }} />
+              <span className="label-sm" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{workoutCount} S</span>
             </div>
           </div>
         </motion.div>

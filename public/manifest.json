@@ -1,0 +1,17 @@
+{
+  "name": "Mouv'Body",
+  "short_name": "Mouv'Body",
+  "description": "Entraînement et nutrition personnalisés selon ton morphotype, ton IMC et tes objectifs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

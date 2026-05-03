@@ -218,10 +218,18 @@ export default function Social() {
     : filteredAthletes;
 
   return (
-    <div className="page-container" style={{ paddingBottom: 'calc(var(--space-24) + 60px)' }}>
-      <header className="header" style={{ marginBottom: 'var(--space-6)' }}>
-        <h1 className="display-sm">Réseau</h1>
-        <p className="body-md text-muted">Trouvez d'autres athlètes Mouv'Body.</p>
+    <div className="page" style={{ paddingBottom: 'calc(var(--space-24) + 60px)' }}>
+      <header style={{ marginBottom: 'var(--space-10)' }}>
+        <h1 className="display-sm" style={{ 
+          textTransform: 'uppercase', 
+          lineHeight: 0.9, 
+          margin: 0,
+          fontSize: '1.8rem'
+        }}>
+          Réseau<br />
+          <span style={{ color: 'var(--primary)' }}>ATHLÈTES</span>
+        </h1>
+        <p className="body-sm text-muted" style={{ marginTop: 'var(--space-2)' }}>Trouvez d'autres athlètes Mouv'Body.</p>
       </header>
 
       {/* Tabs */}

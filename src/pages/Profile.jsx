@@ -90,7 +90,13 @@ export default function Profile() {
       <motion.div variants={container} initial="hidden" animate="show">
 
         {/* Hero Header with Photo */}
-        <motion.div variants={item} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)', marginBottom: 'var(--space-10)', marginTop: 'var(--space-4)', flexWrap: 'wrap' }}>
+        <motion.div variants={item} style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 'var(--space-6)', 
+          marginBottom: 'var(--space-10)', 
+          flexWrap: 'wrap' 
+        }}>
           <div style={{ position: 'relative' }}>
             <img src={avatarUrl} alt="Profile" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--primary)' }} />
             <button onClick={() => fileRef.current?.click()} style={{
@@ -106,7 +112,13 @@ export default function Profile() {
             </div>}
           </div>
           <div>
-            <h1 className="display-md" style={{ textTransform: 'uppercase', lineHeight: 1, margin: 0, wordBreak: 'break-word' }}>
+            <h1 className="display-md" style={{ 
+              textTransform: 'uppercase', 
+              lineHeight: 0.9, 
+              margin: 0, 
+              wordBreak: 'break-word',
+              fontSize: '2rem'
+            }}>
               {profile?.prenom || 'ATHLÈTE'}<br />
               <span style={{ color: 'var(--secondary)' }}>{profile?.nom || 'INCONNU'}</span>
             </h1>
