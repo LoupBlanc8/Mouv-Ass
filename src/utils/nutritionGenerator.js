@@ -21,6 +21,7 @@ const repasPertePoids = {
     nom: "Omelette protéinée & Épinards",
     description: "3 œufs entiers, épinards, 1 tranche pain complet.",
     focus: "Protéines élevées, satiété durable",
+    recette: "Battez 3 œufs. Faites revenir une poignée d'épinards dans une poêle légèrement huilée. Ajoutez les œufs et faites cuire à feu moyen. Servez avec le pain complet grillé.",
     options: [
       { nom: "Omelette aux épinards", image: imgPtDej3 },
       { nom: "Porridge Fruits Rouges", image: imgPtDej1 },
@@ -31,16 +32,18 @@ const repasPertePoids = {
     nom: "Salade Quinoa & Thon",
     description: "Quinoa, thon, avocat, tomates, vinaigrette légère.",
     focus: "Fibres, volume alimentaire",
+    recette: "Cuire 50g de quinoa. Mélanger avec 100g de thon au naturel, 1/2 avocat en dés et des tomates cerises. Assaisonner avec 1 c.à.s d'huile d'olive, jus de citron, sel et poivre.",
     options: [
       { nom: "Salade Quinoa Thon", image: imgDej1 },
       { nom: "Poulet grillé & Haricots", image: imgDej2 },
-      { nom: "Wrap Dinde Crudités", image: imgDiner1 }
+      { nom: "Plat Halal: Émincé de dinde (Halal) et boulgour", image: imgDiner1 }
     ]
   },
   collation: {
     nom: "Skyr aux Fruits Rouges",
     description: "200g de Skyr, fruits rouges, graines de chia.",
     focus: "Protéines lentes, IG bas",
+    recette: "Dans un bol, versez 200g de Skyr. Ajoutez une poignée de fruits rouges et saupoudrez d'une cuillère à café de graines de chia. Dégustez frais.",
     options: [
       { nom: "Skyr & Myrtilles", image: imgSnack1 },
       { nom: "Pomme & Amandes", image: imgSnack3 },
@@ -51,6 +54,7 @@ const repasPertePoids = {
     nom: "WHEY_PLACEHOLDER & Datte",
     description: "WHEY_DESC_PLACEHOLDER + 1 ou 2 dattes.",
     focus: "Énergie rapide",
+    recette: "Mélangez votre poudre avec de l'eau. Accompagnez de 1 à 2 dattes pour un apport glucidique rapide avant l'effort.",
     options: [
       { nom: "Shaker & Datte", image: imgSnack2 },
       { nom: "Banane", image: imgSnack3 }
@@ -60,8 +64,10 @@ const repasPertePoids = {
     nom: "Riz Blanc & Poulet CREATINE_PLACEHOLDER",
     description: "Riz, poulet, haricots. CREATINE_DESC_PLACEHOLDER",
     focus: "Recharge glycogénique",
+    recette: "Faites cuire 60g de riz blanc. Faites griller 120g de blanc de poulet. Accompagnez d'une portion de haricots verts.",
     options: [
       { nom: "Poulet & Riz", image: imgDej2 },
+      { nom: "Plat Halal: Poulet rôti (Halal) & Riz", image: imgDej2 },
       { nom: "Shaker & Banane", image: imgSnack2 }
     ]
   },
@@ -69,15 +75,17 @@ const repasPertePoids = {
     nom: "Cabillaud & Patate Douce",
     description: "Cabillaud, brocolis, patate douce.",
     focus: "Digestion légère",
+    recette: "Cuire 150g de cabillaud en papillote au four à 180°C (15 min). Cuire à la vapeur 150g de patate douce et 100g de brocolis. Assaisonner d'herbes.",
     options: [
       { nom: "Poisson & Patate douce", image: imgDej3 },
-      { nom: "Steak haché 5% & Légumes", image: imgDiner2 }
+      { nom: "Plat Halal: Steak haché 5% (Halal) & Légumes", image: imgDiner2 }
     ]
   },
   nuit: {
     nom: "Fromage Blanc & Cannelle",
     description: "Fromage blanc 0% et cannelle.",
     focus: "Caséine nocturne",
+    recette: "Mélangez 150g de fromage blanc 0% avec une pincée de cannelle.",
     options: [
       { nom: "Fromage blanc", image: imgSnack1 }
     ]
@@ -89,26 +97,29 @@ const repasPriseMasse = {
     nom: "Bowl Avoine & WHEY_PLACEHOLDER",
     description: "Flocons d'avoine, lait entier, WHEY_DESC_PLACEHOLDER, banane.",
     focus: "Densité calorique",
+    recette: "Chauffez 80g de flocons d'avoine avec 200ml de lait entier. Hors du feu, ajoutez la whey et 1 banane en rondelles.",
     options: [
       { nom: "Porridge Banane", image: imgPtDej1 },
       { nom: "Pancakes Protéinés", image: imgPtDej2 },
-      { nom: "4 Oeufs & Bacon", image: imgPtDej3 }
+      { nom: "Plat Halal: 4 Oeufs & Bacon de Dinde (Halal)", image: imgPtDej3 }
     ]
   },
   dejeuner: {
     nom: "Poulet & Riz + Fromage",
     description: "Riz blanc, poulet, huile d'olive, fromage.",
     focus: "Protéines, Glucides ++",
+    recette: "Cuire 100g de riz sec. Saisir 150g de blanc de poulet en dés. Mélanger le tout avec 1 c.à.s d'huile d'olive et 30g de fromage râpé.",
     options: [
       { nom: "Poulet Riz XXL", image: imgDej2 },
       { nom: "Pâtes au Boeuf", image: imgDiner2 },
-      { nom: "Saumon & Quinoa", image: imgDej3 }
+      { nom: "Plat Halal: Boeuf haché (Halal) & Pâtes", image: imgDiner2 }
     ]
   },
   collation: {
     nom: "Gros Bol Skyr & Granola",
     description: "Skyr, granola maison, beurre de cacahuète.",
     focus: "Calories faciles",
+    recette: "Dans un grand bol, mélangez 250g de Skyr avec 50g de granola. Ajoutez une cuillère à soupe de beurre de cacahuète.",
     options: [
       { nom: "Skyr Beurre Cacahuète", image: imgSnack1 },
       { nom: "Gainer Maison", image: imgSnack2 },
@@ -119,6 +130,7 @@ const repasPriseMasse = {
     nom: "Banane & Beurre d'Amande",
     description: "1 grosse banane + beurre d'amande.",
     focus: "Énergie soutenue",
+    recette: "Coupez une banane en deux et tartinez le centre de beurre d'amande.",
     options: [
       { nom: "Banane Beurre Amande", image: imgSnack3 },
       { nom: "Gâteau de riz", image: imgPtDej1 }
@@ -128,24 +140,29 @@ const repasPriseMasse = {
     nom: "Gainer Maison CREATINE_PLACEHOLDER",
     description: "WHEY_PLACEHOLDER, lait, avoine mixés. CREATINE_DESC_PLACEHOLDER",
     focus: "Insuline spike",
+    recette: "Mixez 300ml de lait entier, 1 portion de poudre, 50g de poudre d'avoine, 1 banane (et créatine si prévue).",
     options: [
       { nom: "Gainer Liquide", image: imgSnack2 },
-      { nom: "Repas Solide Poulet Riz", image: imgDej2 }
+      { nom: "Repas Solide Poulet Riz", image: imgDej2 },
+      { nom: "Plat Halal: Riz blanc & Poulet (Halal)", image: imgDej2 }
     ]
   },
   diner: {
     nom: "Saumon & Quinoa",
     description: "Saumon, quinoa, épinards, avocat.",
     focus: "Oméga-3",
+    recette: "Cuire 150g de saumon au four (180°C, 15 min) et 80g de quinoa. Servir sur des jeunes pousses d'épinards avec un demi-avocat.",
     options: [
       { nom: "Saumon Avocat", image: imgDej3 },
-      { nom: "Steak & Pâtes", image: imgDiner2 }
+      { nom: "Steak & Pâtes", image: imgDiner2 },
+      { nom: "Plat Halal: Escalope de Veau (Halal) & Riz", image: imgDiner3 }
     ]
   },
   nuit: {
     nom: "Fromage Blanc & Noix",
     description: "Fromage blanc, noix, cacao.",
     focus: "Anti-catabolisme",
+    recette: "Ajoutez une poignée de noix et une cuillère de cacao pur dans 200g de fromage blanc.",
     options: [
       { nom: "Fromage Blanc Noix", image: imgSnack1 }
     ]
@@ -157,24 +174,29 @@ const repasMaintien = {
     nom: "Porridge Protéiné",
     description: "Flocons d'avoine, lait, WHEY_DESC_PLACEHOLDER.",
     focus: "Équilibre",
+    recette: "Chauffez 60g d'avoine avec 150ml de lait demi-écrémé. Ajoutez la poudre protéinée en fin de cuisson.",
     options: [
       { nom: "Porridge Protéiné", image: imgPtDej1 },
-      { nom: "Oeufs au plat", image: imgPtDej3 }
+      { nom: "Oeufs au plat", image: imgPtDej3 },
+      { nom: "Plat Halal: Toast Avocat & Oeuf", image: imgPtDej3 }
     ]
   },
   dejeuner: {
     nom: "Poulet & Patate Douce",
     description: "Poulet, patate douce, brocolis.",
     focus: "Repas équilibré",
+    recette: "Faites dorer 130g de blanc de poulet. Servez avec 150g de patate douce rôtie et 100g de brocolis vapeur.",
     options: [
       { nom: "Poulet Patate Douce", image: imgDiner3 },
-      { nom: "Salade composée", image: imgDej1 }
+      { nom: "Salade composée", image: imgDej1 },
+      { nom: "Plat Halal: Poulet Curry (Halal) & Riz basmati", image: imgDiner3 }
     ]
   },
   collation: {
     nom: "Yaourt Grec & Amandes",
     description: "Yaourt grec nature, amandes.",
     focus: "Satiété",
+    recette: "Servez 150g de yaourt grec avec une quinzaine d'amandes.",
     options: [
       { nom: "Yaourt Amandes", image: imgSnack1 },
       { nom: "Shaker", image: imgSnack2 }
@@ -184,6 +206,7 @@ const repasMaintien = {
     nom: "Pain Complet & Miel",
     description: "Tranches de pain complet avec miel.",
     focus: "Glucides de préparation",
+    recette: "Faites griller deux tranches de pain complet et étalez finement du miel.",
     options: [
       { nom: "Pain Miel", image: imgPtDej2 },
       { nom: "Banane", image: imgSnack3 }
@@ -193,24 +216,28 @@ const repasMaintien = {
     nom: "WHEY_PLACEHOLDER & Fruit CREATINE_PLACEHOLDER",
     description: "WHEY_DESC_PLACEHOLDER et un fruit. CREATINE_DESC_PLACEHOLDER",
     focus: "Récupération immédiate",
+    recette: "Diluez la poudre dans l'eau. Consommez avec un fruit de saison.",
     options: [
       { nom: "Whey & Fruit", image: imgSnack2 },
-      { nom: "Poulet Riz", image: imgDej2 }
+      { nom: "Plat Halal: Poulet (Halal) & Riz", image: imgDej2 }
     ]
   },
   diner: {
     nom: "Steak Haché 5% & Pâtes Complètes",
     description: "Steak haché 5% MG, pâtes complètes.",
     focus: "Reconstruction musculaire",
+    recette: "Cuisez 70g de pâtes complètes. Poêlez un steak haché à 5% MG et mélangez avec du coulis de tomate.",
     options: [
       { nom: "Steak Pâtes", image: imgDiner2 },
-      { nom: "Poisson Riz", image: imgDej3 }
+      { nom: "Poisson Riz", image: imgDej3 },
+      { nom: "Plat Halal: Steak haché (Halal) & Boulgour", image: imgDiner2 }
     ]
   },
   nuit: {
     nom: "Skyr Nature",
     description: "Un bol de Skyr.",
     focus: "Protéines nocturnes",
+    recette: "Versez 150g de Skyr dans un bol. Ajoutez quelques gouttes de vanille si désiré.",
     options: [
       { nom: "Skyr", image: imgSnack1 }
     ]

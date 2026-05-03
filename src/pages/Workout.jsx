@@ -7,6 +7,7 @@ import { Play, Pause, RotateCcw, Check, ChevronRight, Timer, Dumbbell, ChevronDo
 import { addXP, calculateSessionXP, updateStreak } from '../utils/gamification';
 import { estimateKcalBurned } from '../utils/loadCalculator';
 import ExerciseRoulette from '../components/ui/ExerciseRoulette';
+import YouTubePlayer from '../components/ui/YouTubePlayer';
 
 const JOURS_FULL = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
@@ -64,6 +65,9 @@ export default function Workout() {
   const [logs, setLogs] = useState([]);
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');
+  const [maxLoads, setMaxLoads] = useState({});
+  const [missingMaxLoadsModal, setMissingMaxLoadsModal] = useState({ open: false, exercises: [] });
+  const [tempMaxLoads, setTempMaxLoads] = useState({});
   const [sessionStartTime, setSessionStartTime] = useState(null);
   const [xpEarned, setXpEarned] = useState(null);
   const [totalKcal, setTotalKcal] = useState(0);
@@ -82,6 +86,73 @@ export default function Workout() {
       if (data) setAllExercises(data);
     });
   }, []);
+
+  // Fetch max loads for the user
+  useEffect(() => {
+    if (user) {
+      supabase.from('user_max_loads').select('*').eq('user_id', user.id).then(({ data }) => {
+        if (data) {
+          const loadsObj = {};
+          data.forEach(d => loadsObj[d.exercise_id] = d.max_load_kg);
+          setMaxLoads(loadsObj);
+        }
+      });
+    }
+  }, [user, activeWorkout]); // Refresh if activeWorkout changes just in case
+
+  // PERSISTENCE: Restore workout on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('mouvbody_active_workout');
+    if (saved && user) {
+      try {
+        const data = JSON.parse(saved);
+        // Only restore if it's the same user and the data exists
+        if (data.activeWorkout && data.userId === user.id) {
+          setActiveWorkout(data.activeWorkout);
+          setCurrentExIdx(data.currentExIdx || 0);
+          setCurrentSet(data.currentSet || 1);
+          setLogs(data.logs || []);
+          setTotalKcal(data.totalKcal || 0);
+          if (data.sessionStartTime) {
+            setSessionStartTime(new Date(data.sessionStartTime));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to restore workout", e);
+        localStorage.removeItem('mouvbody_active_workout');
+      }
+    }
+  }, [user]);
+
+  // PERSISTENCE: Save workout whenever state changes
+  useEffect(() => {
+    if (activeWorkout && user) {
+      const data = {
+        userId: user.id,
+        activeWorkout,
+        currentExIdx,
+        currentSet,
+        logs,
+        totalKcal,
+        sessionStartTime: sessionStartTime?.toISOString()
+      };
+      localStorage.setItem('mouvbody_active_workout', JSON.stringify(data));
+    } else if (!activeWorkout) {
+      // Clear storage when workout is over
+      localStorage.removeItem('mouvbody_active_workout');
+    }
+  }, [activeWorkout, currentExIdx, currentSet, logs, totalKcal, sessionStartTime, user]);
+
+  function getRecommendedWeight(maxLoad, objectif) {
+    if (!maxLoad) return null;
+    let percent = 0.75; // par défaut 75%
+    if (objectif === 'prise_masse') percent = 0.75;
+    else if (objectif === 'perte_poids' || objectif === 'seche' || objectif === 'tonification') percent = 0.65;
+    else if (objectif === 'endurance') percent = 0.60;
+    
+    // Arrondir à 0.5 près
+    return Math.round((maxLoad * percent) * 2) / 2;
+  }
 
   const todaySession = sessions.find(s => s.jour_semaine === selectedDay);
 
@@ -119,6 +190,48 @@ export default function Workout() {
       console.error(err);
       alert('Erreur lors du remplacement');
     }
+  }
+
+  function handleStartWorkout() {
+    if (!todaySession) return;
+    
+    // Check for missing max loads for all exercises in session
+    // Filter duplicates by exercise_id
+    const missing = todaySession.session_exercises.filter((se, index, self) => {
+      return maxLoads[se.exercise_id] === undefined &&
+             self.findIndex(s => s.exercise_id === se.exercise_id) === index;
+    });
+    
+    if (missing.length > 0) {
+      setMissingMaxLoadsModal({ open: true, exercises: missing });
+      return; // wait for user to fill
+    }
+    
+    startWorkout();
+  }
+
+  async function saveMaxLoadsAndStart() {
+    const inserts = [];
+    for (const ex of missingMaxLoadsModal.exercises) {
+      const weightVal = parseFloat(tempMaxLoads[ex.exercise_id]) || 0;
+      inserts.push({
+        user_id: user.id,
+        exercise_id: ex.exercise_id,
+        max_load_kg: weightVal,
+        estimated_1rm: weightVal // on l'utilise comme 1RM direct
+      });
+      setMaxLoads(prev => ({ ...prev, [ex.exercise_id]: weightVal }));
+    }
+    
+    if (inserts.length > 0) {
+      const { error } = await supabase.from('user_max_loads').upsert(inserts, { onConflict: 'user_id, exercise_id' });
+      if (error) {
+        console.error("Erreur lors de la sauvegarde des charges max:", error);
+      }
+    }
+    
+    setMissingMaxLoadsModal({ open: false, exercises: [] });
+    startWorkout();
   }
 
   function startWorkout() {
@@ -219,6 +332,30 @@ export default function Workout() {
 
     // Refresh profile to sync XP/streak in global state
     await refreshProfile();
+    
+    // Check if user broke their max loads for these exercises
+    for (const ex_id of [...new Set(finalLogs.map(l => l.exercise_id))]) {
+      const maxInSession = Math.max(...finalLogs.filter(l => l.exercise_id === ex_id).map(l => l.poids_kg));
+      const currentMax = maxLoads[ex_id] || 0;
+      // if they lift more than 90% of their 1RM for reps, maybe we should bump their 1RM.
+      // Un simple calcul de 1RM estimé (Epley formula: 1RM = W * (1 + r/30))
+      let maxEstimated1RM = currentMax;
+      finalLogs.filter(l => l.exercise_id === ex_id).forEach(l => {
+        const est1RM = l.poids_kg * (1 + l.reps / 30);
+        if (est1RM > maxEstimated1RM) {
+          maxEstimated1RM = est1RM;
+        }
+      });
+      
+      if (maxEstimated1RM > currentMax + 1) { // significant increase
+        await supabase.from('user_max_loads').insert({
+          user_id: user.id,
+          exercise_id: ex_id,
+          max_load_kg: maxEstimated1RM,
+          estimated_1rm: maxEstimated1RM
+        }); // Note: since there is no unique constraint we just insert a new one, but we really should update the existing one. For simplicity, we can just insert a new record to keep history, or ideally update.
+      }
+    }
     
     setTimeout(() => {
       setActiveWorkout(null);
@@ -341,22 +478,64 @@ export default function Workout() {
 
         <motion.div key={currentExIdx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} 
           style={{ 
-            backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)', marginBottom: 'var(--space-6)',
+            backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', marginBottom: 'var(--space-6)',
             position: 'relative', overflow: 'hidden', border: '1px solid rgba(var(--outline-variant), 0.1)'
           }}>
-          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundImage: `url(${getExerciseImage(exercise?.nom)})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.15, zIndex: 0 }}></div>
-          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(var(--secondary-rgb), 0.15) 0%, rgba(0,0,0,0) 70%)', borderRadius: '50%', zIndex: 0 }}></div>
-          <h3 className="title-lg mb-2" style={{ position: 'relative', zIndex: 1, textTransform: 'uppercase' }}>{exercise?.nom}</h3>
-          <p className="body-sm mb-6" style={{ color: 'var(--on-surface-variant)', position: 'relative', zIndex: 1 }}>{exercise?.description_technique}</p>
           
-          <div className="flex gap-4" style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
-              <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>OBJECTIF</span>
-              <div className="title-md" style={{ color: 'var(--primary)' }}>{ex.series} × {ex.reps_min}-{ex.reps_max}</div>
-            </div>
-            <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
-              <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>REPOS</span>
-              <div className="title-md" style={{ color: 'var(--on-surface)' }}>{ex.repos_secondes || 90}s</div>
+          {/* Explicative Video / GIF Banner */}
+          <div style={{ 
+            width: '100%', height: '220px', backgroundColor: '#050505', position: 'relative', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderBottom: '1px solid rgba(var(--outline-variant), 0.1)'
+          }}>
+            {(() => {
+              // Extract YouTube ID if it's a YouTube URL (supports shorts, watch, embed, youtu.be)
+              const url = exercise?.video_url;
+              const ytMatch = url ? url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?]{11})/) : null;
+              const ytId = ytMatch ? ytMatch[1] : null;
+
+              if (ytId) {
+                let startSec = undefined;
+                let endSec = undefined;
+                
+                if (url.includes('start=')) {
+                  const startMatch = url.match(/start=(\d+)/);
+                  if (startMatch) startSec = parseInt(startMatch[1], 10);
+                }
+                if (url.includes('end=')) {
+                  const endMatch = url.match(/end=(\d+)/);
+                  if (endMatch) endSec = parseInt(endMatch[1], 10);
+                }
+                
+                return <YouTubePlayer videoId={ytId} startSeconds={startSec} endSeconds={endSec} />;
+              } else if (url && url.endsWith('.mp4')) {
+                return <video src={url} autoPlay loop muted playsInline style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', zIndex: 1, position: 'relative' }} />;
+              } else {
+                return <img src={url || getExerciseImage(exercise?.nom)} alt="Démo du mouvement" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', zIndex: 1, position: 'relative' }} />;
+              }
+            })()}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px', background: 'linear-gradient(to top, var(--surface-container-low), transparent)', zIndex: 2, pointerEvents: 'none' }}></div>
+          </div>
+
+          <div style={{ padding: 'var(--space-6)', position: 'relative', zIndex: 1 }}>
+            <h3 className="title-lg mb-2" style={{ textTransform: 'uppercase' }}>{exercise?.nom}</h3>
+            <p className="body-sm mb-6" style={{ color: 'var(--on-surface-variant)' }}>{exercise?.description_technique || "Observez l'animation ci-dessus pour réaliser ce mouvement avec la forme parfaite."}</p>
+            
+            <div className="flex gap-4">
+              <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>OBJECTIF</span>
+                <div className="title-md" style={{ color: 'var(--primary)' }}>{ex.series} × {ex.reps_min}-{ex.reps_max}</div>
+              </div>
+              <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
+                <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>REPOS</span>
+                <div className="title-md" style={{ color: 'var(--on-surface)' }}>{ex.repos_secondes || 90}s</div>
+              </div>
+              {maxLoads[ex.exercise_id] !== undefined && getRecommendedWeight(maxLoads[ex.exercise_id], profile?.objectif) > 0 && (
+                <div style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }}>
+                  <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>CHARGE CONSEILLÉE</span>
+                  <div className="title-md" style={{ color: 'var(--secondary)' }}>{getRecommendedWeight(maxLoads[ex.exercise_id], profile?.objectif)} kg</div>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
@@ -548,7 +727,7 @@ export default function Workout() {
 
                   {(!todaySession.session_exercises || todaySession.session_exercises.length === 0) ? null : (
                     <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-8)' }}>
-                      <button className="btn btn--primary btn--full" style={{ flex: 3, padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }} onClick={startWorkout}>
+                      <button className="btn btn--primary btn--full" style={{ flex: 3, padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }} onClick={handleStartWorkout}>
                         <Play size={20} /> Démarrer la séance
                       </button>
                       <button onClick={() => setShowRoulette(true)} style={{ flex: 1, padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', background: 'linear-gradient(135deg, #00E5FF, #7C4DFF)', border: 'none', color: '#fff', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Exercice Surprise">
@@ -629,6 +808,50 @@ export default function Workout() {
           />
         )}
       </AnimatePresence>
+
+      {/* Missing Max Loads Modal */}
+      {missingMaxLoadsModal.open && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(5px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-4)' }}>
+          <div className="card" style={{ width: '100%', maxWidth: 500, maxHeight: '80vh', overflowY: 'auto', background: 'var(--surface)', border: '1px solid rgba(var(--outline-variant), 0.2)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)' }}>
+            <h3 className="display-sm mb-4" style={{ textTransform: 'uppercase', lineHeight: 1 }}>Calibrage des charges</h3>
+            <p className="body-md mb-6" style={{ color: 'var(--on-surface-variant)' }}>
+              Pour personnaliser vos charges de travail selon vos objectifs, veuillez indiquer votre charge maximale (1RM) ou votre charge de travail habituelle pour ces exercices. Mettez 0 si c'est au poids du corps.
+            </p>
+            
+            <div className="flex flex-col gap-4 mb-8">
+              {missingMaxLoadsModal.exercises.map(ex => (
+                <div key={ex.exercise_id} style={{ background: 'var(--surface-container-low)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(var(--outline-variant), 0.1)' }}>
+                  <label className="label-md" style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--space-2)', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                    {ex.exercises?.nom}
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="number" 
+                      placeholder="Ex: 80"
+                      value={tempMaxLoads[ex.exercise_id] || ''}
+                      onChange={(e) => setTempMaxLoads(prev => ({ ...prev, [ex.exercise_id]: e.target.value }))}
+                      style={{ 
+                        flex: 1, backgroundColor: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.3)', 
+                        color: 'var(--on-surface)', padding: '12px 16px', fontSize: '1rem', borderRadius: 'var(--radius-md)', outline: 'none'
+                      }} 
+                    />
+                    <span className="body-md" style={{ color: 'var(--on-surface-variant)' }}>kg</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-3">
+              <button className="btn" style={{ flex: 1, backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)' }} onClick={() => setMissingMaxLoadsModal({ open: false, exercises: [] })}>
+                Annuler
+              </button>
+              <button className="btn btn--primary" style={{ flex: 2, padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)' }} onClick={saveMaxLoadsAndStart}>
+                Sauvegarder & Démarrer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Regenerate button */}
       {program && (

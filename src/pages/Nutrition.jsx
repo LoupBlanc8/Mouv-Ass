@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UtensilsCrossed, CheckCircle2, Circle, Flame, Info } from 'lucide-react';
+import { UtensilsCrossed, CheckCircle2, Circle, Flame, Info, Sparkles, ChefHat } from 'lucide-react';
 import { calculateMacros, calculateTDEE } from '../utils/calculations';
 import { getMealPlan } from '../utils/nutritionGenerator';
+import { generateRealRecipe } from '../utils/recipeMatcher';
 import { addXP } from '../utils/gamification';
 
 export default function Nutrition() {
@@ -12,6 +13,46 @@ export default function Nutrition() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedMeal, setExpandedMeal] = useState(null);
+  const [ingredients, setIngredients] = useState('');
+  const [generatedRecipe, setGeneratedRecipe] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateRecipe = async () => {
+    if (!ingredients.trim()) return;
+    setIsGenerating(true);
+    
+    // Calcul de la cible calorique pour un repas principal (~35% du total)
+    // On utilise l'objet "macros" calculé plus bas dans le composant
+    let targetKcal = 600;
+    try {
+      if (macros && macros.calories > 0) {
+        targetKcal = Math.round(macros.calories * 0.35);
+      }
+    } catch (e) {
+      console.error("Erreur calcul macros", e);
+    }
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-recipe', {
+        body: { ingredients, targetKcal }
+      });
+      
+      if (error) throw error;
+      
+      setGeneratedRecipe({
+        nom: data.nom,
+        recette: data.recette
+      });
+    } catch (err) {
+      console.error("Erreur de génération :", err);
+      setGeneratedRecipe({
+        nom: "Oups... Connexion IA échouée",
+        recette: "Impossible de générer la recette avec l'IA pour le moment. Réessayez dans quelques instants."
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   useEffect(() => {
     if (user) loadLogs();
@@ -92,18 +133,18 @@ export default function Nutrition() {
   let meals = [];
   if (isTrainingDay) {
     meals = [
-      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, options: mealPlan.petit_dejeuner.options, ratio: 0.20 },
-      { id: 'm2', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, options: mealPlan.dejeuner.options, ratio: 0.30 },
-      { id: 'm3', type: 'Pré-Workout', nom: mealPlan.pre_workout.nom, desc: mealPlan.pre_workout.description, options: mealPlan.pre_workout.options, ratio: 0.10 },
-      { id: 'm4', type: 'Post-Workout', nom: mealPlan.post_workout.nom, desc: mealPlan.post_workout.description, options: mealPlan.post_workout.options, ratio: 0.15 },
-      { id: 'm5', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, options: mealPlan.diner.options, ratio: 0.25 },
+      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, recette: mealPlan.petit_dejeuner.recette, options: mealPlan.petit_dejeuner.options, ratio: 0.20 },
+      { id: 'm2', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, recette: mealPlan.dejeuner.recette, options: mealPlan.dejeuner.options, ratio: 0.30 },
+      { id: 'm3', type: 'Pré-Workout', nom: mealPlan.pre_workout.nom, desc: mealPlan.pre_workout.description, recette: mealPlan.pre_workout.recette, options: mealPlan.pre_workout.options, ratio: 0.10 },
+      { id: 'm4', type: 'Post-Workout', nom: mealPlan.post_workout.nom, desc: mealPlan.post_workout.description, recette: mealPlan.post_workout.recette, options: mealPlan.post_workout.options, ratio: 0.15 },
+      { id: 'm5', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, recette: mealPlan.diner.recette, options: mealPlan.diner.options, ratio: 0.25 },
     ];
   } else {
     meals = [
-      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, options: mealPlan.petit_dejeuner.options, ratio: 0.25 },
-      { id: 'm2', type: 'Collation', nom: mealPlan.collation.nom, desc: mealPlan.collation.description, options: mealPlan.collation.options, ratio: 0.10 },
-      { id: 'm3', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, options: mealPlan.dejeuner.options, ratio: 0.35 },
-      { id: 'm4', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, options: mealPlan.diner.options, ratio: 0.30 },
+      { id: 'm1', type: 'Petit-déjeuner', nom: mealPlan.petit_dejeuner.nom, desc: mealPlan.petit_dejeuner.description, recette: mealPlan.petit_dejeuner.recette, options: mealPlan.petit_dejeuner.options, ratio: 0.25 },
+      { id: 'm2', type: 'Collation', nom: mealPlan.collation.nom, desc: mealPlan.collation.description, recette: mealPlan.collation.recette, options: mealPlan.collation.options, ratio: 0.10 },
+      { id: 'm3', type: 'Déjeuner', nom: mealPlan.dejeuner.nom, desc: mealPlan.dejeuner.description, recette: mealPlan.dejeuner.recette, options: mealPlan.dejeuner.options, ratio: 0.35 },
+      { id: 'm4', type: 'Dîner', nom: mealPlan.diner.nom, desc: mealPlan.diner.description, recette: mealPlan.diner.recette, options: mealPlan.diner.options, ratio: 0.30 },
     ];
   }
 
@@ -222,6 +263,16 @@ export default function Nutrition() {
                             <p className="body-md" style={{ color: 'var(--on-surface)', lineHeight: 1.5 }}>{meal.desc}</p>
                           </div>
                           
+                          {meal.recette && (
+                            <div className="flex items-start gap-3 mb-4" style={{ background: 'var(--surface-container)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(var(--primary-rgb), 0.2)' }}>
+                              <UtensilsCrossed size={18} style={{ color: 'var(--primary)', marginTop: '2px', flexShrink: 0 }} />
+                              <div>
+                                <p className="label-sm" style={{ color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 'bold' }}>Recette rapide</p>
+                                <p className="body-sm" style={{ color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>{meal.recette}</p>
+                              </div>
+                            </div>
+                          )}
+                          
                           {meal.options && meal.options.length > 0 && (
                             <div>
                               <p className="label-sm" style={{ color: 'var(--on-surface-variant)', textTransform: 'uppercase', marginBottom: 'var(--space-3)', fontWeight: 'bold' }}>Alternatives suggérées</p>
@@ -244,6 +295,57 @@ export default function Nutrition() {
                 </div>
               );
             })}
+          </div>
+        </motion.div>
+
+        {/* Frigo Magique / Générateur de Recettes */}
+        <motion.div variants={item} className="mb-10">
+          <div className="card" style={{ background: 'var(--surface-container)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(var(--primary-rgb), 0.3)' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <ChefHat size={28} style={{ color: 'var(--primary)' }} />
+              <div>
+                <h3 className="title-md" style={{ textTransform: 'uppercase', margin: 0 }}>Générateur de recettes</h3>
+                <p className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>Saisissez les aliments que vous avez, on s'occupe du reste !</p>
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mb-4" style={{ flexWrap: 'wrap' }}>
+              <input 
+                type="text" 
+                placeholder="Ex: Poulet, riz, brocolis, 2 œufs..." 
+                value={ingredients}
+                onChange={(e) => setIngredients(e.target.value)}
+                style={{ flex: 1, minWidth: '200px', background: 'var(--surface-container-high)', border: '1px solid rgba(var(--outline-variant), 0.2)', padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius-full)', color: 'var(--on-surface)', outline: 'none' }}
+              />
+              <button 
+                className="btn btn--primary" 
+                onClick={handleGenerateRecipe}
+                disabled={isGenerating || !ingredients.trim()}
+                style={{ borderRadius: 'var(--radius-full)', padding: 'var(--space-3) var(--space-6)', display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                {isGenerating ? 'Création...' : (
+                  <>
+                    <Sparkles size={18} />
+                    Générer
+                  </>
+                )}
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {generatedRecipe && !isGenerating && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <div style={{ background: 'var(--surface-container-high)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', marginTop: 'var(--space-4)', border: '1px solid rgba(var(--primary-rgb), 0.2)' }}>
+                    <h4 className="label-lg" style={{ color: 'var(--primary)', textTransform: 'uppercase', marginBottom: 'var(--space-4)', fontWeight: 'bold' }}>{generatedRecipe.nom}</h4>
+                    <div className="body-md" style={{ color: 'var(--on-surface)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>{generatedRecipe.recette}</div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 

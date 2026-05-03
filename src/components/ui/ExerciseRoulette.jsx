@@ -87,7 +87,10 @@ export default function ExerciseRoulette({ exercises, profile, onStart, onClose 
     // Random result
     const randomIdx = Math.floor(Math.random() * filteredExercises.length);
     const targetAngle = 360 - (randomIdx * segmentAngle + segmentAngle / 2);
-    const totalRotation = rotation + 1440 + targetAngle; // 4 full spins + target
+    
+    // Calcul de la rotation absolue correcte
+    const currentSpins = Math.floor(rotation / 360);
+    const totalRotation = (currentSpins + 5) * 360 + targetAngle; // 5 tours complets + angle cible
 
     setRotation(totalRotation);
 
