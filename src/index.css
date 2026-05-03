@@ -156,6 +156,8 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -165,6 +167,9 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  overscroll-behavior-y: none;
 }
 
 #root {
@@ -295,6 +300,7 @@ a:hover {
    LAYOUT
    ============================================ */
 .app-shell {
+  width: 100%;
   max-width: 430px;
   margin: 0 auto;
   min-height: 100vh;
@@ -890,10 +896,12 @@ a:hover {
   display: flex;
   flex-direction: column;
   width: 100%;
+  overflow-x: hidden;
 }
 .dashboard-content {
   flex: 1;
   width: 100%;
+  overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
