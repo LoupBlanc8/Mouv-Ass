@@ -91,6 +91,9 @@ export default function Onboarding() {
 
       // ── Étape 2 : Pathologies & Conditions ──
       console.log('[Onboarding] 2/5 Santé...');
+      // Nettoyer les anciennes entrées pour éviter les doublons en cas de tentative multiple
+      await supabase.from('user_pathologies').delete().eq('user_id', user.id);
+      
       if (formData.pathologies.length > 0) {
         const paths = formData.pathologies.map(p => ({ user_id: user.id, zone: p }));
         const { error: errPatho } = await supabase.from('user_pathologies').insert(paths);
