@@ -170,13 +170,14 @@ export function AuthProvider({ children }) {
       const uid = userId || user?.id;
       if (!uid) return;
       console.log('[Auth] Fetching program for:', uid);
-      const { data: prog } = await supabase
+      const { data: prog, error: progErr } = await supabase
         .from('programs')
         .select('*')
         .eq('user_id', uid)
         .eq('actif', true)
         .maybeSingle();
 
+      if (progErr) console.error('[Auth] Programs query error:', progErr);
       console.log('[Auth] Programs query OK', prog);
       if (!prog) {
         setProgram(null);

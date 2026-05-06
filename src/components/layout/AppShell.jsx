@@ -45,7 +45,7 @@ export default function AppShell() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '100%', minHeight: '100%' }}
           >
             <Outlet />
           </motion.div>

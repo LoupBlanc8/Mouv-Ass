@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Zap, CheckCircle2 } from 'lucide-react';
+import { Flame, Zap, CheckCircle2, Circle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { generateDailyQuests, checkQuestCompletion } from '../../utils/questGenerator';
+import { addXP } from '../../utils/gamification';
 
 const QUEST_ICONS = {
   workout: '🏋️', sets: '💪', volume: '⚡', exercises: '🎯',
@@ -12,9 +13,10 @@ const QUEST_ICONS = {
 };
 
 export default function DailyQuests() {
-  const { profile, user } = useAuth();
+  const { profile, user, refreshProfile } = useAuth();
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [completing, setCompleting] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -45,6 +47,35 @@ export default function DailyQuests() {
       setQuests(generateDailyQuests(profile).map((q, i) => ({ ...q, id: `local-${i}`, current_value: 0, completed: false })));
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function completeQuest(quest) {
+    if (quest.completed || completing) return;
+    setCompleting(quest.id);
+    try {
+      // Update in database
+      const isLocalId = String(quest.id).startsWith('local-');
+      if (!isLocalId) {
+        await supabase.from('daily_quests')
+          .update({ completed: true, current_value: quest.target_value })
+          .eq('id', quest.id);
+      }
+
+      // Award XP
+      await addXP(user.id, quest.xp_reward || 50);
+
+      // Update local state
+      setQuests(prev => prev.map(q =>
+        q.id === quest.id ? { ...q, completed: true, current_value: q.target_value } : q
+      ));
+
+      // Refresh profile for XP
+      await refreshProfile();
+    } catch (err) {
+      console.error('Quest completion error:', err);
+    } finally {
+      setCompleting(null);
     }
   }
 
@@ -81,26 +112,49 @@ export default function DailyQuests() {
         </div>
       </motion.div>
 
+      {/* Instruction */}
+      <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginBottom: 'var(--space-4)', textAlign: 'center' }}>
+        Touche une quête pour la valider manuellement et gagner les XP !
+      </p>
+
       {/* Quest Cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
         {quests.map((quest, i) => {
           const done = quest.completed || checkQuestCompletion(quest);
           const pct = quest.target_value > 0 ? Math.min(100, (quest.current_value / quest.target_value) * 100) : 0;
+          const isCompleting = completing === quest.id;
           return (
             <motion.div key={quest.id || i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
-              style={{ background: done ? 'rgba(0,230,118,0.08)' : 'var(--surface-container-low)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-4)', border: done ? '1px solid rgba(0,230,118,0.3)' : '1px solid rgba(var(--outline-variant), 0.1)' }}>
+              onClick={() => !done && completeQuest(quest)}
+              style={{
+                background: done ? 'rgba(0,230,118,0.08)' : 'var(--surface-container-low)',
+                borderRadius: 'var(--radius-xl)', padding: 'var(--space-4)',
+                border: done ? '1px solid rgba(0,230,118,0.3)' : '1px solid rgba(var(--outline-variant), 0.1)',
+                cursor: done ? 'default' : 'pointer',
+                transition: 'all 0.2s ease',
+                opacity: isCompleting ? 0.6 : 1,
+              }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-lg)', background: done ? 'rgba(0,230,118,0.15)' : 'var(--surface-container-high)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', flexShrink: 0 }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: 'var(--radius-lg)',
+                  background: done ? 'rgba(0,230,118,0.15)' : 'var(--surface-container-high)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', flexShrink: 0,
+                }}>
                   {done ? <CheckCircle2 size={22} color="#00E676" /> : (QUEST_ICONS[quest.quest_type] || '🎯')}
                 </div>
                 <div style={{ flex: 1 }}>
                   <p className="body-md" style={{ fontWeight: 600, margin: 0, textDecoration: done ? 'line-through' : 'none', opacity: done ? 0.6 : 1 }}>{quest.quest_description}</p>
                   <div style={{ height: 4, background: 'var(--surface-container-highest)', borderRadius: 99, marginTop: 8, overflow: 'hidden' }}>
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.6 }}
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${done ? 100 : pct}%` }} transition={{ duration: 0.6 }}
                       style={{ height: '100%', borderRadius: 99, background: done ? '#00E676' : 'linear-gradient(90deg, #00E5FF, #7C4DFF)' }} />
                   </div>
                 </div>
-                <span className="label-sm" style={{ background: done ? 'rgba(0,230,118,0.15)' : 'rgba(var(--primary-rgb), 0.1)', padding: '4px 10px', borderRadius: '999px', color: done ? '#00E676' : 'var(--primary)', fontWeight: 700 }}>+{quest.xp_reward} XP</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                  <span className="label-sm" style={{ background: done ? 'rgba(0,230,118,0.15)' : 'rgba(var(--primary-rgb), 0.1)', padding: '4px 10px', borderRadius: '999px', color: done ? '#00E676' : 'var(--primary)', fontWeight: 700 }}>+{quest.xp_reward} XP</span>
+                  {!done && (
+                    <span className="label-sm" style={{ color: 'var(--on-surface-variant)', fontSize: '0.65rem' }}>VALIDER</span>
+                  )}
+                </div>
               </div>
             </motion.div>
           );

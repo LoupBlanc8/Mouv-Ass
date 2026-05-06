@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation — Conception de programmes sportifs personnalisés</title>
+<style>
+  :root {
+    --bg: #f9f8f5;
+    --bg2: #ffffff;
+    --surface: #f1efe8;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.06);
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --text3: #88807a;
+    --purple-50: #EEEDFE; --purple-100: #CECBF6; --purple-600: #534AB7; --purple-800: #3C3489; --purple-900: #26215C;
+    --teal-50: #E1F5EE; --teal-100: #9FE1CB; --teal-600: #0F6E56; --teal-800: #085041; --teal-900: #04342C;
+    --amber-50: #FAEEDA; --amber-100: #FAC775; --amber-600: #854F0B; --amber-800: #633806; --amber-900: #412402;
+    --coral-50: #FAECE7; --coral-100: #F5C4B3; --coral-600: #993C1D; --coral-800: #712B13; --coral-900: #4A1B0C;
+    --blue-50: #E6F1FB; --blue-100: #B5D4F4; --blue-600: #185FA5; --blue-800: #0C447C; --blue-900: #042C53;
+    --green-50: #EAF3DE; --green-100: #C0DD97; --green-600: #3B6D11; --green-800: #27500A; --green-900: #173404;
+    --red-50: #FCEBEB; --red-100: #F7C1C1; --red-600: #A32D2D; --red-800: #791F1F; --red-900: #501313;
+    --gray-50: #F1EFE8; --gray-100: #D3D1C7; --gray-600: #5F5E5A; --gray-800: #444441; --gray-900: #2C2C2A;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c; --bg2: #252523; --surface: #2c2c2a; --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.06);
+      --text: #e8e6df; --text2: #a8a69f; --text3: #6e6c66;
+      --purple-50: #26215C; --purple-100: #3C3489; --purple-600: #AFA9EC; --purple-800: #CECBF6; --purple-900: #EEEDFE;
+      --teal-50: #04342C; --teal-100: #085041; --teal-600: #5DCAA5; --teal-800: #9FE1CB; --teal-900: #E1F5EE;
+      --amber-50: #412402; --amber-100: #633806; --amber-600: #EF9F27; --amber-800: #FAC775; --amber-900: #FAEEDA;
+      --coral-50: #4A1B0C; --coral-100: #712B13; --coral-600: #F0997B; --coral-800: #F5C4B3; --coral-900: #FAECE7;
+      --blue-50: #042C53; --blue-100: #0C447C; --blue-600: #85B7EB; --blue-800: #B5D4F4; --blue-900: #E6F1FB;
+      --green-50: #173404; --green-100: #27500A; --green-600: #97C459; --green-800: #C0DD97; --green-900: #EAF3DE;
+      --red-50: #501313; --red-100: #791F1F; --red-600: #F09595; --red-800: #F7C1C1; --red-900: #FCEBEB;
+      --gray-50: #2C2C2A; --gray-100: #444441; --gray-600: #B4B2A9; --gray-800: #D3D1C7; --gray-900: #F1EFE8;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    padding: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  nav {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 32px 0 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  nav .logo {
+    padding: 0 24px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text3);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 16px;
+  }
+  nav .logo span { display: block; font-size: 16px; font-weight: 500; color: var(--text); text-transform: none; letter-spacing: 0; margin-top: 4px; }
+  nav ul { list-style: none; padding: 0 12px; }
+  nav ul li { margin: 1px 0; }
+  nav ul li a {
+    display: block;
+    padding: 7px 12px;
+    border-radius: 7px;
+    font-size: 13.5px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }
+  nav ul li a:hover { background: var(--surface); color: var(--text); }
+  nav ul li a.active { background: var(--purple-50); color: var(--purple-600); font-weight: 500; }
+  nav .section-label {
+    padding: 16px 24px 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  main { flex: 1; padding: 48px 56px 80px; max-width: 920px; }
+
+  /* ── TYPOGRAPHY ── */
+  h1 { font-size: 30px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  h2 { font-size: 22px; font-weight: 500; color: var(--text); margin: 52px 0 16px; padding-top: 8px; border-top: 1px solid var(--border2); }
+  h3 { font-size: 17px; font-weight: 500; color: var(--text); margin: 32px 0 12px; }
+  h4 { font-size: 14px; font-weight: 500; color: var(--text2); margin: 20px 0 8px; text-transform: uppercase; letter-spacing: .04em; }
+  p { color: var(--text); margin-bottom: 12px; }
+  .lead { font-size: 16px; color: var(--text2); margin-bottom: 0; }
+
+  /* ── PARAM CARD ── */
+  .param-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .param-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 20px 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .param-header:hover { background: var(--surface); }
+  .param-number {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--purple-50);
+    color: var(--purple-600);
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .param-title-wrap { flex: 1; }
+  .param-title { font-size: 15px; font-weight: 500; color: var(--text); }
+  .param-subtitle { font-size: 13px; color: var(--text3); margin-top: 2px; }
+  .param-chevron { color: var(--text3); font-size: 12px; transition: transform .2s; margin-top: 4px; }
+  .param-card.open .param-chevron { transform: rotate(180deg); }
+  .param-body { display: none; padding: 0 20px 20px; }
+  .param-card.open .param-body { display: block; }
+
+  /* ── IMPACT GRID ── */
+  .impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .impact-item {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .impact-item .impact-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .impact-item .impact-val { font-size: 13.5px; color: var(--text); }
+
+  /* ── BADGES ── */
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 12px; font-weight: 500; }
+  .badge-purple { background: var(--purple-50); color: var(--purple-600); }
+  .badge-teal   { background: var(--teal-50);   color: var(--teal-600); }
+  .badge-amber  { background: var(--amber-50);  color: var(--amber-600); }
+  .badge-blue   { background: var(--blue-50);   color: var(--blue-600); }
+  .badge-coral  { background: var(--coral-50);  color: var(--coral-600); }
+  .badge-green  { background: var(--green-50);  color: var(--green-600); }
+  .badge-red    { background: var(--red-50);    color: var(--red-600); }
+
+  /* ── RULE TABLE ── */
+  .rule-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13.5px; }
+  .rule-table th {
+    text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 500;
+    color: var(--text3); text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 1px solid var(--border);
+  }
+  .rule-table td { padding: 10px 12px; border-bottom: 1px solid var(--border2); vertical-align: top; }
+  .rule-table tr:last-child td { border-bottom: none; }
+  .rule-table tr:hover td { background: var(--surface); }
+  .rule-table td:first-child { font-weight: 500; color: var(--text); width: 200px; }
+  .rule-table td:last-child { color: var(--text2); }
+
+  /* ── FORMULA BOX ── */
+  .formula {
+    background: var(--surface);
+    border-left: 3px solid var(--purple-600);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 14px 0;
+  }
+  .formula code { font-family: "SF Mono", "Fira Code", monospace; font-size: 13px; background: var(--bg2); padding: 1px 6px; border-radius: 4px; }
+
+  /* ── SECTION INTRO ── */
+  .section-intro {
+    background: var(--purple-50);
+    border: 1px solid var(--purple-100);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--purple-600);
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout-amber { background: var(--amber-50); border: 1px solid var(--amber-100); color: var(--amber-600); }
+  .callout-teal  { background: var(--teal-50);  border: 1px solid var(--teal-100);  color: var(--teal-600); }
+  .callout-blue  { background: var(--blue-50);  border: 1px solid var(--blue-100);  color: var(--blue-600); }
+  .callout .callout-title { font-weight: 500; margin-bottom: 4px; }
+
+  /* ── PROGRAM MATRIX ── */
+  .matrix { display: grid; gap: 12px; margin-top: 16px; }
+  .matrix-row { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: start; }
+  .matrix-key {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .matrix-val {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text2);
+  }
+
+  /* ── PHASE TIMELINE ── */
+  .timeline { position: relative; padding-left: 28px; margin-top: 16px; }
+  .timeline::before { content: ''; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-dot { position: absolute; left: -28px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--purple-600); border: 2px solid var(--bg); }
+  .tl-title { font-weight: 500; font-size: 14px; color: var(--text); }
+  .tl-body { font-size: 13.5px; color: var(--text2); margin-top: 4px; }
+
+  /* ── HERO ── */
+  .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 32px; }
+
+  /* ── SEARCH ── */
+  .search-wrap { position: relative; margin-bottom: 16px; }
+  .search-input {
+    width: 100%; padding: 9px 14px 9px 36px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--bg2); color: var(--text); font-size: 14px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--purple-600); }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
+
+  /* ── TOC ── */
+  .toc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 32px; }
+  .toc-title { font-size: 12px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .toc ul { list-style: none; }
+  .toc ul li { margin: 4px 0; }
+  .toc ul li a { font-size: 13.5px; color: var(--text2); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .toc ul li a:hover { color: var(--text); }
+  .toc ul li a .toc-num { font-size: 11px; color: var(--text3); min-width: 20px; }
+
+  hr.section-sep { border: none; border-top: 1px solid var(--border2); margin: 40px 0; }
+
+  @media (max-width: 768px) {
+    nav { display: none; }
+    main { padding: 24px 20px 60px; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .matrix-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="logo">Documentation<span>Programmes sportifs personnalisés</span></div>
+
+  <div class="section-label">Introduction</div>
+  <ul>
+    <li><a href="#intro" class="active">Vue d'ensemble</a></li>
+    <li><a href="#architecture">Architecture du système</a></li>
+  </ul>
+
+  <div class="section-label">Partie 1 — Profil de base</div>
+  <ul>
+    <li><a href="#objectif">Objectif principal</a></li>
+    <li><a href="#biometrie">Biométrie</a></li>
+    <li><a href="#composition">Composition corporelle</a></li>
+    <li><a href="#habitudes">Habitudes actuelles</a></li>
+  </ul>
+
+  <div class="section-label">Partie 2 — Programme d'entraînement</div>
+  <ul>
+    <li><a href="#experience">Expérience & niveau</a></li>
+    <li><a href="#structure">Structure du programme</a></li>
+    <li><a href="#contraintes">Contraintes physiques</a></li>
+    <li><a href="#groupes">Groupes musculaires</a></li>
+  </ul>
+
+  <div class="section-label">Partie 3 — Nutrition</div>
+  <ul>
+    <li><a href="#calorique">Bilan calorique</a></li>
+    <li><a href="#proteines">Protéines</a></li>
+    <li><a href="#adherence">Adhérence nutritionnelle</a></li>
+    <li><a href="#restrictions">Restrictions alimentaires</a></li>
+  </ul>
+
+  <div class="section-label">Partie 4 — Psychologie & style de vie</div>
+  <ul>
+    <li><a href="#motivation">Motivation & consistance</a></li>
+    <li><a href="#sommeil">Sommeil & récupération</a></li>
+    <li><a href="#cardio">Cardio</a></li>
+  </ul>
+
+  <div class="section-label">Références</div>
+  <ul>
+    <li><a href="#matrix">Matrice décisionnelle</a></li>
+    <li><a href="#phases">Phases de progression</a></li>
+  </ul>
+</nav>
+
+<!-- ── MAIN ── -->
+<main>
+
+  <!-- HERO -->
+  <section id="intro">
+    <h1>Documentation technique — Conception de programmes sportifs</h1>
+    <p class="lead">Comment chaque paramètre du questionnaire se traduit en décisions concrètes dans le design d'un programme d'entraînement et d'un plan nutritionnel personnalisé.</p>
+    <div class="hero-meta">
+      <span class="badge badge-purple">47 paramètres</span>
+      <span class="badge badge-teal">Entraînement</span>
+      <span class="badge badge-blue">Nutrition</span>
+      <span class="badge badge-amber">Psychologie</span>
+      <span class="badge badge-green">Style de vie</span>
+    </div>
+
+    <div class="toc">
+      <div class="toc-title">Sommaire</div>
+      <ul>
+        <li><a href="#architecture"><span class="toc-num">00</span>Architecture du système de personnalisation</a></li>
+        <li><a href="#objectif"><span class="toc-num">01</span>Objectif principal & goal setting</a></li>
+        <li><a href="#biometrie"><span class="toc-num">02</span>Biométrie (genre, âge, taille, poids)</a></li>
+        <li><a href="#composition"><span class="toc-num">03</span>Composition corporelle & cibles</a></li>
+        <li><a href="#habitudes"><span class="toc-num">04</span>Habitudes actuelles & historique</a></li>
+        <li><a href="#experience"><span class="toc-num">05</span>Expérience & niveau d'entraînement</a></li>
+        <li><a href="#structure"><span class="toc-num">06</span>Structure du programme (jours, durée, matériel)</a></li>
+        <li><a href="#contraintes"><span class="toc-num">07</span>Contraintes physiques & blessures</a></li>
+        <li><a href="#groupes"><span class="toc-num">08</span>Groupes musculaires prioritaires</a></li>
+        <li><a href="#calorique"><span class="toc-num">09</span>Bilan calorique</a></li>
+        <li><a href="#proteines"><span class="toc-num">10</span>Protéines</a></li>
+        <li><a href="#adherence"><span class="toc-num">11</span>Adhérence nutritionnelle</a></li>
+        <li><a href="#restrictions"><span class="toc-num">12</span>Restrictions alimentaires</a></li>
+        <li><a href="#motivation"><span class="toc-num">13</span>Psychologie, motivation & consistance</a></li>
+        <li><a href="#sommeil"><span class="toc-num">14</span>Sommeil, récupération & niveau d'activité</a></li>
+        <li><a href="#cardio"><span class="toc-num">15</span>Cardio</a></li>
+        <li><a href="#matrix"><span class="toc-num">16</span>Matrice décisionnelle globale</a></li>
+        <li><a href="#phases"><span class="toc-num">17</span>Phases de progression type</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture">
+    <h2>00 — Architecture du système de personnalisation</h2>
+    <p>Le questionnaire suit une logique en trois couches. Chaque couche affine les décisions prises par la couche précédente.</p>
+
+    <div class="callout callout-blue">
+      <div class="callout-title">Logique de priorisation</div>
+      L'objectif principal (Q1) est le filtre le plus fort — il détermine si le programme est orienté déficit, surplus ou maintenance. Toutes les décisions suivantes s'y subordonnent.
+    </div>
+
+    <table class="rule-table">
+      <tr><th>Couche</th><th>Questions</th><th>Rôle dans le programme</th></tr>
+      <tr><td>Couche 1 — Fondations</td><td>Q1–Q9, Q26–Q28</td><td>Définit le type de programme, les ratios macro, le split d'entraînement</td></tr>
+      <tr><td>Couche 2 — Structure</td><td>Q10–Q15, Q29–Q33</td><td>Ajuste la fréquence, le volume, la sélection d'exercices, les modifications</td></tr>
+      <tr><td>Couche 3 — Adhérence</td><td>Q16–Q25, Q34–Q47</td><td>Calibre les recommandations pour maximiser l'adherence à long terme</td></tr>
+    </table>
+  </section>
+
+  <hr class="section-sep">
+
+  <!-- PARTIE 1 -->
+  <section id="objectif">
+    <h2>01 — Objectif principal</h2>
+    <p class="lead">C'est le paramètre le plus structurant du programme. Il détermine le sens du bilan énergétique et l'orientation de l'entraînement.</p>
+
+    <!-- Q1 -->
+    <div class="param-card open" data-id="q1">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">1</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What is your main fitness goal right now?</div>
+          <div class="param-subtitle">Perte de gras · Prise de masse · Recomposition · Performance</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Objectif déclaré</th><th>Impact sur le programme</th></tr>
+          <tr>
+            <td>Perte de gras <span class="badge badge-coral">Fat loss</span></td>
+            <td>Déficit calorique de 300–500 kcal/j · Ratio protéique élevé (2,2–2,5 g/kg) · Volume modéré · Cardio LISS intégré · Progression basée sur la rétention musculaire</td>
+          </tr>
+          <tr>
+            <td>Prise de masse <span class="badge badge-blue">Bulk</span></td>
+            <td>Surplus de 200–350 kcal/j · Volume élevé · Progression de charge prioritaire · Cardio minimal (2×30 min/sem max) · Fréquence d'entraînement élevée (4–5j)</td>
+          </tr>
+          <tr>
+            <td>Recomposition <span class="badge badge-purple">Recomp</span></td>
+            <td>Maintenance calorique ±100 kcal · Protéines très élevées (2,5+ g/kg) · Privilégié pour les débutants ou personnes avec excès de gras · Progression lente mais double bénéfice</td>
+          </tr>
+          <tr>
+            <td>Performance <span class="badge badge-teal">Athletic</span></td>
+            <td>Focus sur les patterns de mouvement · Cardio structuré obligatoire · Périodisation ondulatoire · Nutrition adaptée à la demande énergétique de l'activité</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-amber" style="margin-top:14px;">
+          <div class="callout-title">Point technique important</div>
+          La recomposition corporelle est réservée aux débutants (0–1 an d'entraînement) ou aux personnes reprenant après une longue pause. Pour un intermédiaire ou avancé, choisir soit fat loss soit bulk avec un calendrier défini (ex. : bulk 4 mois → cut 3 mois).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIOMÉTRIE -->
+  <section id="biometrie">
+    <h2>02 — Biométrie</h2>
+    <p class="lead">Genre, âge, taille et poids sont les inputs des formules de calcul du TDEE (dépense énergétique totale journalière).</p>
+
+    <!-- Q2 -->
+    <div class="param-card" data-id="q2">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">2</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What gender do you identify with?</div>
+          <div class="param-subtitle">Impact sur le métabolisme, les hormones et les recommandations</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-label">Taux de gras de référence</div>
+            <div class="impact-val">Homme : gras essentiel 3–5% · Femme : 10–13% (hormonal)</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Réponse hormonale</div>
+            <div class="impact-val">Femmes : cycle menstruel affecte la performance (semaines 3–4 = fatigue). Adapter le volume en conséquence.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Formule BMR</div>
+            <div class="impact-val">Harris-Benedict modifié intègre le genre comme variable. Femmes : -161 kcal vs hommes : +5 kcal dans l'équation.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Recommandation protéique</div>
+            <div class="impact-val">Identique en ratio g/kg. Différence : masse maigre de référence plus basse chez les femmes → quantité absolue moindre.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="param-card" data-id="q3">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">3</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What is your age range?</div>
+          <div class="param-subtitle">Métabolisme, récupération, seuils hormonaux</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Tranche d'âge</th><th>Ajustements clés</th></tr>
+          <tr><td>18–25 ans</td><td>Récupération rapide · Tolérance volume élevée · Gains maximaux en masse maigre possibles · Déficit calorique sans trop d'impact hormonal</td></tr>
+          <tr><td>26–35 ans</td><td>Programme standard · Pas d'ajustement majeur · Commencer à surveiller la récupération entre sessions</td></tr>
+          <tr><td>36–45 ans</td><td>Réduire le volume par session de ~10% · Augmenter la fréquence et les jours de récupération active · Testostérone en légère baisse → maintenir les charges lourdes (≤6 reps) pour stimuler l'axe hormonal</td></tr>
+          <tr><td>46–55 ans</td><td>Priorité à la mobilité et aux patterns de mouvement · Volume réduit (–20%) mais intensité maintenue · Augmenter les protéines (2,4–2,6 g/kg) pour contrebalancer l'anabolisme réduit</td></tr>
+          <tr><td>55+ ans</td><td>Entraînement en résistance ≥ 3×/sem pour la densité osseuse · Exercices unilatéraux prioritaires · Focus sur la santé fonctionnelle · Déficit calorique très modéré (–200 kcal max)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q4 + Q5 -->
+    <div class="param-card" data-id="q45">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">4–5</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Taille & poids actuel</div>
+          <div class="param-subtitle">Calcul du BMR, TDEE, et objectifs de progression</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="formula">
+          <strong>BMR (Mifflin-St Jeor) :</strong><br>
+          Homme : <code>10×poids(kg) + 6.25×taille(cm) − 5×âge + 5</code><br>
+          Femme : <code>10×poids(kg) + 6.25×taille(cm) − 5×âge − 161</code>
+        </div>
+        <div class="formula">
+          <strong>TDEE = BMR × facteur d'activité</strong><br>
+          Sédentaire : <code>×1.2</code> · Légèrement actif : <code>×1.375</code> · Modérément actif : <code>×1.55</code> · Très actif : <code>×1.725</code>
+        </div>
+        <p style="font-size:13.5px; color:var(--text2); margin-top:12px;">
+          La taille + poids permettent aussi de calculer l'IMC comme point de départ, mais le pourcentage de masse grasse (Q8) est une donnée bien plus fiable pour concevoir un programme.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPOSITION CORPORELLE -->
+  <section id="composition">
+    <h2>03 — Composition corporelle & cibles</h2>
+    <p class="lead">Le type de corps actuel et le % de gras cible définissent la durée estimée du programme et l'amplitude du déficit ou surplus à appliquer.</p>
+
+    <!-- Q7 -->
+    <div class="param-card" data-id="q7">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">7</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What best matches your current body type?</div>
+          <div class="param-subtitle">Ectomorphe · Mésomorphe · Endomorphe</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Type</th><th>Caractéristiques</th><th>Ajustements programme</th></tr>
+          <tr>
+            <td>Ectomorphe</td>
+            <td>Métabolisme rapide, difficulté à prendre du poids</td>
+            <td>Surplus plus élevé (+400–500 kcal) · Réduire le cardio · Volume modéré mais intensité haute · Focus sur les exercices composés</td>
+          </tr>
+          <tr>
+            <td>Mésomorphe</td>
+            <td>Répond bien à l'entraînement, composition favorable</td>
+            <td>Programme standard · Flexibilité sur le goal · Peut faire des mini-cuts/mini-bulks courtes</td>
+          </tr>
+          <tr>
+            <td>Endomorphe</td>
+            <td>Tendance à stocker le gras, métabolisme plus lent</td>
+            <td>Déficit modéré (–300 à –400 kcal) · Cardio LISS 3–4×/sem · Volume d'entraînement élevé · Surveillance glucides</td>
+          </tr>
+        </table>
+        <div class="callout callout-amber">
+          <div class="callout-title">Nuance importante</div>
+          Les somatotypes sont des approximations utiles mais non scientifiques au sens strict. Les traiter comme des indicateurs de tendance métabolique, non comme des catégories fixes.
+        </div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="param-card" data-id="q8">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">8</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Which image best reflects your current body fat level?</div>
+          <div class="param-subtitle">Estimation du % de gras de départ</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>% de gras (H / F)</th><th>Catégorie</th><th>Décision programme</th></tr>
+          <tr><td>&lt;10% / &lt;18%</td><td>Très maigre / Athlète</td><td>Bulk recommandé · Éviter tout déficit · Surveiller les hormones</td></tr>
+          <tr><td>10–15% / 18–25%</td><td>Fit / En forme</td><td>Zone optimale pour la recompo ou un mini-bulk · Bonne sensibilité insulinique</td></tr>
+          <tr><td>15–20% / 25–30%</td><td>Acceptable / Moyenne</td><td>Cut recommandé avant de bulk · Améliorer d'abord la sensibilité insulinique</td></tr>
+          <tr><td>&gt;20% / &gt;30%</td><td>Surpoids</td><td>Cut priorisé · Déficit modéré · Entraînement en résistance dès le départ pour conserver la masse</td></tr>
+        </table>
+
+        <div class="formula">
+          <strong>Masse grasse à perdre :</strong> <code>(% gras actuel − % gras cible) × poids(kg)</code><br>
+          <strong>Durée estimée :</strong> <code>kg à perdre ÷ 0.5 kg/sem = semaines</code> (rythme safe de perte)
+        </div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="param-card" data-id="q9">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">9</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What is the ideal body fat % you'd like to reach?</div>
+          <div class="param-subtitle">Cible de composition corporelle</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <p style="font-size:13.5px;color:var(--text2);">La cible permet de calibrer deux choses : la durée totale du programme et l'amplitude du déficit. Plus la cible est agressive (très faible %), plus le déficit doit être modéré pour préserver la masse musculaire.</p>
+        <div class="callout callout-teal">
+          <div class="callout-title">Règle de conservation musculaire</div>
+          Au-dessous de 10% (H) / 18% (F), le corps défend activement le gras restant. Réduire le déficit à –150–200 kcal, augmenter les protéines, et intégrer des phases de maintenance (diet break) de 1–2 semaines.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HABITUDES ACTUELLES -->
+  <section id="habitudes">
+    <h2>04 — Habitudes actuelles & historique</h2>
+
+    <!-- Q10 -->
+    <div class="param-card" data-id="q10">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">10</div>
+        <div class="param-title-wrap">
+          <div class="param-title">How would you describe your training and nutrition?</div>
+          <div class="param-subtitle">Niveau de structure actuel</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Profil déclaré</th><th>Point de départ du programme</th></tr>
+          <tr><td>Entraînement + nutrition structurés</td><td>Progresser directement → volume et intensité avancés · Periodisation ondulatoire</td></tr>
+          <tr><td>Entraînement oui, nutrition non</td><td>Maintenir l'entraînement actuel · Ajouter un tracking nutritionnel minimal (protéines + calories totales)</td></tr>
+          <tr><td>Nutrition oui, entraînement non</td><td>Démarrer en douceur (3j/sem, exercices de base) · Ne pas tout changer d'un coup</td></tr>
+          <tr><td>Ni l'un ni l'autre</td><td>Programme débutant strict · 3j/sem full body · Nutrition simplifiée (1 règle à la fois)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q22 -->
+    <div class="param-card" data-id="q22">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">22</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Have you attempted any of the following in the past?</div>
+          <div class="param-subtitle">Historique d'approches (keto, personal trainer, programmes en ligne…)</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <p style="font-size:13.5px;color:var(--text2);">L'historique des tentatives passées sert à éviter de reproduire ce qui n'a pas fonctionné et à identifier les points de rupture.</p>
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-label">Keto tenté</div>
+            <div class="impact-val">Éviter de recommander strictement le keto. Privilégier une approche flexible (IIFYM ou cycle glucidique) pour maximiser l'adhérence.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Comptage calorique tenté</div>
+            <div class="impact-val">Si abandon passé, proposer d'abord un tracking simplifié par portions visuelles avant le tracking précis.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Coach / PT passé</div>
+            <div class="impact-val">Niveau d'expérience probablement plus élevé que déclaré. Peut tolérer un volume et une complexité plus grands.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Programme en ligne passé</div>
+            <div class="impact-val">Vérifier pourquoi l'abandon. Souvent : manque de personnalisation ou progression mal structurée. Insister sur la progressivité.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-sep">
+
+  <!-- EXPÉRIENCE & NIVEAU -->
+  <section id="experience">
+    <h2>05 — Expérience & niveau d'entraînement</h2>
+    <p class="lead">Le niveau détermine le potentiel de progression, la tolérance au volume et la complexité des exercices à introduire.</p>
+
+    <!-- Q14 -->
+    <div class="param-card" data-id="q14">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">14</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What's your gym experience?</div>
+          <div class="param-subtitle">Débutant · Intermédiaire · Avancé</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Niveau</th><th>Split recommandé</th><th>Volume par muscle/sem</th><th>Progressions</th></tr>
+          <tr>
+            <td>Débutant (0–1 an)</td>
+            <td>Full body 3×/sem</td>
+            <td>10–12 séries/muscle</td>
+            <td>Progression linéaire : +2.5 kg chaque session</td>
+          </tr>
+          <tr>
+            <td>Intermédiaire (1–3 ans)</td>
+            <td>Upper/Lower ou PPL 4×/sem</td>
+            <td>14–18 séries/muscle</td>
+            <td>Progression hebdomadaire ou bi-hebdomadaire</td>
+          </tr>
+          <tr>
+            <td>Avancé (3+ ans)</td>
+            <td>PPL 6×/sem ou Bro split spécialisé</td>
+            <td>18–22+ séries/muscle</td>
+            <td>Périodisation ondulatoire ou en blocs</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-teal" style="margin-top:14px;">
+          <div class="callout-title">Surcharger le débutant est la principale erreur</div>
+          Un programme débutant avec trop de volume provoque une fatigue excessive sans gains supplémentaires. La progression linéaire simple est plus efficace que n'importe quel programme avancé pour cette population.
+        </div>
+      </div>
+    </div>
+
+    <!-- Q28 -->
+    <div class="param-card" data-id="q28">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">28</div>
+        <div class="param-title-wrap">
+          <div class="param-title">How comfortable are you with squat, bench and deadlift?</div>
+          <div class="param-subtitle">Maîtrise des exercices de base</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Niveau de maîtrise</th><th>Décision sur les exercices</th></tr>
+          <tr><td>Jamais fait</td><td>Introduire les patrons de mouvement avec des variantes accessibles : goblet squat, dumbbell RDL, push-up incliné. Progression vers les barbell progressivement.</td></tr>
+          <tr><td>En apprentissage</td><td>Conserver les exercices de base avec charges légères (technique prioritaire). Ajouter 1–2 variantes d'assistance pour renforcer les faiblesses.</td></tr>
+          <tr><td>Confiant</td><td>Programme centré sur les 3 lifts principaux + variantes. Utiliser la progression de charge comme métrique principale.</td></tr>
+          <tr><td>Expert / Compétiteur</td><td>Programme de force structuré (5/3/1, conjugate, etc.) avec périodisation formelle.</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="param-card" data-id="q16">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">16</div>
+        <div class="param-title-wrap">
+          <div class="param-title">How long have you been focused on getting in shape?</div>
+          <div class="param-subtitle">Ancienneté de l'intention vs ancienneté de la pratique réelle</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <p style="font-size:13.5px;color:var(--text2);">Cette question croise Q14 pour affiner le niveau réel. Quelqu'un qui dit "3+ ans" à Q14 mais "0–6 mois" ici a probablement une pratique irrégulière — traiter comme intermédiaire bas, pas avancé. Quelqu'un avec 1–3 ans de pratique continue peut avoir progressé plus vite qu'un profil "3+ ans" irrégulier.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRUCTURE DU PROGRAMME -->
+  <section id="structure">
+    <h2>06 — Structure du programme</h2>
+
+    <!-- Q29+Q30 -->
+    <div class="param-card" data-id="q2930">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">29–30</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Jours disponibles & fréquence hebdomadaire</div>
+          <div class="param-subtitle">Détermination du split d'entraînement</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Jours/sem</th><th>Split recommandé</th><th>Notes</th></tr>
+          <tr><td>2 jours</td><td>Full body 2× (A/B)</td><td>Minimum viable. Chaque muscle stimulé 2× par sem. Intensité haute.</td></tr>
+          <tr><td>3 jours</td><td>Full body 3× ou Push/Pull/Legs</td><td>Optimal pour débutants. Meilleur rapport efficacité/temps.</td></tr>
+          <tr><td>4 jours</td><td>Upper/Lower (2+2)</td><td>Bon équilibre volume/récupération pour intermédiaires.</td></tr>
+          <tr><td>5 jours</td><td>PPL + Upper ou spécialisation</td><td>PPL 3j + 2 sessions d'accent selon objectif.</td></tr>
+          <tr><td>6 jours</td><td>PPL ×2 (Lun–Sam)</td><td>Avancés uniquement. Chaque muscle 2× par sem. Récupération critique.</td></tr>
+        </table>
+
+        <div class="callout callout-amber" style="margin-top:14px;">
+          <div class="callout-title">Règle des jours non-consécutifs</div>
+          Idéalement, 48h minimum entre deux sessions ciblant les mêmes groupes musculaires. Exemple : Full body Lun/Mer/Ven. Upper/Lower : ne pas faire deux Upper consécutifs.
+        </div>
+      </div>
+    </div>
+
+    <!-- Q31 -->
+    <div class="param-card" data-id="q31">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">31</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What is your ideal workout length?</div>
+          <div class="param-subtitle">Durée de session : 30 min vs 60 min</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-label">30 minutes</div>
+            <div class="impact-val">3–4 exercices composés · Superset obligatoire · Temps de repos 60 sec max · Pas d'isolation · Sélection ultra-efficiente (squat + presse + pull-up + core)</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">60 minutes</div>
+            <div class="impact-val">5–7 exercices · 1–2 composés + 2–3 d'assistance + 1–2 isolation · Temps de repos 90–120 sec · Volume standard possible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q32 -->
+    <div class="param-card" data-id="q32">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">32</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What's your typical setup for working out?</div>
+          <div class="param-subtitle">Salle complète · Home gym · Haltères uniquement · Poids du corps</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Setup</th><th>Sélection d'exercices prioritaires</th></tr>
+          <tr><td>Salle complète</td><td>Squat barre · Deadlift · Bench press · Pull-up lesté · Machine isolation → programme optimal sans contrainte</td></tr>
+          <tr><td>Home gym (rack + barre)</td><td>Identique à salle complète · Ajouter des variantes pour les exercices de machines (câbles remplacés par bandes ou haltères)</td></tr>
+          <tr><td>Haltères uniquement</td><td>Goblet squat · Dumbbell RDL · Incliné DB press · DB row · Farmers carry · Progresser via tempo et amplitude</td></tr>
+          <tr><td>Poids du corps</td><td>Progression via variations (push-up → décliné → archer → prise étroite) · Utiliser des anneaux si possible pour la poitrine et le dos · Pistol squat progression</td></tr>
+          <tr><td>Bandes élastiques</td><td>Compléter un programme haltères. Les bandes seules sont insuffisantes pour un stimulus de force significatif long terme.</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTRAINTES PHYSIQUES -->
+  <section id="contraintes">
+    <h2>07 — Contraintes physiques & blessures</h2>
+
+    <!-- Q33 -->
+    <div class="param-card" data-id="q33">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">33</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Do you have any past or current injuries that affect how you move?</div>
+          <div class="param-subtitle">Épaule · Genou · Lombaires · Aucun</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Zone</th><th>Exercices à éviter</th><th>Alternatives recommandées</th></tr>
+          <tr>
+            <td>Épaule</td>
+            <td>Presse militaire barre derrière la nuque · Développé couché prise large · Élévations latérales lestées</td>
+            <td>Presse épaules haltères neutres · Développé incliné prise mi-large · Câble élévations latérales basse tension</td>
+          </tr>
+          <tr>
+            <td>Genou</td>
+            <td>Leg extension full ROM · Squat profond chargé · Fentes longues</td>
+            <td>Leg press · Hack squat · Fentes courtes · Renforcement vastus medialis (terminal extension)</td>
+          </tr>
+          <tr>
+            <td>Lombaires</td>
+            <td>Deadlift conventionnel · Good morning · Jefferson curl</td>
+            <td>Trap bar deadlift · Romanian deadlift léger · Hyper extension machine · Renforcement core prioritaire</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-blue" style="margin-top:14px;">
+          <div class="callout-title">Principe fondamental</div>
+          L'entraînement autour d'une blessure (not through it) est souvent bénéfique. Identifier les patterns de mouvement sans douleur et construire autour. Une douleur aiguë → référer à un médecin ou kiné avant de concevoir un programme.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GROUPES MUSCULAIRES -->
+  <section id="groupes">
+    <h2>08 — Groupes musculaires prioritaires & zones problématiques</h2>
+
+    <!-- Q12 + Q13 -->
+    <div class="param-card" data-id="q1213">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">12–13</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Zones difficiles à affiner & groupes à prioriser</div>
+          <div class="param-subtitle">Abdomen · Cuisses · Bras · Épaules · Poitrine · Dos</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="callout callout-amber">
+          <div class="callout-title">Spot reduction : le mythe à déconstruire</div>
+          Il est impossible de cibler la perte de gras sur une zone spécifique. Les "zones difficiles" guident la sélection d'exercices pour hypertrophier ces muscles, pas pour brûler le gras localement. La réduction du gras général révélera les muscles développés.
+        </div>
+
+        <table class="rule-table" style="margin-top:14px;">
+          <tr><th>Muscle prioritaire</th><th>Exercices clés à intégrer en priorité</th><th>Volume supplémentaire</th></tr>
+          <tr><td>Épaules</td><td>Presse épaules · Élévations latérales · Face pull</td><td>+2–4 séries/sem vs programme standard</td></tr>
+          <tr><td>Dos (largeur)</td><td>Pull-up · Lat pulldown · Pull-over</td><td>+2–4 séries/sem lat focus</td></tr>
+          <tr><td>Dos (épaisseur)</td><td>Rowing barre · DB row · Seated row</td><td>+2–4 séries/sem rear delt + rhomboïdes</td></tr>
+          <tr><td>Bras (biceps)</td><td>Curl barre · Curl incliné · Hammer curl</td><td>+3–6 séries/sem isolation</td></tr>
+          <tr><td>Bras (triceps)</td><td>Dips · Skull crusher · Cable pushdown</td><td>+3–6 séries/sem isolation</td></tr>
+          <tr><td>Quadriceps</td><td>Squat · Leg press · Hack squat</td><td>+2–4 séries/sem</td></tr>
+          <tr><td>Fessiers</td><td>Hip thrust · RDL · Sumo squat</td><td>+4–6 séries/sem</td></tr>
+          <tr><td>Abdominaux</td><td>Crunch câble · Hollow body · Leg raise</td><td>2–3 sessions dédiées/sem de 10–15 min</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-sep">
+
+  <!-- BILAN CALORIQUE -->
+  <section id="calorique">
+    <h2>09 — Bilan calorique</h2>
+
+    <!-- Q34 -->
+    <div class="param-card" data-id="q34">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">34</div>
+        <div class="param-title-wrap">
+          <div class="param-title">"We estimate you'll need to eat [X] kcal/j. How close are you to this now?"</div>
+          <div class="param-subtitle">Écart entre consommation actuelle et cible</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Situation</th><th>Approche recommandée</th></tr>
+          <tr><td>Très loin en-dessous (–500+)</td><td>Augmenter progressivement (+100 kcal/sem). Un choc calorique positif soudain cause une prise de gras rapide et un inconfort digestif.</td></tr>
+          <tr><td>Légèrement en-dessous (–100 à –300)</td><td>Ajustement direct possible. Cibler la cible en 1–2 semaines.</td></tr>
+          <tr><td>À la cible</td><td>Maintenir et ajuster après 2–3 semaines selon les résultats (poids, énergie, performance).</td></tr>
+          <tr><td>Au-dessus de la cible</td><td>Si objectif fat loss : réduire par paliers de –200 kcal/sem. Ne pas couper drastiquement.</td></tr>
+        </table>
+
+        <div class="formula">
+          <strong>Cible calorique selon objectif :</strong><br>
+          Fat loss : <code>TDEE − 300 à − 500 kcal</code><br>
+          Bulk lean : <code>TDEE + 200 à + 300 kcal</code><br>
+          Maintenance/Recomp : <code>TDEE ± 100 kcal</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROTÉINES -->
+  <section id="proteines">
+    <h2>10 — Protéines</h2>
+
+    <!-- Q35 -->
+    <div class="param-card" data-id="q35">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">35</div>
+        <div class="param-title-wrap">
+          <div class="param-title">"We estimate you should eat around [X]g of protein/day. How close are you?"</div>
+          <div class="param-subtitle">Paramètre le plus impactant sur la composition corporelle</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="formula">
+          <strong>Recommandations protéiques :</strong><br>
+          Base : <code>1,6–2,2 g × poids de corps (kg)</code><br>
+          Fat loss (préservation musculaire) : <code>2,2–2,6 g/kg</code><br>
+          Bulk débutant : <code>1,6–2,0 g/kg</code><br>
+          Obésité : calculer sur le <em>poids cible</em>, pas sur le poids actuel
+        </div>
+
+        <table class="rule-table" style="margin-top:14px;">
+          <tr><th>Écart à la cible</th><th>Stratégie</th></tr>
+          <tr><td>Très loin (&lt;50% de la cible)</td><td>Introduire 1 repas riche en protéines à la fois. Ne pas tout changer simultanément. Suggérer des sources pratiques (œufs, poulet, skyr, whey).</td></tr>
+          <tr><td>Modérément loin (50–80%)</td><td>Ajouter 1–2 snacks protéinés (fromage blanc, édamame, steak haché maigre).</td></tr>
+          <tr><td>Proche (80–100%)</td><td>Ajustement marginal. Optimiser la répartition (3–4 prises de 30–40g).</td></tr>
+        </table>
+
+        <div class="callout callout-teal" style="margin-top:14px;">
+          <div class="callout-title">Répartition optimale des protéines</div>
+          4 prises de 30–40g réparties sur la journée maximisent la synthèse protéique musculaire (MPS). Une seule grande prise ne compense pas l'absence sur les autres repas.
+        </div>
+      </div>
+    </div>
+
+    <!-- Q45 -->
+    <div class="param-card" data-id="q45b">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">45</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Do you usually take a pre-workout supplement before training?</div>
+          <div class="param-subtitle">Supplémentation — impact sur l'optimisation du programme</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Supplément</th><th>Rôle réel dans le programme</th></tr>
+          <tr><td>Pre-workout (caféine)</td><td>Améliore performance aiguë et focus. Placer l'entraînement dans les 30–60 min post-prise. Pas d'impact structural sur le programme.</td></tr>
+          <tr><td>Whey protéine</td><td>Outil pour atteindre la cible protéique, pas une nécessité si l'alimentation est suffisante.</td></tr>
+          <tr><td>Créatine monohydrate</td><td>Seul supplément avec preuve robuste sur la force et la masse. 3–5g/jour en continu. Recommander si non utilisée.</td></tr>
+          <tr><td>Aucun</td><td>Aucun impact sur le design du programme. La nutrition de base prime.</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADHÉRENCE NUTRITIONNELLE -->
+  <section id="adherence">
+    <h2>11 — Adhérence nutritionnelle</h2>
+
+    <!-- Q36 -->
+    <div class="param-card" data-id="q36">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">36</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What makes it hardest to stick to your nutrition goals?</div>
+          <div class="param-subtitle">Restaurants fréquents · Week-ends difficiles · Soirées difficiles · Repas sociaux</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Obstacle déclaré</th><th>Solution intégrée au programme</th></tr>
+          <tr><td>Mange souvent au restaurant</td><td>Guide des choix restaurant (protéines + légumes d'abord, estimer les calories) · Cibler les établissements avec options saines · Budget calorique flexible les jours restaurants</td></tr>
+          <tr><td>Week-ends difficiles</td><td>Définir un protocole week-end : maintenir les protéines, relâcher les calories totales de max +200 · Entraînement le samedi matin pour ancrer une journée saine</td></tr>
+          <tr><td>Soirées difficiles</td><td>Snack protéiné 1h avant le repas du soir · Alimentation légère en journée sans être en restriction</td></tr>
+          <tr><td>Stress / émotionnel</td><td>Identifier les déclencheurs · Proposer des alternatives non-alimentaires (marche, appel) · Pas de "aliments interdits" dans l'approche</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q38 -->
+    <div class="param-card" data-id="q38">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">38</div>
+        <div class="param-title-wrap">
+          <div class="param-title">How busy are you typically?</div>
+          <div class="param-subtitle">Niveau de disponibilité pour la préparation des repas</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-label">Très occupé (journées chargées)</div>
+            <div class="impact-val">Meal prep hebdomadaire obligatoire · Repas en moins de 10 min · Snacks prêts à l'emploi · Plan A/B simple (2 options par repas)</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Agenda flexible</div>
+            <div class="impact-val">Peut cuisiner quotidiennement · Plan nutritionnel plus varié · Tracking plus précis possible</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Déplacements fréquents</div>
+            <div class="impact-val">Protocole de voyage : options protéinées partout (fromage, charcuterie maigre, barres protéinées) · Ne pas viser la perfection, viser le minimum acceptable</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESTRICTIONS ALIMENTAIRES -->
+  <section id="restrictions">
+    <h2>12 — Restrictions alimentaires</h2>
+
+    <!-- Q37 -->
+    <div class="param-card" data-id="q37">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">37</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Do you have any dietary restrictions or allergies?</div>
+          <div class="param-subtitle">Vegan · Sans gluten · Sans lactose · Allergie noix</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Restriction</th><th>Défis protéiques</th><th>Solutions</th></tr>
+          <tr><td>Végan</td><td>Protéines incomplètes, absorption réduite</td><td>Combiner légumineuses + céréales · Augmenter la cible à 2,0–2,4 g/kg · Whey végétale (pois + riz) · Supplémenter B12, Zinc, Fer</td></tr>
+          <tr><td>Végétarien</td><td>Sources protéiques plus limitées</td><td>Œufs + produits laitiers comme base · Yaourt grec, cottage cheese, fromage blanc</td></tr>
+          <tr><td>Sans lactose</td><td>Pertes de sources protéinées pratiques</td><td>Whey isolate (lactose minimal) · Remplacer yaourt par alternatives végétales enrichies</td></tr>
+          <tr><td>Sans gluten</td><td>Peu d'impact sur les protéines · Glucides à adapter</td><td>Riz, pomme de terre, quinoa, avoine certifiée GF comme sources de glucides</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-sep">
+
+  <!-- PSYCHOLOGIE -->
+  <section id="motivation">
+    <h2>13 — Psychologie, motivation & consistance</h2>
+
+    <!-- Q11 -->
+    <div class="param-card" data-id="q11">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">11</div>
+        <div class="param-title-wrap">
+          <div class="param-title">What is affecting your consistency most?</div>
+          <div class="param-subtitle">Principal frein à la régularité</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Frein principal</th><th>Ajustement du programme</th></tr>
+          <tr><td>Manque de temps</td><td>Réduire la durée des sessions (30 min) · Augmenter la fréquence courte plutôt que les longues sessions rares</td></tr>
+          <tr><td>Manque de motivation</td><td>Ancrer l'habitude (même heure chaque jour) · Définir des micro-objectifs hebdomadaires · Réduire la friction (sac préparé la veille)</td></tr>
+          <tr><td>Résultats trop lents</td><td>Recadrer les attentes (0,5 kg/sem = résultat optimal) · Introduire des métriques non-scalaires (mensurations, photos, force)</td></tr>
+          <tr><td>Injuries / douleurs</td><td>Adapter les exercices (Q33) · Inclure des sessions de récupération active</td></tr>
+          <tr><td>Manque de savoir</td><td>Simplifier : 3 règles max à la fois · Éducation progressive</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q19–Q21 -->
+    <div class="param-card" data-id="q192021">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">19–21</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Échelles d'accord — Frustration, consistance, nutrition</div>
+          <div class="param-subtitle">Mesure de la disposition psychologique au changement</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <p style="font-size:13.5px;color:var(--text2);">Ces trois questions mesurent la disposition au changement selon le modèle transthéorique. Score 1–2 = pré-contemplation, 3 = contemplation, 4–5 = préparation/action.</p>
+
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-label">Q19 : Insatisfaction + prêt à changer</div>
+            <div class="impact-val">Score élevé (4–5) → forte motivation initiale. Risque de over-restriction ou sur-entraînement dans les premières semaines. Cadrer des attentes réalistes dès le départ.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Q20 : Difficultés de consistance</div>
+            <div class="impact-val">Score élevé → prioriser les systèmes d'accountability (journal, app, partenaire). Concevoir un programme tolérant aux "mauvaises" semaines (flexibilité intégrée).</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Q21 : Nutrition complexe</div>
+            <div class="impact-val">Score élevé → démarrer avec 1–2 règles nutritionnelles simples. Ne pas imposer un tracking précis immédiatement. Progression graduelle.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q17 + Q18 -->
+    <div class="param-card" data-id="q1718">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">17–18</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Raison principale & inconfort corporel autour des autres</div>
+          <div class="param-subtitle">Motivation intrinsèque vs extrinsèque</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <p style="font-size:13.5px;color:var(--text2);">Les motivations intrinsèques (se sentir mieux, être plus sain) prédisent mieux l'adhérence à long terme que les motivations extrinsèques (paraître, plaire aux autres). Un score d'inconfort élevé (Q18) peut indiquer une dysmorphophobie légère — concevoir un programme axé sur la performance et les gains de force plutôt que sur l'apparence seule.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOMMEIL & RÉCUPÉRATION -->
+  <section id="sommeil">
+    <h2>14 — Sommeil, récupération & niveau d'activité quotidienne</h2>
+
+    <!-- Q47 -->
+    <div class="param-card" data-id="q47">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">47</div>
+        <div class="param-title-wrap">
+          <div class="param-title">On most days, how many hours of sleep do you get?</div>
+          <div class="param-subtitle">Impact majeur sur les hormones anaboliques et la récupération</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Heures de sommeil</th><th>Ajustements programme</th></tr>
+          <tr><td>&lt;6h</td><td>Réduire le volume d'entraînement de 20% · Éviter les sessions d'intensité haute · Prioriser 1–2 sessions/sem plutôt que 5 sessions médiocres · Cortisol élevé → rétention hydrique, récupération dégradée</td></tr>
+          <tr><td>6–7h</td><td>Programme standard mais surveiller les signes de surentraînement · Recommander un suivi de la variabilité de la fréquence cardiaque (HRV) si disponible</td></tr>
+          <tr><td>7–9h</td><td>Zone optimale. Programme sans contrainte liée au sommeil.</td></tr>
+          <tr><td>+9h</td><td>Vérifier si signe de surentraînement existant ou de dépression. Pas d'impact négatif si naturel.</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q26 -->
+    <div class="param-card" data-id="q26">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">26</div>
+        <div class="param-title-wrap">
+          <div class="param-title">How physically active are you during a typical day?</div>
+          <div class="param-subtitle">Niveau d'activité non-sportive (NEAT)</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <p style="font-size:13.5px;color:var(--text2);">Le NEAT (Non-Exercise Activity Thermogenesis) représente 15–50% de la dépense totale. C'est la variable la plus variable entre individus et la plus facile à augmenter.</p>
+
+        <div class="formula">
+          <strong>Facteur d'activité pour le TDEE :</strong><br>
+          Sédentaire (bureau tout la journée) : <code>BMR × 1.2</code><br>
+          Légèrement actif (marche 30–60 min/j) : <code>BMR × 1.375</code><br>
+          Actif (debout, marche fréquente) : <code>BMR × 1.55</code><br>
+          Très actif (travail physique) : <code>BMR × 1.725</code>
+        </div>
+
+        <div class="callout callout-teal" style="margin-top:14px;">
+          <div class="callout-title">Levier sous-estimé : augmenter le NEAT</div>
+          Ajouter 3 000–5 000 pas/jour brûle 150–250 kcal supplémentaires sans affecter la récupération. Recommander comme premier levier avant de réduire les calories.
+        </div>
+      </div>
+    </div>
+
+    <!-- Q46 -->
+    <div class="param-card" data-id="q46">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">46</div>
+        <div class="param-title-wrap">
+          <div class="param-title">Do you prefer training in the morning or evening?</div>
+          <div class="param-subtitle">Chronotype et performance</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <div class="impact-grid">
+          <div class="impact-item">
+            <div class="impact-label">Matin</div>
+            <div class="impact-val">Cortisol naturellement élevé (6h–9h) → bonne mobilisation de l'énergie. Testostérone également élevée. Inconvénient : raideur musculaire → étirements dynamiques obligatoires en échauffement.</div>
+          </div>
+          <div class="impact-item">
+            <div class="impact-label">Soir</div>
+            <div class="impact-val">Température corporelle optimale en fin d'après-midi. Force maximale vers 17h–19h. Risque : impact sur le sommeil si entraînement intense après 20h.</div>
+          </div>
+        </div>
+        <p style="font-size:13.5px;color:var(--text2);margin-top:12px;">Le moment d'entraînement le plus efficace est celui qu'on est le plus susceptible de maintenir sur le long terme. L'écart de performance matin/soir est marginal (5–10%) comparé à la consistance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDIO -->
+  <section id="cardio">
+    <h2>15 — Cardio</h2>
+
+    <!-- Q27 -->
+    <div class="param-card" data-id="q27">
+      <div class="param-header" onclick="toggleCard(this)">
+        <div class="param-number">27</div>
+        <div class="param-title-wrap">
+          <div class="param-title">How often do you do cardio-related exercise?</div>
+          <div class="param-subtitle">Rarement · Occasionnellement · Fréquemment</div>
+        </div>
+        <div class="param-chevron">▼</div>
+      </div>
+      <div class="param-body">
+        <table class="rule-table">
+          <tr><th>Fréquence actuelle</th><th>Recommandation selon objectif</th></tr>
+          <tr>
+            <td rowspan="2">Rarement</td>
+            <td><span class="badge badge-coral">Fat loss</span> Introduire 2×30 min de marche rapide/vélo LISS. Ne pas imposer d'emblée un HIIT qui sera abandonné.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Bulk</span> Maintenir à ce niveau. Le cardio excessif interfère avec la prise de masse.</td>
+          </tr>
+          <tr>
+            <td>Occasionnellement</td>
+            <td>Structurer : 2–3 sessions LISS de 30–45 min/sem · Placer après l'entraînement de force ou les jours de repos</td>
+          </tr>
+          <tr>
+            <td>Fréquemment</td>
+            <td>Évaluer si le cardio interfère avec la récupération du renforcement musculaire. Séparer par 6h minimum les sessions cardio haute intensité et les sessions de force.</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-amber" style="margin-top:14px;">
+          <div class="callout-title">LISS vs HIIT — quand choisir quoi</div>
+          LISS (steady state 60–70% FCmax) : n'affecte pas la récupération musculaire, durable, recommandé pour la majorité. HIIT (>85% FCmax) : plus de calories brûlées/min mais impact sur la récupération → limiter à 1–2 sessions/sem maximum et jamais le lendemain d'une session de force lourde.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-sep">
+
+  <!-- MATRICE DÉCISIONNELLE -->
+  <section id="matrix">
+    <h2>16 — Matrice décisionnelle globale</h2>
+    <p class="lead">Synthèse des combinaisons de paramètres les plus courantes et le programme qui en résulte.</p>
+
+    <div class="section-intro">
+      Cette matrice couvre les 6 profils les plus fréquents. Elle combine Q1 (objectif), Q14 (niveau), Q30 (fréquence) et Q8 (% gras) pour aboutir à une structure de programme précise.
+    </div>
+
+    <table class="rule-table">
+      <tr>
+        <th>Profil</th>
+        <th>Paramètres clés</th>
+        <th>Programme généré</th>
+      </tr>
+      <tr>
+        <td><span class="badge badge-coral">A</span> Débutant en perte de poids</td>
+        <td>Q1: Fat loss · Q14: Débutant · Q30: 3j · Q8: &gt;25%</td>
+        <td>Full body 3× · –350 kcal/j · 2.2g prot/kg · Cardio LISS 2×30min · Exercices: Goblet squat, DB row, Push-up, Hip thrust</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">B</span> Intermédiaire en prise de masse</td>
+        <td>Q1: Bulk · Q14: Intermédiaire · Q30: 4j · Q8: 12–15%</td>
+        <td>Upper/Lower 4× · +250 kcal/j · 2.0g prot/kg · Cardio 1×30min optionnel · Exercices composés lourds + assistance</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">C</span> Avancé en recomposition</td>
+        <td>Q1: Recomp · Q14: Avancé · Q30: 5–6j · Q8: 15–20%</td>
+        <td>PPL 5×/sem · Maintenance calorique · 2.4g prot/kg · Périodisation ondulatoire · Cardio 2×LISS</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-amber">D</span> Occupé, peu de temps</td>
+        <td>Q1: Fat loss · Q31: 30min · Q32: Salle</td>
+        <td>Full body 3× en 30min · Supersets imposés · 4 exercices max · –300 kcal/j · NEAT augmenté (+3000 pas/j)</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-teal">E</span> Home gym, haltères uniquement</td>
+        <td>Q1: Tous objectifs · Q32: Haltères</td>
+        <td>Full body ou Upper/Lower avec DB · Progression par tempo, ROM et variantes · Pas de barbell requis</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">F</span> Blessure lombaire + fat loss</td>
+        <td>Q1: Fat loss · Q33: Lombaires · Q14: Intermédiaire</td>
+        <td>Éviter deadlift conventionnel · Trap bar / leg press / machine rowing · Core renforcé en priorité · Cardio: vélo (pas de course à pied)</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- PHASES DE PROGRESSION -->
+  <section id="phases">
+    <h2>17 — Phases de progression type</h2>
+    <p class="lead">Structure temporelle d'un programme sur 6 mois intégrant les paramètres recueillis.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Semaines 1–2 : Adaptation & baseline</div>
+        <div class="tl-body">Volume bas (–20% vs programme cible) · Maîtrise technique des exercices · Établir les habitudes nutritionnelles (protéines + calories) · Pas de déficit agressif · Objectif : créer la routine</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Semaines 3–8 : Accumulation</div>
+        <div class="tl-body">Volume progressif (+1 série/exercice toutes les 2 semaines) · Déficit ou surplus cible appliqué · Tracking nutritionnel régulier · Ajustement selon les résultats à S4 (poids, force) · Cardio intégré</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Semaines 9–12 : Intensification</div>
+        <div class="tl-body">Volume élevé · Techniques d'intensification (drop sets, tempo) pour intermédiaires/avancés · Révision des exercices (substitutions si plateaux) · Surveillance fatigue (sur-entraînement)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Semaine 13 : Décharge (Deload)</div>
+        <div class="tl-body">Volume réduit de 40–50% · Intensité maintenue (mêmes charges) · Récupération des tendons et du SNC · Nutrition maintenue (pas de réduction supplémentaire) · Objectif : repartir plus fort</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Semaines 14–24 : Progression phase 2</div>
+        <div class="tl-body">Nouveau cycle avec programme réajusté · Réévaluation du % de gras et du poids · Ajustement calorique si nécessaire · Introduction de nouveaux exercices · Objectifs de force révisés</div>
+      </div>
+    </div>
+
+    <div class="callout callout-blue" style="margin-top: 24px;">
+      <div class="callout-title">Diet break (pause nutritionnelle)</div>
+      Pour les programmes de perte de poids &gt;12 semaines : intégrer 1–2 semaines de maintenance calorique (sans déficit) toutes les 8–12 semaines. Réduit l'adaptation métabolique, améliore l'humeur et la testostérone, et améliore l'adhérence à long terme. Pas de prise de gras si les protéines restent élevées.
+    </div>
+  </section>
+
+  <div style="margin-top:60px;padding-top:24px;border-top:1px solid var(--border2);font-size:12.5px;color:var(--text3);">
+    Documentation générée à partir du questionnaire Built With Science — 47 paramètres analysés. Usage interne pour la conception de programmes personnalisés.
+  </div>
+
+</main>
+</div>
+
+<script>
+function toggleCard(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+const navLinks = document.querySelectorAll('nav a');
+const sections = document.querySelectorAll('section[id]');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+}, { passive: true });
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>

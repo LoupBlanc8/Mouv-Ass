@@ -36,7 +36,7 @@ export default function Academy() {
 
   const muscleFilters = mode === 'street_workout' 
     ? ['Tous', 'Push', 'Pull', 'Core']
-    : ['Tous', 'Pectoraux', 'Dos', 'Épaules', 'Jambes'];
+    : ['Tous', 'Pectoraux', 'Dos', 'Épaules', 'Jambes', 'Tous les exercices'];
 
 
   let displayedSkills = [];
@@ -49,7 +49,7 @@ export default function Academy() {
   }
 
   // Filter by muscle group
-  const filteredSkills = muscleFilter === 'Tous'
+  const filteredSkills = muscleFilter === 'Tous' || muscleFilter === 'Tous les exercices'
     ? displayedSkills
     : displayedSkills.filter(s => s.focus?.toLowerCase().includes(muscleFilter.toLowerCase()));
 
@@ -226,6 +226,35 @@ export default function Academy() {
                               <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'bold' }}>Focus Musculaire</span>
                               <p className="body-md">{skill.focus}</p>
                             </div>
+                            {skill.reps && (
+                              <div style={{ background: 'rgba(var(--primary-rgb), 0.08)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-4)', border: '1px solid rgba(var(--primary-rgb), 0.15)' }}>
+                                <span className="label-sm" style={{ color: 'var(--primary)', display: 'block', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'bold' }}>Nombre de Reps</span>
+                                <p className="title-md" style={{ color: 'var(--primary)' }}>{skill.reps}</p>
+                              </div>
+                            )}
+                            {/* Preview du prochain palier */}
+                            {(() => {
+                              const sameExercise = displayedSkills.filter(s => {
+                                // Same exercise line (e.g. bench_1 -> bench_2)
+                                const baseId = skill.id.replace(/_\d+$|_bonus$/, '');
+                                const otherBase = s.id.replace(/_\d+$|_bonus$/, '');
+                                return baseId === otherBase && s.difficulty > skill.difficulty;
+                              }).sort((a, b) => a.difficulty - b.difficulty);
+                              const nextTier = sameExercise[0];
+                              if (!nextTier) return null;
+                              return (
+                                <div style={{ background: 'var(--surface-container)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-4)', border: '1px dashed rgba(var(--outline-variant), 0.3)' }}>
+                                  <span className="label-sm" style={{ color: 'var(--on-surface-variant)', display: 'block', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 'bold' }}>⏭ Prochain Palier</span>
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <p className="title-md" style={{ margin: 0, color: 'var(--on-surface-variant)' }}>{nextTier.name}</p>
+                                      <span className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>{nextTier.prereq}{nextTier.reps ? ` · ${nextTier.reps}` : ''}</span>
+                                    </div>
+                                    <span className="chip chip--sm" style={{ background: 'var(--surface-container-high)', fontSize: '0.7rem' }}>DIFF {nextTier.difficulty}/6</span>
+                                  </div>
+                                </div>
+                              );
+                            })()}
                             {!achieved && (
                               <button className="btn btn--primary btn--full" style={{ padding: '16px', borderRadius: 'var(--radius-xl)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}
                                 onClick={(e) => validateSkill(e, skill)} disabled={loadingSkill === skill.id}>

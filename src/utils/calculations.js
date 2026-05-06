@@ -37,73 +37,70 @@ export function calculateMetabolismeBase(poidsKg, tailleCm, age, sexe) {
 // ============================================
 // DÉPENSE ÉNERGÉTIQUE TOTALE
 // ============================================
-const ACTIVITY_MULTIPLIERS = {
-  sedentaire: 1.2,
-  leger: 1.375,       // 1-3 jours/semaine
-  modere: 1.55,        // 3-5 jours/semaine
-  actif: 1.725,        // 6-7 jours/semaine
-  tres_actif: 1.9,     // 2x/jour
-};
-
-export function calculateTDEE(metabolismeBase, joursSemaine) {
+export function calculateTDEE(metabolismeBase, activityLevel) {
   if (!metabolismeBase) return null;
-  let level = 'sedentaire';
-  if (joursSemaine >= 6) level = 'actif';
-  else if (joursSemaine >= 3) level = 'modere';
-  else if (joursSemaine >= 1) level = 'leger';
-  return Math.round(metabolismeBase * ACTIVITY_MULTIPLIERS[level]);
+  const multipliers = {
+    sedentaire: 1.2,
+    leger: 1.375,
+    actif: 1.55,
+    tres_actif: 1.725,
+    extreme: 1.9 // Not in onboarding but for completeness
+  };
+  const multiplier = multipliers[activityLevel] || 1.2;
+  return Math.round(metabolismeBase * multiplier);
 }
 
 // ============================================
 // MACROS (adapté par morphotype + objectif)
 // ============================================
-export function calculateMacros(tdee, poidsKg, objectif, morphotype, jourEntrainement = true) {
+export function calculateMacros(tdee, poidsKg, objectif, morphotype, bodyFat = '15_20') {
   if (!tdee || !poidsKg) return null;
 
   let caloriesAjustees = tdee;
-  let proteinesParKg, pourcentageLipides;
+  let proteinesParKg = 2.0; // Default
+  let pourcentageLipides = 0.25; // Default
 
-  // Ajustement calorique par objectif
+  // 1. Ajustement calorique par objectif (BWS Logic)
   switch (objectif) {
     case 'perte_poids':
-      caloriesAjustees = Math.round(tdee * 0.80); // -20%
-      proteinesParKg = 2.2;
-      pourcentageLipides = 0.25;
+      caloriesAjustees = Math.round(tdee * 0.80); // Déficit -20%
+      proteinesParKg = 2.2; // Plus de protéines en déficit pour préserver le muscle
+      break;
+    case 'deficit_calorique':
+      caloriesAjustees = Math.round(tdee * 0.85); // Déficit -15%
+      proteinesParKg = 2.0;
+      break;
+    case 'seche':
+      caloriesAjustees = Math.round(tdee * 0.90); // Déficit -10%
+      proteinesParKg = 2.4; // Très haut en protéines pour le "shred"
       break;
     case 'prise_masse':
-      caloriesAjustees = Math.round(tdee * 1.15); // +15%
-      proteinesParKg = 2.0;
-      pourcentageLipides = 0.25;
+      caloriesAjustees = Math.round(tdee * 1.10); // Surplus +10% (BWS recommande souvent +10-15%)
+      proteinesParKg = 1.8; // Moins critique car surplus énergétique
+      break;
+    case 'recomposition':
+      caloriesAjustees = tdee; // Maintenance
+      proteinesParKg = 2.2;
       break;
     case 'tonification':
-      caloriesAjustees = Math.round(tdee * 0.95); // -5%
+      caloriesAjustees = Math.round(tdee * 0.95); // Léger déficit -5%
       proteinesParKg = 2.0;
-      pourcentageLipides = 0.28;
       break;
     case 'endurance':
-    default:
       caloriesAjustees = tdee;
       proteinesParKg = 1.6;
-      pourcentageLipides = 0.30;
+      pourcentageLipides = 0.30; // Plus de gras pour l'énergie longue durée
       break;
+    default:
+      caloriesAjustees = tdee;
   }
 
-  // Ajustement morphotype
-  switch (morphotype) {
-    case 'ectomorphe':
-      caloriesAjustees = Math.round(caloriesAjustees * 1.10); // +10% car métabolisme rapide
-      proteinesParKg = Math.min(proteinesParKg + 0.2, 2.4);
-      break;
-    case 'endomorphe':
-      caloriesAjustees = Math.round(caloriesAjustees * 0.92); // -8% tendance au stockage
-      pourcentageLipides = Math.max(pourcentageLipides - 0.03, 0.20);
-      break;
-    // Mésomorphe = baseline
-  }
-
-  // Jour repos : réduire glucides
-  if (!jourEntrainement) {
-    caloriesAjustees = Math.round(caloriesAjustees * 0.90);
+  // 2. Ajustement selon le Body Fat (BWS Logic)
+  // Plus on est gras, moins on a besoin de protéines par kg de poids total (car moins de masse sèche relative)
+  if (bodyFat === 'plus_20') {
+    proteinesParKg -= 0.2;
+  } else if (bodyFat === 'moins_10') {
+    proteinesParKg += 0.2;
   }
 
   const proteines = Math.round(poidsKg * proteinesParKg);
@@ -114,7 +111,7 @@ export function calculateMacros(tdee, poidsKg, objectif, morphotype, jourEntrain
   return {
     calories: caloriesAjustees,
     proteines,
-    glucides: Math.max(glucides, 50), // minimum 50g glucides
+    glucides: Math.max(glucides, 50),
     lipides,
     ratios: {
       proteines: Math.round((proteines * 4 / caloriesAjustees) * 100),

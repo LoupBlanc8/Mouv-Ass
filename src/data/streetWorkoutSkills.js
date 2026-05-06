@@ -1,27 +1,27 @@
 export const STREET_WORKOUT_SKILLS = [
   // PULL (Tirage)
-  { id: 'pull_1', name: 'Tractions : Initié', prereq: '1 Traction stricte', time: '1-3 mois', difficulty: 1, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
-  { id: 'pull_2', name: 'Tractions : Intermédiaire', prereq: '10 Tractions strictes', time: '3-6 mois', difficulty: 2, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
-  { id: 'pull_3', name: 'Muscle-up (Barre)', prereq: '15 Tractions strictes', time: '6-12 mois', difficulty: 3, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
-  { id: 'pull_4', name: 'Front Lever : Initié', prereq: 'Straddle Front Lever 5s', time: '1-2 ans', difficulty: 4, focus: 'Pull', type: 'Isométrique', image: '/exercises/traction.gif' },
-  { id: 'pull_5', name: 'Front Lever : Full', prereq: 'Full Front Lever 10s', time: '2-3 ans', difficulty: 5, focus: 'Pull', type: 'Isométrique', image: '/exercises/traction.gif' },
-  { id: 'pull_bonus', name: 'Front Lever : Pull-ups (Bonus)', prereq: '5 Front Lever Pull-ups', time: '3+ ans', difficulty: 6, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
+  { id: 'pull_1', name: 'Tractions : Initié', prereq: '1 Traction stricte', reps: '1 rep', time: '1-3 mois', difficulty: 1, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
+  { id: 'pull_2', name: 'Tractions : Intermédiaire', prereq: '10 Tractions strictes', reps: '10 reps', time: '3-6 mois', difficulty: 2, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
+  { id: 'pull_3', name: 'Muscle-up (Barre)', prereq: '15 Tractions strictes', reps: '1 rep', time: '6-12 mois', difficulty: 3, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
+  { id: 'pull_4', name: 'Front Lever : Initié', prereq: 'Straddle Front Lever 5s', reps: '5s hold', time: '1-2 ans', difficulty: 4, focus: 'Pull', type: 'Isométrique', image: '/exercises/traction.gif' },
+  { id: 'pull_5', name: 'Front Lever : Full', prereq: 'Full Front Lever 10s', reps: '10s hold', time: '2-3 ans', difficulty: 5, focus: 'Pull', type: 'Isométrique', image: '/exercises/traction.gif' },
+  { id: 'pull_bonus', name: 'Front Lever : Pull-ups (Bonus)', prereq: '5 Front Lever Pull-ups', reps: '5 reps', time: '3+ ans', difficulty: 6, focus: 'Pull', type: 'Dynamique', image: '/exercises/traction.gif' },
 
   // PUSH (Poussée)
-  { id: 'push_1', name: 'Pompes & Dips : Initié', prereq: '15 Pompes / 5 Dips', time: '1-3 mois', difficulty: 1, focus: 'Push', type: 'Dynamique', image: '/exercises/pompe.gif' },
-  { id: 'push_2', name: 'Handstand : Initié', prereq: 'Handstand contre mur 30s', time: '3-6 mois', difficulty: 2, focus: 'Push', type: 'Isométrique', image: '/exercises/presse-militaire.gif' },
-  { id: 'push_3', name: 'Handstand Push-up', prereq: '5 HSPU strictes (mur)', time: '6-12 mois', difficulty: 3, focus: 'Push', type: 'Dynamique', image: '/exercises/presse-militaire.gif' },
-  { id: 'push_4', name: 'Planche : Initié (Tuck)', prereq: 'Tuck Planche 15s', time: '1-2 ans', difficulty: 4, focus: 'Push', type: 'Isométrique', image: '/exercises/pompe.gif' },
-  { id: 'push_5', name: 'Planche : Full', prereq: 'Full Planche 5s', time: '2-4 ans', difficulty: 5, focus: 'Push', type: 'Isométrique', image: '/exercises/pompe.gif' },
-  { id: 'push_bonus', name: 'Planche : Push-ups (Bonus)', prereq: '3 Full Planche Push-ups', time: '4+ ans', difficulty: 6, focus: 'Push', type: 'Dynamique', image: '/exercises/pompe.gif' },
+  { id: 'push_1', name: 'Pompes & Dips : Initié', prereq: '15 Pompes / 5 Dips', reps: '15 / 5 reps', time: '1-3 mois', difficulty: 1, focus: 'Push', type: 'Dynamique', image: '/exercises/pompe.gif' },
+  { id: 'push_2', name: 'Handstand : Initié', prereq: 'Handstand contre mur 30s', reps: '30s hold', time: '3-6 mois', difficulty: 2, focus: 'Push', type: 'Isométrique', image: '/exercises/presse-militaire.gif' },
+  { id: 'push_3', name: 'Handstand Push-up', prereq: '5 HSPU strictes (mur)', reps: '5 reps', time: '6-12 mois', difficulty: 3, focus: 'Push', type: 'Dynamique', image: '/exercises/presse-militaire.gif' },
+  { id: 'push_4', name: 'Planche : Initié (Tuck)', prereq: 'Tuck Planche 15s', reps: '15s hold', time: '1-2 ans', difficulty: 4, focus: 'Push', type: 'Isométrique', image: '/exercises/pompe.gif' },
+  { id: 'push_5', name: 'Planche : Full', prereq: 'Full Planche 5s', reps: '5s hold', time: '2-4 ans', difficulty: 5, focus: 'Push', type: 'Isométrique', image: '/exercises/pompe.gif' },
+  { id: 'push_bonus', name: 'Planche : Push-ups (Bonus)', prereq: '3 Full Planche Push-ups', reps: '3 reps', time: '4+ ans', difficulty: 6, focus: 'Push', type: 'Dynamique', image: '/exercises/pompe.gif' },
 
   // CORE (Gainage / Acrobatie)
-  { id: 'core_1', name: 'L-Sit : Initié', prereq: 'L-Sit sol 5s', time: '1-3 mois', difficulty: 1, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
-  { id: 'core_2', name: 'L-Sit : Confirmé', prereq: 'L-Sit sol 20s', time: '3-6 mois', difficulty: 2, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
-  { id: 'core_3', name: 'V-Sit', prereq: 'V-Sit 10s', time: '6-12 mois', difficulty: 3, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
-  { id: 'core_4', name: 'Human Flag : Initié', prereq: 'Tuck Flag 10s', time: '1-2 ans', difficulty: 4, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
-  { id: 'core_5', name: 'Human Flag : Full', prereq: 'Full Flag 10s', time: '2-3 ans', difficulty: 5, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
-  { id: 'core_bonus', name: 'Human Flag : Pull-ups (Bonus)', prereq: '3 Human Flag Pull-ups', time: '3+ ans', difficulty: 6, focus: 'Core', type: 'Dynamique', image: '/exercises/Gainage.gif' }
+  { id: 'core_1', name: 'L-Sit : Initié', prereq: 'L-Sit sol 5s', reps: '5s hold', time: '1-3 mois', difficulty: 1, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
+  { id: 'core_2', name: 'L-Sit : Confirmé', prereq: 'L-Sit sol 20s', reps: '20s hold', time: '3-6 mois', difficulty: 2, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
+  { id: 'core_3', name: 'V-Sit', prereq: 'V-Sit 10s', reps: '10s hold', time: '6-12 mois', difficulty: 3, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
+  { id: 'core_4', name: 'Human Flag : Initié', prereq: 'Tuck Flag 10s', reps: '10s hold', time: '1-2 ans', difficulty: 4, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
+  { id: 'core_5', name: 'Human Flag : Full', prereq: 'Full Flag 10s', reps: '10s hold', time: '2-3 ans', difficulty: 5, focus: 'Core', type: 'Isométrique', image: '/exercises/Gainage.gif' },
+  { id: 'core_bonus', name: 'Human Flag : Pull-ups (Bonus)', prereq: '3 Human Flag Pull-ups', reps: '3 reps', time: '3+ ans', difficulty: 6, focus: 'Core', type: 'Dynamique', image: '/exercises/Gainage.gif' }
 ];
 
 export const STREET_WORKOUT_PROGRAMS = {

@@ -5,9 +5,9 @@ import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, Activity, Target, AlertTriangle, MapPin, Beaker } from 'lucide-react';
 import { calculateIMC, getIMCCategory, calculateMetabolismeBase } from '../utils/calculations';
-import { generateProgramSessions } from '../utils/programGenerator';
+import { generateProgramSessions, generateProgramSessionsAsync } from '../utils/programGenerator';
 
-const STEPS = 8;
+const STEPS = 9;
 
 export default function Onboarding() {
   const { profile, user, updateProfile, refreshProfile, refreshProgram, signOut } = useAuth();
@@ -21,12 +21,12 @@ export default function Onboarding() {
     navigate('/login');
   }
   
-  // Form State
   const [formData, setFormData] = useState({
     prenom: '', nom: '', sexe: 'homme', age: 25, taille_cm: 175, poids_kg: 70,
     morphotype: '', objectif: '', niveau: 'debutant', jours_semaine: [1, 3, 5],
     duree_seance: 60, mode_entrainement: 'salle', pathologies: [], points_faibles: [],
-    use_whey: true, use_creatine: false
+    use_whey: true, use_creatine: false,
+    body_fat: '15_20', tracking_habits: 'rien', sleep_hours: '7_9', activity_level: 'sedentaire', cardio_freq: 'occasionnel'
   });
 
   // Load existing data if regenerating
@@ -53,7 +53,12 @@ export default function Onboarding() {
           pathologies: pathoZones,
           points_faibles: profile.points_faibles || [],
           use_whey: profile.use_whey ?? true,
-          use_creatine: profile.use_creatine ?? false
+          use_creatine: profile.use_creatine ?? false,
+          body_fat: profile.body_fat || '15_20',
+          tracking_habits: profile.tracking_habits || 'rien',
+          sleep_hours: profile.sleep_hours || '7_9',
+          activity_level: profile.activity_level || 'sedentaire',
+          cardio_freq: profile.cardio_freq || 'occasionnel'
         });
 
         // If regenerating, jump to step 3 (Objectif)
@@ -85,7 +90,9 @@ export default function Onboarding() {
         taille_cm: formData.taille_cm, poids_kg: formData.poids_kg, morphotype: formData.morphotype,
         objectif: formData.objectif, niveau: formData.niveau, jours_semaine: formData.jours_semaine,
         duree_seance: formData.duree_seance, mode_entrainement: formData.mode_entrainement, points_faibles: formData.points_faibles,
-        metabolisme_base, use_whey: formData.use_whey, use_creatine: formData.use_creatine
+        metabolisme_base, use_whey: formData.use_whey, use_creatine: formData.use_creatine,
+        body_fat: formData.body_fat, tracking_habits: formData.tracking_habits, sleep_hours: formData.sleep_hours, 
+        activity_level: formData.activity_level, cardio_freq: formData.cardio_freq
       });
       console.log('[Onboarding] ✓ Profil OK');
 
@@ -105,11 +112,18 @@ export default function Onboarding() {
       const { data: allEx, error: errEx } = await supabase.from('exercises').select('*');
       if (errEx || !allEx || allEx.length === 0) throw new Error('Impossible de charger les exercices');
 
-      const { sessionsData, sessionExercisesData, programType } = generateProgramSessions(formData, allEx);
+      const { sessionsData, sessionExercisesData, programType } = await generateProgramSessionsAsync(formData, allEx);
       
       if (!sessionsData || sessionsData.length === 0) {
         throw new Error("Désolé, nous n'avons pas pu générer de séances avec tes critères. Essaie de modifier tes jours ou ton objectif.");
       }
+
+      // ── Étape 3.5 : Désactiver les anciens programmes ──
+      console.log('[Onboarding] Désactivation des anciens programmes...');
+      await supabase.from('programs')
+        .update({ actif: false })
+        .eq('user_id', user.id)
+        .eq('actif', true);
 
       const { data: prog, error: errProg } = await supabase.from('programs').insert({
         user_id: user.id, nom: `Programme ${formData.objectif.replace('_', ' ')}`, type_split: programType
@@ -158,8 +172,9 @@ export default function Onboarding() {
       if (errFinal) throw errFinal;
 
       // ── Finalisation ──
-      console.log('[Onboarding] Rafraîchissement profil...');
+      console.log('[Onboarding] Rafraîchissement profil et programme...');
       await refreshProfile();
+      await refreshProgram();
       console.log('[Onboarding] ✓ Terminé ! Redirection...');
       navigate('/');
     } catch (err) {
@@ -188,7 +203,7 @@ export default function Onboarding() {
             </div>
             <div className="input-group flex-1">
               <label className="input-label">Âge</label>
-              <input className="input" type="number" value={formData.age} onChange={e=>updateForm('age', Number(e.target.value))} />
+              <input className="input" type="number" value={formData.age === '' ? '' : formData.age} onChange={e=>updateForm('age', e.target.value === '' ? '' : Number(e.target.value))} />
             </div>
           </div>
           
@@ -200,11 +215,11 @@ export default function Onboarding() {
           <div className="flex gap-4 mb-6">
             <div className="input-group flex-1">
               <label className="input-label">Taille (cm)</label>
-              <input className="input" type="number" value={formData.taille_cm} onChange={e=>updateForm('taille_cm', Number(e.target.value))} />
+              <input className="input" type="number" value={formData.taille_cm === '' ? '' : formData.taille_cm} onChange={e=>updateForm('taille_cm', e.target.value === '' ? '' : Number(e.target.value))} />
             </div>
             <div className="input-group flex-1">
               <label className="input-label">Poids (kg)</label>
-              <input className="input" type="number" step="0.1" value={formData.poids_kg} onChange={e=>updateForm('poids_kg', Number(e.target.value))} />
+              <input className="input" type="number" step="0.1" value={formData.poids_kg === '' ? '' : formData.poids_kg} onChange={e=>updateForm('poids_kg', e.target.value === '' ? '' : Number(e.target.value))} />
             </div>
           </div>
 
@@ -245,38 +260,97 @@ export default function Onboarding() {
           <p className="section-label mt-4">Objectif principal</p>
           <div className="flex flex-col gap-3 mb-6">
             {[
-              { id: 'perte_poids', title: '🔥 Perte de poids' },
-              { id: 'seche', title: '✂️ Sèche (Définition musculaire)' },
-              { id: 'prise_masse', title: '💪 Prise de masse' },
-              { id: 'tonification', title: '✨ Tonification' },
-              { id: 'endurance', title: '🏃 Endurance' },
-              { id: 'street_workout', title: '🤸 Street Workout (Figures)' }
+              { id: 'perte_poids', title: '🔥 Perte de poids', desc: 'Réduire ta masse grasse tout en conservant ta masse musculaire. Déficit calorique modéré (-20%), entraînement mixte force + cardio.' },
+              { id: 'deficit_calorique', title: '📉 Déficit calorique', desc: 'Programme orienté perte de gras avec un déficit calorique contrôlé (-15%). Idéal pour perdre du poids progressivement sans sacrifier la performance.' },
+              { id: 'seche', title: '✂️ Sèche', desc: 'Affiner ta silhouette et révéler ta définition musculaire. Alternance musculation lourde et HIIT, déficit calorique modéré (-10%).' },
+              { id: 'prise_masse', title: '💪 Prise de masse', desc: 'Gagner du volume musculaire avec un surplus calorique contrôlé (+15%). Séries lourdes, repos longs, alimentation hypercalorique.' },
+              { id: 'recomposition', title: '🔄 Déficit + Prise de masse', desc: 'Perdre du gras tout en construisant du muscle. Approche équilibrée avec un léger déficit, haute protéine et entraînement intense.' },
+              { id: 'tonification', title: '✨ Tonification', desc: 'Raffermir et dessiner ton corps sans prendre de volume excessif. Séries modérées, tempo contrôlé, déficit léger (-5%).' },
+              { id: 'endurance', title: '🏃 Endurance', desc: 'Améliorer ta condition cardiovasculaire et ton endurance musculaire. Séries longues, repos courts, alimentation à l\'équilibre.' },
+              { id: 'street_workout', title: '🤸 Street Workout', desc: 'Maîtriser les figures au poids du corps : muscle-up, front lever, planche. Progression par paliers de difficulté.' }
             ].map(o => (
-
               <div key={o.id} className={`card card--interactive ${formData.objectif === o.id ? 'card--selected' : ''}`} style={{ padding: 'var(--space-4)' }} onClick={() => updateForm('objectif', o.id)}>
                 <h3 className="title-md">{o.title}</h3>
+                <p className="body-sm text-muted" style={{ marginTop: '4px' }}>{o.desc}</p>
               </div>
             ))}
           </div>
 
           <p className="section-label">Niveau actuel</p>
-          <div className="flex gap-3">
-            {['debutant', 'intermediaire', 'avance'].map(n => (
-              <button key={n} className={`btn flex-1 btn--sm ${formData.niveau === n ? 'btn--primary' : 'btn--secondary'}`} style={{ textTransform: 'capitalize' }} onClick={() => updateForm('niveau', n)}>{n}</button>
+          <div className="flex flex-col gap-3">
+            {[
+              { id: 'debutant', label: 'Débutant', desc: 'Moins de 6 mois de pratique régulière. Tu découvres les mouvements de base et construis tes fondations.' },
+              { id: 'intermediaire', label: 'Intermédiaire', desc: '6 mois à 2 ans de pratique. Tu maîtrises les mouvements fondamentaux et cherches à progresser en charge ou en volume.' },
+              { id: 'avance', label: 'Avancé', desc: 'Plus de 2 ans de pratique régulière. Tu connais ton corps, tu maîtrises la technique et tu cherches l\'optimisation.' }
+            ].map(n => (
+              <div key={n.id} className={`card card--interactive ${formData.niveau === n.id ? 'card--selected' : ''}`} style={{ padding: 'var(--space-4)' }} onClick={() => updateForm('niveau', n.id)}>
+                <h3 className="title-md" style={{ color: formData.niveau === n.id ? 'var(--primary)' : 'var(--on-surface)' }}>{n.label}</h3>
+                <p className="body-sm text-muted" style={{ marginTop: '2px' }}>{n.desc}</p>
+              </div>
             ))}
           </div>
         </motion.div>
       );
       case 4: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+          <h2 className="headline-md mb-2">Style de vie & Habitudes</h2>
+          <p className="body-md text-muted mb-6">Ces détails affinent ton programme pour s'assurer qu'il soit réaliste et tenable.</p>
+
+          <p className="section-label">Estimation Masse Grasse (%)</p>
+          <div className="flex flex-col gap-2 mb-6">
+            {[
+              { id: 'moins_10', title: '< 10% (Très sec)', desc: 'Abdos très visibles, vascularisation.' },
+              { id: '10_15', title: '10 - 15% (Athlétique)', desc: 'Abdos visibles, bonne définition globale.' },
+              { id: '15_20', title: '15 - 20% (Moyenne)', desc: 'Léger surpoids, abdos peu ou pas visibles.' },
+              { id: 'plus_20', title: '> 20% (Surpoids)', desc: 'Masse grasse répartie sur le corps.' }
+            ].map(o => (
+              <div key={o.id} className={`card card--interactive ${formData.body_fat === o.id ? 'card--selected' : ''}`} style={{ padding: 'var(--space-3)' }} onClick={() => updateForm('body_fat', o.id)}>
+                <h3 className="title-md">{o.title}</h3><p className="body-sm text-muted">{o.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="section-label">Activité Quotidienne (NEAT)</p>
+          <div className="flex gap-2 mb-6">
+            <select className="input flex-1" value={formData.activity_level} onChange={e => updateForm('activity_level', e.target.value)}>
+              <option value="sedentaire">Sédentaire (Bureau, peu de pas)</option>
+              <option value="leger">Légèrement actif (Marche régulière)</option>
+              <option value="actif">Actif (Debout souvent)</option>
+              <option value="tres_actif">Très actif (Travail physique)</option>
+            </select>
+          </div>
+
+          <div className="flex gap-4 mb-2">
+            <div className="flex-1">
+              <p className="section-label">Sommeil moyen</p>
+              <select className="input w-full" value={formData.sleep_hours} onChange={e => updateForm('sleep_hours', e.target.value)}>
+                <option value="moins_6">&lt; 6 heures</option>
+                <option value="6_7">6 - 7 heures</option>
+                <option value="7_9">7 - 9 heures</option>
+                <option value="plus_9">&gt; 9 heures</option>
+              </select>
+            </div>
+            <div className="flex-1">
+              <p className="section-label">Cardio Actuel</p>
+              <select className="input w-full" value={formData.cardio_freq} onChange={e => updateForm('cardio_freq', e.target.value)}>
+                <option value="jamais">Jamais</option>
+                <option value="occasionnel">Occasionnel (1-2x/sem)</option>
+                <option value="frequent">Fréquent (3x+/sem)</option>
+              </select>
+            </div>
+          </div>
+        </motion.div>
+      );
+      case 5: return (
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
           <h2 className="headline-md mb-2">Santé & Blessures</h2>
           <p className="body-md text-muted mb-6">Sélectionne les zones où tu ressens des douleurs régulières pour que nous adaptions le programme.</p>
           
-          <div className="flex flex-wrap gap-3">
+          <div style={{ display: 'flex', gap: 'var(--space-3)', overflowX: 'auto', paddingBottom: 'var(--space-3)', WebkitOverflowScrolling: 'touch' }}>
             {['dos', 'genoux', 'epaules', 'poignets_coudes', 'hanches'].map(zone => {
               const selected = formData.pathologies.includes(zone);
               return (
-                <button key={zone} className={`chip ${selected ? 'chip--secondary' : ''}`} style={{ padding: 'var(--space-3) var(--space-4)', fontSize: '1rem' }}
+                <button key={zone} className={`chip ${selected ? 'chip--secondary' : ''}`} style={{ padding: 'var(--space-3) var(--space-5)', fontSize: '1rem', whiteSpace: 'nowrap', flexShrink: 0 }}
                   onClick={() => {
                     if (selected) updateForm('pathologies', formData.pathologies.filter(p => p !== zone));
                     else updateForm('pathologies', [...formData.pathologies, zone]);
@@ -288,16 +362,17 @@ export default function Onboarding() {
           </div>
         </motion.div>
       );
-      case 5: return (
+      case 6: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
           <h2 className="headline-md mb-2">Disponibilités & Lieu</h2>
           
           <p className="section-label mt-4">Jours d'entraînement</p>
-          <div className="flex gap-2 mb-6">
-            {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((j, i) => {
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
+            {['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].map((j, i) => {
               const selected = formData.jours_semaine.includes(i);
               return (
-                <button key={i} className={`btn flex-1 ${selected ? 'btn--primary' : 'btn--secondary'}`} style={{ padding: 'var(--space-3) 0' }}
+                <button key={i} className={`btn ${selected ? 'btn--primary' : 'btn--secondary'}`}
+                  style={{ padding: 'var(--space-4) var(--space-2)', minHeight: '56px', fontSize: '0.95rem', fontWeight: 700, borderRadius: 'var(--radius-lg)', width: '100%' }}
                   onClick={() => {
                     if (selected) updateForm('jours_semaine', formData.jours_semaine.filter(d => d !== i));
                     else updateForm('jours_semaine', [...formData.jours_semaine, i].sort());
@@ -323,13 +398,13 @@ export default function Onboarding() {
           </div>
         </motion.div>
       );
-      case 6: return (
+      case 7: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
           <h2 className="headline-md mb-2">Points Faibles</h2>
           <p className="body-md text-muted mb-6">Quels groupes musculaires souhaites-tu améliorer en priorité ? Le programme mettra plus l'accent sur ces zones.</p>
           
           <div className="flex flex-wrap gap-3">
-            {['Pectoraux', 'Dos', 'Epaules', 'Bras', 'Jambes', 'Abdos', 'Mollets'].map(muscle => {
+            {['Pectoraux', 'Dos', 'Épaules', 'Bras', 'Jambes', 'Abdos', 'Mollets', 'Fessiers'].map(muscle => {
               const selected = formData.points_faibles.includes(muscle);
               return (
                 <button key={muscle} className={`chip ${selected ? 'chip--primary' : ''}`} style={{ padding: 'var(--space-3) var(--space-4)', fontSize: '1rem' }}
@@ -345,7 +420,7 @@ export default function Onboarding() {
           <p className="body-sm text-muted mt-4">Sélectionne jusqu'à 3 points faibles.</p>
         </motion.div>
       );
-      case 7: return (
+      case 8: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
           <h2 className="headline-md mb-2">Nutrition & Suppléments</h2>
           <p className="body-md text-muted mb-6">Afin d'adapter tes recommandations de repas, utilises-tu ces compléments ?</p>
@@ -373,7 +448,7 @@ export default function Onboarding() {
           </div>
         </motion.div>
       );
-      case 8: return (
+      case 9: return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="text-center">
           <div className="orb orb--primary" style={{ width: 300, height: 300, top: '10%', left: '50%', transform: 'translateX(-50%)' }} />
           
@@ -400,12 +475,12 @@ export default function Onboarding() {
     if (step === 1) return !formData.prenom || !formData.age || !formData.taille_cm || !formData.poids_kg;
     if (step === 2) return !formData.morphotype;
     if (step === 3) return !formData.objectif;
-    if (step === 5) return formData.jours_semaine.length === 0;
+    if (step === 6) return formData.jours_semaine.length === 0;
     return false;
   };
 
   return (
-    <div className="page" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="page" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
       {/* Header with Logout */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 'var(--space-4)' }}>
         <button onClick={handleLogout} style={{

@@ -98,7 +98,15 @@ export default function Workout() {
         }
       });
     }
-  }, [user, activeWorkout]); // Refresh if activeWorkout changes just in case
+  }, [user]);
+
+  // Self-healing for missing program
+  useEffect(() => {
+    if (!program && profile?.onboarding_complete) {
+      console.log('[Workout] Program missing but onboarding complete. Syncing...');
+      refreshProgram();
+    }
+  }, [program, profile?.onboarding_complete, refreshProgram]);
 
   // PERSISTENCE: Restore workout on mount
   useEffect(() => {
@@ -146,9 +154,9 @@ export default function Workout() {
   function getRecommendedWeight(maxLoad, objectif) {
     if (!maxLoad) return null;
     let percent = 0.75; // par défaut 75%
-    if (objectif === 'prise_masse') percent = 0.75;
-    else if (objectif === 'perte_poids' || objectif === 'seche' || objectif === 'tonification') percent = 0.65;
-    else if (objectif === 'endurance') percent = 0.60;
+    if (objectif === 'prise_masse' || objectif === 'recomposition') percent = 0.75;
+    else if (objectif === 'perte_poids' || objectif === 'seche' || objectif === 'deficit_calorique' || objectif === 'tonification') percent = 0.65;
+    else if (objectif === 'endurance' || objectif === 'street_workout') percent = 0.60;
     
     // Arrondir à 0.5 près
     return Math.round((maxLoad * percent) * 2) / 2;
@@ -466,6 +474,9 @@ export default function Workout() {
       );
     }
 
+    const tkMatch = exercise?.video_url ? exercise.video_url.match(/tiktok\.com\/.*video\/(\d+)/) : null;
+    const tkId = tkMatch ? tkMatch[1] : null;
+
     return (
       <div className="page" style={{ paddingBottom: 'var(--space-8)', backgroundColor: 'var(--surface)', minHeight: '100vh', color: 'var(--on-surface)' }}>
         <div className="flex items-center justify-between mb-8" style={{ marginTop: 'var(--space-4)' }}>
@@ -484,7 +495,7 @@ export default function Workout() {
           
           {/* Explicative Video / GIF Banner */}
           <div style={{ 
-            width: '100%', height: '220px', backgroundColor: '#050505', position: 'relative', 
+            width: '100%', height: tkId ? '580px' : '220px', backgroundColor: '#050505', position: 'relative', 
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             borderBottom: '1px solid rgba(var(--outline-variant), 0.1)'
           }}>
@@ -508,6 +519,17 @@ export default function Workout() {
                 }
                 
                 return <YouTubePlayer videoId={ytId} startSeconds={startSec} endSeconds={endSec} />;
+              } else if (tkId) {
+                return (
+                  <div style={{ width: '100%', display: 'flex', justifyContent: 'center', background: '#000', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+                    <iframe 
+                      src={`https://www.tiktok.com/embed/v2/${tkId}`} 
+                      style={{ width: '325px', maxWidth: '100%', height: '580px', border: 'none' }} 
+                      allow="autoplay; encrypted-media" 
+                      allowFullScreen>
+                    </iframe>
+                  </div>
+                );
               } else if (url && url.endsWith('.mp4')) {
                 return <video src={url} autoPlay loop muted playsInline style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', zIndex: 1, position: 'relative' }} />;
               } else {
