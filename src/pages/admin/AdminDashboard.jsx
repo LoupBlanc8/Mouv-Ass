@@ -590,8 +590,8 @@ function SecurityView({ stats }) {
   return (
     <>
       <div className="admin__page-header">
-        <h1 className="admin__page-title">Journal de Sécurité (Audit)</h1>
-        <p className="admin__page-subtitle">Logs réels extraits de la table admin_audit_logs.</p>
+        <h1 className="admin__page-title">Journal de Sécurité <span className="chip chip--ok" style={{fontSize: '0.7rem', verticalAlign: 'middle', marginLeft: '10px'}}>LIVE</span></h1>
+        <p className="admin__page-subtitle">Données réelles extraites en direct de Supabase (admin_audit_logs).</p>
       </div>
       <div className="admin__panel">
         <table className="admin__table">
