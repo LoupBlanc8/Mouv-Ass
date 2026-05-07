@@ -41,8 +41,14 @@ function LoadingScreen() {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       minHeight: '100vh', flexDirection: 'column', gap: 'var(--space-4)'
     }}>
+      <img 
+        src="/logo-mouvbody.png" 
+        alt="Mouv'Body" 
+        className="app-logo app-logo--loading"
+        style={{ marginBottom: 'var(--space-4)' }}
+      />
       <div style={{
-        width: 48, height: 48, borderRadius: '50%',
+        width: 36, height: 36, borderRadius: '50%',
         border: '3px solid var(--surface-container-highest)',
         borderTopColor: 'var(--primary)',
         animation: 'spin 0.8s linear infinite'

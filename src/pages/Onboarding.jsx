@@ -481,8 +481,13 @@ export default function Onboarding() {
 
   return (
     <div className="page" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-      {/* Header with Logout */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 'var(--space-4)' }}>
+      {/* Header with Logo & Logout */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 'var(--space-4)' }}>
+        <img 
+          src="/logo-mouvbody.png" 
+          alt="Mouv'Body" 
+          className="app-logo app-logo--compact"
+        />
         <button onClick={handleLogout} style={{
           background: 'none', border: 'none', color: 'var(--on-surface-variant)', 
           fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Zap } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -35,10 +35,7 @@ export default function Login() {
       <div className="orb orb--secondary" style={{ width:260, height:260, bottom:60, left:-100 }} />
 
       <motion.div initial={{ opacity:0, y:-20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6, ease }} style={{ textAlign:'center', marginBottom:'var(--space-12)' }}>
-        <div style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', width:72, height:72, borderRadius:'var(--radius-2xl)', background:'linear-gradient(135deg, var(--primary), var(--secondary-dim))', marginBottom:'var(--space-4)', boxShadow:'0 0 60px rgba(129,236,255,0.2)' }}>
-          <Zap size={36} color="#004d57" strokeWidth={2.5} />
-        </div>
-        <h1 className="display-md" style={{ background:'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Mouv'Body</h1>
+        <img src="/logo-mouvbody.png" alt="Mouv'Body" className="app-logo app-logo--hero" style={{ marginBottom: 'var(--space-4)' }} />
         <p className="body-md text-muted" style={{ marginTop:'var(--space-2)' }}>{isLogin ? 'Content de te revoir 💪' : 'Prêt à transformer ton corps ?'}</p>
       </motion.div>
 

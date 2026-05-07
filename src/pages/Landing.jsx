@@ -21,9 +21,7 @@ export default function Landing() {
     <div style={{ minHeight: '100vh', background: '#0e0e0e', color: '#fff', overflow: 'hidden' }}>
       {/* Nav */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 5%', maxWidth: 1200, margin: '0 auto' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-          MOUV'<span style={{ background: 'linear-gradient(135deg, #00E5FF, #7C4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>BODY</span>
-        </h2>
+        <img src="/logo-mouvbody.png" alt="Mouv'Body" className="app-logo app-logo--nav" />
         <button onClick={() => navigate('/login')} style={{
           background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
           color: '#fff', padding: '10px 24px', borderRadius: 999, fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem',

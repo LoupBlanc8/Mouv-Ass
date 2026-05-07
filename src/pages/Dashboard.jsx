@@ -121,17 +121,16 @@ export default function Dashboard() {
           alignItems: 'flex-start', 
           marginBottom: 'var(--space-10)'
         }}>
-          <div>
-            <h1 className="title-lg" style={{ 
-              textTransform: 'uppercase', 
-              lineHeight: 1.1, 
-              margin: 0,
-              fontSize: '1.5rem',
-              letterSpacing: '-0.02em'
-            }}>
-              <span className="body-sm text-muted" style={{ display: 'block', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '2px' }}>{greeting.toUpperCase()}</span>
-              <span style={{ color: 'var(--primary)', fontWeight: 900 }}>{prenom.toUpperCase()} 👊</span>
-            </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+            <img 
+              src="/logo-mouvbody.png" 
+              alt="Mouv'Body" 
+              className="app-logo app-logo--nav"
+            />
+            <div>
+              <span className="body-sm text-muted" style={{ display: 'block', fontWeight: 500, letterSpacing: '0.05em', marginBottom: '2px', textTransform: 'uppercase' }}>{greeting}</span>
+              <span style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '1.2rem', textTransform: 'uppercase' }}>{prenom} 👊</span>
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 'var(--space-2)', flexShrink: 0 }}>
             {(profile?.streak_current || 0) > 0 && (

@@ -996,3 +996,57 @@ a:hover {
     align-items: center !important;
   }
 }
+
+/* ============================================
+   APP LOGO
+   ============================================ */
+.app-logo {
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  transition: filter var(--duration-normal) var(--ease-kinetic), opacity var(--duration-normal) var(--ease-kinetic);
+}
+
+/* Dark mode: keep original colors, add subtle glow */
+:root:not([data-theme="light"]) .app-logo {
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.15));
+}
+
+/* Light mode: subtle shadow */
+:root[data-theme="light"] .app-logo {
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+/* Logo in nav/header contexts — subtle */
+.app-logo--nav {
+  height: 40px;
+  border-radius: var(--radius-md);
+}
+
+/* Logo on login/splash — large & prominent */
+.app-logo--hero {
+  height: 90px;
+  border-radius: var(--radius-xl);
+}
+
+:root:not([data-theme="light"]) .app-logo--hero {
+  filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.2));
+}
+
+/* Logo on loading screen — medium with pulse */
+.app-logo--loading {
+  height: 72px;
+  border-radius: var(--radius-xl);
+  animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+/* Logo in compact header (onboarding etc.) */
+.app-logo--compact {
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+
