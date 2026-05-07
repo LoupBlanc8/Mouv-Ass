@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, Activity, DollarSign, ShieldCheck, Database, 
   Bell, BarChart3, AlertTriangle, Search, Filter, 
@@ -11,27 +11,103 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell
 } from 'recharts';
-import './AdminDashboard.css';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../supabaseClient';
 import * as mock from './mockData';
+import './AdminDashboard.css';
+
+// --- MAIN DASHBOARD ---
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    kpis: [],
+    recentUsers: [],
+    activityStats: {},
+    contentStats: {},
+    chartData: []
+  });
+  const navigate = useNavigate();
 
-  // Stats for the "Vue Synthétique"
-  const kpis = mock.kpiData;
+  useEffect(() => {
+    fetchRealStats();
+  }, []);
+
+  const fetchRealStats = async () => {
+    setLoading(true);
+    try {
+      // 1. Users count & recent
+      const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+      const { data: latestUsers } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(10);
+      
+      // 2. Content counts
+      const { count: progCount } = await supabase.from('programs').select('*', { count: 'exact', head: true });
+      const { count: exerciseCount } = await supabase.from('exercises').select('*', { count: 'exact', head: true });
+      
+      // 3. Activity counts
+      const { count: logCount } = await supabase.from('workout_logs').select('*', { count: 'exact', head: true });
+
+      // 4. Transform for UI
+      setStats({
+        kpis: [
+          { id: 'u-t', label: 'Utilisateurs', value: userCount || 0, color: 'primary', icon: <Users /> },
+          { id: 's-t', label: 'Séances Totales', value: logCount || 0, color: 'secondary', icon: <Activity /> },
+          { id: 'p-t', label: 'Programmes', value: progCount || 0, color: 'tertiary', icon: <Database /> },
+          { id: 'e-t', label: 'Exercices', value: exerciseCount || 0, color: 'neutral', icon: <Zap /> },
+        ],
+        recentUsers: (latestUsers || []).map(u => ({
+          name: `${u.prenom || ''} ${u.nom || ''}`.trim() || 'Anonyme',
+          email: 'Donnée sécurisée',
+          role: u.rank || 'Débutant',
+          status: u.onboarding_complete ? 'actif' : 'en cours',
+          joined: new Date(u.created_at).toLocaleDateString('fr-FR'),
+          lastSeen: u.updated_at ? `le ${new Date(u.updated_at).toLocaleDateString('fr-FR')}` : '—'
+        })),
+        contentStats: {
+          totalPrograms: progCount || 0,
+          totalExercises: exerciseCount || 0,
+          pendingModeration: 0
+        },
+        activityStats: {
+          activeSessions: logCount || 0,
+          avgSessionTime: '—',
+          actionsPerDay: '—'
+        }
+      });
+    } catch (err) {
+      console.error("Fetch Error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (confirm('Se déconnecter ?')) {
+      await supabase.auth.signOut();
+      window.location.href = '/login';
+    }
+  };
 
   const renderContent = () => {
+    if (loading) return (
+      <div className="admin__loading">
+        <RefreshCcw className="admin__loading-spinner" />
+        <p>Synchronisation avec Supabase...</p>
+      </div>
+    );
+
     switch (activeTab) {
-      case 'overview': return <OverviewView />;
-      case 'users': return <UsersView />;
-      case 'activity': return <ActivityView />;
-      case 'financial': return <FinancialView />;
+      case 'overview': return <OverviewView stats={stats} />;
+      case 'users': return <UsersView stats={stats} />;
+      case 'activity': return <ActivityView stats={stats} />;
+      case 'financial': return <div className="admin__panel p-8 text-center opacity-50">Gestion financière désactivée.</div>;
       case 'system': return <SystemView />;
-      case 'content': return <ContentView />;
+      case 'content': return <ContentView stats={stats} />;
       case 'security': return <SecurityView />;
       case 'alerts': return <AlertsView />;
-      default: return <OverviewView />;
+      default: return <OverviewView stats={stats} />;
     }
   };
 
@@ -48,8 +124,8 @@ export default function AdminDashboard() {
           <span className="admin__topbar-badge">v2.4.1</span>
         </div>
         <div className="admin__topbar-right">
-          <div className="admin__topbar-btn" onClick={() => alert('Recherche globale bientôt disponible')}>
-            <Search size={18} />
+          <div className="admin__topbar-btn" onClick={() => fetchRealStats()}>
+            <RefreshCw size={18} />
           </div>
           <div className="admin__topbar-btn" onClick={() => alert('Aucune nouvelle notification')}>
             <Bell size={18} />
@@ -61,7 +137,7 @@ export default function AdminDashboard() {
           <div 
             className="admin__topbar-btn" 
             style={{ marginLeft: 'var(--space-2)', background: 'var(--error)', color: 'white' }}
-            onClick={() => confirm('Se déconnecter ?') && (window.location.href = '/login')}
+            onClick={handleLogout}
           >
             <LogOut size={18} />
           </div>
@@ -185,144 +261,94 @@ function KPICard({ title, value, trend, trendDir, icon, color = 'primary' }) {
 
 // --- SUB-VIEWS ---
 
-function OverviewView() {
+function OverviewView({ stats }) {
   return (
     <>
       <div className="admin__page-header">
         <h1 className="admin__page-title">Tableau de bord</h1>
-        <p className="admin__page-subtitle">Bienvenue dans le centre de commande de Mouv'Body.</p>
+        <p className="admin__page-subtitle">Données réelles synchronisées avec Supabase.</p>
       </div>
 
-      {/* Vue Synthétique: KPIs */}
       <div className="admin__kpi-grid">
-        {mock.kpiData.map(kpi => (
-          <div key={kpi.id} className={`admin__kpi admin__kpi--${kpi.color}`}>
-            <div className="admin__kpi-header">
-              <span className="admin__kpi-label">{kpi.label}</span>
-              <span className={`admin__kpi-icon admin__kpi-icon--${kpi.color}`}>{kpi.icon}</span>
-            </div>
-            <div className="admin__kpi-value">{kpi.value}</div>
-            {kpi.trend && (
-              <div className={`admin__kpi-trend admin__kpi-trend--${kpi.trendDir}`}>
-                {kpi.trendDir === 'up' ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                {kpi.trend}
-              </div>
-            )}
-          </div>
+        {stats.kpis.map(kpi => (
+          <KPICard 
+            key={kpi.id}
+            title={kpi.label}
+            value={kpi.value}
+            icon={kpi.icon}
+            color={kpi.color}
+          />
         ))}
       </div>
 
       <div className="admin__grid-2">
-        {/* Signups Chart */}
         <div className="admin__panel">
-          <h3 className="admin__panel-title">Inscriptions (7 derniers jours)</h3>
-          <div style={{ height: 240 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mock.chartSignups}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: 'var(--on-surface-variant)', fontSize: 12}} />
-                <YAxis hide />
-                <Tooltip 
-                  contentStyle={{ background: 'var(--surface-container-high)', border: 'none', borderRadius: 'var(--radius-md)' }}
-                  itemStyle={{ color: 'var(--primary)' }}
-                />
-                <Area type="monotone" dataKey="value" stroke="var(--primary)" fillOpacity={1} fill="url(#colorValue)" strokeWidth={3} />
-              </AreaChart>
-            </ResponsiveContainer>
+          <h3 className="admin__panel-title">Inscriptions (Données Brutes)</h3>
+          <div style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>
+            <div className="text-center">
+              <p>Analyse des séries temporelles...</p>
+              <span className="body-sm">Les graphiques réels seront affichés dès que suffisamment de données seront cumulées.</span>
+            </div>
           </div>
         </div>
 
-        {/* Real-time Logs */}
         <div className="admin__panel">
-          <div className="admin__section-header">
-            <h3 className="admin__panel-title">Journal de sécurité en temps réel</h3>
-            <button className="btn btn--ghost btn--sm"><RefreshCw size={14} /></button>
-          </div>
+          <h3 className="admin__panel-title">Inscriptions Récentes</h3>
           <div className="admin__log-list">
-            {mock.securityLogs.map((log, i) => (
+            {stats.recentUsers.map((user, i) => (
               <div key={i} className="admin__log-item">
-                <span className="admin__log-time">{log.time}</span>
-                <span className={`admin__log-msg admin__log-msg--${log.type}`}>{log.msg}</span>
+                <span className="admin__log-time">{user.joined}</span>
+                <span className="admin__log-msg admin__log-msg--info">Nouveau : <b>{user.name}</b></span>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Vue Action: Quick Tasks */}
-      <div className="admin__section mt-8">
-        <h2 className="admin__section-title">Actions rapides</h2>
-        <div className="admin__actions">
-          <button className="admin__action-btn" onClick={() => alert('Ouverture du créateur de programme...')}>Nouveau programme Global</button>
-          <button className="admin__action-btn" onClick={() => alert('Gestion des badges')}>Gérer les Badges</button>
-          <button className="admin__action-btn" onClick={() => alert('Cache vidé avec succès !')}>Vider le cache CDN</button>
-          <button className="admin__action-btn" onClick={() => alert('Ouverture du modérateur...')}>Modérer le contenu ({mock.contentStats.pendingModeration})</button>
-          <button className="admin__action-btn admin__action-btn--danger" onClick={() => confirm('Lancer la maintenance ?') && alert('Maintenance activée')}>Maintenance Système</button>
         </div>
       </div>
     </>
   );
 }
 
-function UsersView() {
+function UsersView({ stats }) {
   return (
     <>
       <div className="admin__page-header">
         <h1 className="admin__page-title">Gestion Utilisateurs</h1>
-        <p className="admin__page-subtitle">Visualisez et gérez la base utilisateur de Mouv'Body.</p>
+        <p className="admin__page-subtitle">Visualisez et gérez la base utilisateur réelle.</p>
       </div>
 
       <div className="admin__panel mb-6">
-        <div className="admin__section-header">
-          <div className="flex items-center gap-4">
-            <div className="input-group mb-0" style={{ minWidth: 300 }}>
-              <input type="text" className="input" placeholder="Rechercher un utilisateur..." />
-            </div>
-            <button className="btn btn--secondary btn--sm"><Filter size={16} /> Filtres</button>
-          </div>
-          <button className="btn btn--primary btn--sm">Exporter CSV</button>
-        </div>
-
         <div className="admin__table-wrap">
           <table className="admin__table">
             <thead>
               <tr>
                 <th>Utilisateur</th>
-                <th>Rôle</th>
+                <th>Rôle / Rang</th>
                 <th>Statut</th>
                 <th>Inscrit le</th>
-                <th>Dernière vue</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {mock.recentUsers.map((user, i) => (
+              {stats.recentUsers.map((user, i) => (
                 <tr key={i}>
                   <td>
                     <div className="flex flex-col">
                       <span style={{ fontWeight: 600 }}>{user.name}</span>
-                      <span className="body-sm" style={{ fontSize: 11 }}>{user.email}</span>
+                      <span className="body-sm" style={{ fontSize: 11 }}>Compte Vérifié</span>
                     </div>
                   </td>
                   <td>
-                    <span className={`chip chip--sm ${user.role === 'Premium' ? 'chip--selected' : ''}`}>
+                    <span className="chip chip--sm">
                       {user.role}
                     </span>
                   </td>
                   <td>
-                    <div className={`admin__status admin__status--${user.status === 'actif' ? 'ok' : user.status === 'banni' ? 'error' : 'neutral'}`}>
+                    <div className={`admin__status admin__status--${user.status === 'actif' ? 'ok' : 'neutral'}`}>
                       <span className="admin__status-dot"></span>
                       {user.status}
                     </div>
                   </td>
                   <td>{user.joined}</td>
-                  <td>{user.lastSeen}</td>
                   <td>
                     <button className="admin__topbar-btn"><MoreVertical size={16} /></button>
                   </td>
@@ -330,41 +356,6 @@ function UsersView() {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      <div className="admin__grid-2">
-        <div className="admin__panel">
-          <h3 className="admin__panel-title">Répartition par Morphotype</h3>
-          <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-             {/* Mock chart representation */}
-             <div className="flex gap-4 items-end" style={{ height: 100 }}>
-                <div className="flex flex-col items-center gap-2">
-                  <div style={{ width: 40, height: 60, background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>
-                  <span className="body-sm">Ecto</span>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div style={{ width: 40, height: 90, background: 'var(--secondary)', borderRadius: '4px 4px 0 0' }}></div>
-                  <span className="body-sm">Meso</span>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div style={{ width: 40, height: 45, background: 'var(--tertiary)', borderRadius: '4px 4px 0 0' }}></div>
-                  <span className="body-sm">Endo</span>
-                </div>
-             </div>
-          </div>
-        </div>
-        <div className="admin__panel">
-          <h3 className="admin__panel-title">Taux de Rétention (W1 &rarr; W4)</h3>
-           <div className="admin__funnel mt-4">
-             {mock.funnelData.slice(2).map((step, i) => (
-               <div key={i} className="admin__funnel-step">
-                 <span className="admin__funnel-label">{step.step}</span>
-                 <div className="admin__funnel-bar" style={{ width: `${step.pct}%` }}>{step.pct}%</div>
-                 <span className="admin__funnel-value">{step.value}</span>
-               </div>
-             ))}
-           </div>
         </div>
       </div>
     </>
@@ -500,36 +491,29 @@ function FinancialView() {
   );
 }
 
-function ActivityView() {
+function ActivityView({ stats }) {
   return (
     <>
       <div className="admin__page-header">
         <h1 className="admin__page-title">Analyse d'Activité</h1>
-        <p className="admin__page-subtitle">Suivi des sessions et des interactions utilisateurs.</p>
+        <p className="admin__page-subtitle">Suivi des séances réelles enregistrées.</p>
       </div>
       <div className="admin__kpi-grid">
-         <KPICard title="Sessions Actives" value={mock.activityStats.activeSessions} icon={<Activity />} color="primary" />
-         <KPICard title="Temps Moyen" value={mock.activityStats.avgSessionTime} icon={<Clock />} color="secondary" />
-         <KPICard title="Actions / Jour" value={mock.activityStats.actionsPerDay} icon={<Zap />} color="tertiary" />
+         <KPICard title="Total Séances" value={stats.activityStats.activeSessions} icon={<Activity />} color="primary" />
+         <KPICard title="Rétention Moyenne" value="—" icon={<Clock />} color="secondary" />
+         <KPICard title="Actions IA" value="—" icon={<Zap />} color="tertiary" />
       </div>
       <div className="admin__panel mt-8">
-        <h3 className="admin__panel-title">Pics d'utilisation (Dernières 24h)</h3>
-        <div style={{ height: 300 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={mock.activityData}>
-              <XAxis dataKey="time" stroke="var(--on-surface-variant)" fontSize={12} />
-              <YAxis stroke="var(--on-surface-variant)" fontSize={12} />
-              <Tooltip contentStyle={{ background: 'var(--surface-container-high)', border: 'none' }} />
-              <Area type="monotone" dataKey="users" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.1} />
-            </AreaChart>
-          </ResponsiveContainer>
+        <h3 className="admin__panel-title">Activité cumulée</h3>
+        <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>
+           <p>Données historiques en cours de compilation...</p>
         </div>
       </div>
     </>
   );
 }
 
-function ContentView() {
+function ContentView({ stats }) {
   return (
     <>
       <div className="admin__page-header">
@@ -537,12 +521,12 @@ function ContentView() {
         <p className="admin__page-subtitle">Modération et gestion des ressources Mouv'Body.</p>
       </div>
       <div className="admin__kpi-grid">
-         <KPICard title="Programmes" value={mock.contentStats.totalPrograms} icon={<Database />} color="neutral" />
-         <KPICard title="Exercices" value={mock.contentStats.totalExercises} icon={<Zap />} color="neutral" />
-         <KPICard title="En attente" value={mock.contentStats.pendingModeration} icon={<AlertTriangle />} color="warning" />
+         <KPICard title="Programmes" value={stats.contentStats.totalPrograms} icon={<Database />} color="neutral" />
+         <KPICard title="Exercices" value={stats.contentStats.totalExercises} icon={<Zap />} color="neutral" />
+         <KPICard title="En attente" value={stats.contentStats.pendingModeration} icon={<AlertTriangle />} color="warning" />
       </div>
       <div className="admin__panel mt-8">
-         <p style={{ textAlign: 'center', opacity: 0.6, padding: '4rem 0' }}>Interface de modération avancée en cours de développement.</p>
+         <p style={{ textAlign: 'center', opacity: 0.6, padding: '4rem 0' }}>Données de contenu synchronisées avec Supabase.</p>
       </div>
     </>
   );
