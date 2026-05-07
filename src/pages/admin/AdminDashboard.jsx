@@ -594,6 +594,9 @@ function SecurityView({ stats }) {
         <p className="admin__page-subtitle">Données réelles extraites en direct de Supabase (admin_audit_logs).</p>
       </div>
       <div className="admin__panel">
+        <div style={{ padding: '10px', color: 'var(--primary)', fontSize: '0.8rem' }}>
+          {stats.auditLogs.length} logs chargés depuis Supabase.
+        </div>
         <table className="admin__table">
           <thead>
             <tr>
