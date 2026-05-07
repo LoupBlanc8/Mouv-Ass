@@ -444,15 +444,17 @@ function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
                           className="admin__action-btn admin__action-btn--edit"
                           title={user.role === 'Admin' ? "Rétrograder en Recrue" : "Promouvoir en Admin"}
                           onClick={() => onToggleRole(user.id, user.role)}
+                          style={{ fontSize: '18px' }}
                         >
-                          <ShieldCheck size={16} />
+                          🛡️
                         </button>
                         <button 
                           className="admin__action-btn admin__action-btn--danger"
                           title="Supprimer définitivement"
                           onClick={() => onDelete(user.id, user.name)}
+                          style={{ fontSize: '18px' }}
                         >
-                          <Trash size={16} />
+                          🗑️
                         </button>
                       </div>
                     </td>
