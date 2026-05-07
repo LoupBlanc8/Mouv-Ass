@@ -4,7 +4,7 @@ import {
   Bell, BarChart3, AlertTriangle, Search, Filter, 
   MoreVertical, ArrowUpRight, ArrowDownRight, 
   Settings, LogOut, RefreshCw, Server, Cpu, 
-  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, Shield, Zap, Trash2, CheckCircle, RefreshCcw
+  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, ShieldCheck, Zap, Trash, CheckCircle, RefreshCcw, Shield
 } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, 
@@ -455,14 +455,14 @@ function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
                           title={user.role === 'Admin' ? "Rétrograder en Recrue" : "Promouvoir en Admin"}
                           onClick={() => onToggleRole(user.id, user.role)}
                         >
-                          <Shield size={16} />
+                          <ShieldCheck size={18} strokeWidth={2.5} />
                         </button>
                         <button 
                           className="admin__action-btn admin__action-btn--danger"
                           title="Supprimer définitivement"
                           onClick={() => onDelete(user.id, user.name)}
                         >
-                          <Trash2 size={16} />
+                          <Trash size={18} strokeWidth={2.5} />
                         </button>
                       </div>
                     </td>
