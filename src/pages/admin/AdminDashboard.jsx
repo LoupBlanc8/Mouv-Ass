@@ -4,7 +4,7 @@ import {
   Bell, BarChart3, AlertTriangle, Search, Filter, 
   MoreVertical, ArrowUpRight, ArrowDownRight, 
   Settings, LogOut, RefreshCw, Server, Cpu, 
-  Menu, X, CheckCircle2, AlertCircle, Clock
+  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, Shield, Zap, Trash2, CheckCircle, RefreshCcw
 } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, 
@@ -121,6 +121,15 @@ export default function AdminDashboard() {
                 badge={4}
               />
             </div>
+
+            <button 
+              className="admin__nav-item"
+              onClick={() => window.location.href = '/'}
+              style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 'var(--space-4)', color: 'var(--on-surface-variant)' }}
+            >
+              <ArrowLeft size={18} />
+              <span>Retour à l'App</span>
+            </button>
           </aside>
         )}
 
@@ -219,11 +228,11 @@ function OverviewView() {
       <div className="admin__section mt-8">
         <h2 className="admin__section-title">Actions rapides</h2>
         <div className="admin__actions">
-          <button className="admin__action-btn">Nouveau programme Global</button>
-          <button className="admin__action-btn">Gérer les Badges</button>
-          <button className="admin__action-btn">Vider le cache CDN</button>
-          <button className="admin__action-btn">Modérer le contenu ({mock.contentStats.pendingModeration})</button>
-          <button className="admin__action-btn admin__action-btn--danger">Maintenance Système</button>
+          <button className="admin__action-btn" onClick={() => alert('Ouverture du créateur de programme...')}>Nouveau programme Global</button>
+          <button className="admin__action-btn" onClick={() => alert('Gestion des badges')}>Gérer les Badges</button>
+          <button className="admin__action-btn" onClick={() => alert('Cache vidé avec succès !')}>Vider le cache CDN</button>
+          <button className="admin__action-btn" onClick={() => alert('Ouverture du modérateur...')}>Modérer le contenu ({mock.contentStats.pendingModeration})</button>
+          <button className="admin__action-btn admin__action-btn--danger" onClick={() => confirm('Lancer la maintenance ?') && alert('Maintenance activée')}>Maintenance Système</button>
         </div>
       </div>
     </>
