@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogOut, Activity, Flame, Moon, Sun, Camera, Palette } from 'lucide-react';
+import { LogOut, Activity, Flame, Moon, Sun, Camera, Palette, ShieldCheck } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const MORPHOTYPE_LABEL = { ectomorphe: '🏃 Ectomorphe', mesomorphe: '💪 Mésomorphe', endomorphe: '🐻 Endomorphe' };
@@ -267,6 +267,25 @@ export default function Profile() {
                   cursor: 'pointer', textTransform: 'uppercase',
                 }}>Sauvegarder les couleurs</button>
               </div>
+            </motion.div>
+          )}
+
+          {/* Admin Access Section */}
+          {user?.email === 'a-bouterfas@outlook.fr' && (
+            <motion.div variants={item} style={{ marginBottom: 'var(--space-6)' }}>
+              <h2 className="title-lg" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>Administration</h2>
+              <button 
+                className="btn btn--primary btn--full" 
+                onClick={() => navigate('/admin')}
+                style={{ 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.05em',
+                  background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                  boxShadow: '0 0 20px rgba(var(--primary-rgb), 0.2)'
+                }}
+              >
+                <ShieldCheck size={18} /> PANEL ADMINISTRATION
+              </button>
             </motion.div>
           )}
 
