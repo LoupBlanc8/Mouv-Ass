@@ -239,9 +239,6 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <main className="admin__main animate-slide-up">
-          <div style={{ background: 'red', color: 'white', padding: '10px', textAlign: 'center', fontWeight: 'bold' }}>
-            DEBUG: VERSION REELLE CHARGEE - SI VOUS VOYEZ CECI Ctrl+F5
-          </div>
           {renderContent()}
         </main>
       </div>
