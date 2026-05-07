@@ -379,58 +379,6 @@ function UsersView({ stats }) {
   );
 }
 
-function SystemView() {
-  return (
-    <>
-      <div className="admin__page-header">
-        <h1 className="admin__page-title">Santé du Système</h1>
-        <p className="admin__page-subtitle">Surveillance en temps réel des services et ressources.</p>
-      </div>
-
-      <div className="admin__section">
-        <h2 className="admin__section-title">État des Services</h2>
-        <div className="admin__service-grid">
-          {mock.services.map((service, i) => (
-            <div key={i} className="admin__service-card">
-              <div className={`admin__service-indicator admin__service-indicator--${service.status}`}></div>
-              <div className="admin__service-info">
-                <div className="admin__service-name">{service.name}</div>
-                <div className="admin__service-latency">{service.latency} • {service.uptime} uptime</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="admin__grid-2">
-        <div className="admin__panel">
-          <h3 className="admin__panel-title">Ressources Infrastructure</h3>
-          <div className="flex flex-col gap-6 mt-4">
-            <ResourceGauge label="CPU Usage" value={34} color="var(--primary)" />
-            <ResourceGauge label="Memory Usage (8GB)" value={65} color="var(--secondary)" />
-            <ResourceGauge label="Storage (50GB)" value={28} color="var(--success)" />
-            <ResourceGauge label="API Throughput" value={42} color="var(--tertiary)" />
-          </div>
-        </div>
-
-        <div className="admin__panel">
-          <h3 className="admin__panel-title">Alertes actives</h3>
-          <div className="flex flex-col gap-2">
-            {mock.alerts.map(alert => (
-              <div key={alert.id} className={`admin__alert admin__alert--${alert.type}`}>
-                {alert.type === 'error' ? <AlertCircle size={18} /> : <AlertCircle size={18} />}
-                <div className="flex-1">
-                  <div>{alert.msg}</div>
-                  <div className="body-sm" style={{ fontSize: 10, marginTop: 2 }}>{alert.time}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
 
 function FinancialView() {
   return (
