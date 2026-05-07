@@ -12,6 +12,7 @@ import Academy from './pages/Academy';
 import Stats from './pages/Stats';
 import Profile from './pages/Profile';
 import Landing from './pages/Landing';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 
 function ProtectedRoute({ children }) {
@@ -82,6 +83,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/onboarding" element={
               <ProtectedRoute><Onboarding /></ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute><AdminDashboard /></ProtectedRoute>
             } />
             <Route element={
               <ProtectedRoute><OnboardingGate><AppShell /></OnboardingGate></ProtectedRoute>
