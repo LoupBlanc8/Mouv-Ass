@@ -163,6 +163,26 @@ function SidebarItem({ icon, label, active, onClick, badge }) {
   );
 }
 
+function KPICard({ title, value, trend, trendDir, icon, color = 'primary' }) {
+  return (
+    <div className={`admin__kpi admin__kpi--${color}`}>
+      <div className="admin__kpi-header">
+        <span className="admin__kpi-label">{title}</span>
+        <span className={`admin__kpi-icon admin__kpi-icon--${color}`}>
+          {React.cloneElement(icon, { size: 20 })}
+        </span>
+      </div>
+      <div className="admin__kpi-value">{value}</div>
+      {trend && (
+        <div className={`admin__kpi-trend admin__kpi-trend--${trendDir || (trend.includes('+') ? 'up' : 'down')}`}>
+          { (trendDir === 'up' || trend.includes('+')) ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+          {trend}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // --- SUB-VIEWS ---
 
 function OverviewView() {
@@ -488,18 +508,9 @@ function ActivityView() {
         <p className="admin__page-subtitle">Suivi des sessions et des interactions utilisateurs.</p>
       </div>
       <div className="admin__kpi-grid">
-         <div className="admin__kpi admin__kpi--primary">
-            <div className="admin__kpi-header"><span className="admin__kpi-label">Sessions Actives</span><Activity size={20} /></div>
-            <div className="admin__kpi-value">{mock.activityStats.activeSessions}</div>
-         </div>
-         <div className="admin__kpi admin__kpi--secondary">
-            <div className="admin__kpi-header"><span className="admin__kpi-label">Temps Moyen</span><Clock size={20} /></div>
-            <div className="admin__kpi-value">{mock.activityStats.avgSessionTime}</div>
-         </div>
-         <div className="admin__kpi admin__kpi--tertiary">
-            <div className="admin__kpi-header"><span className="admin__kpi-label">Actions / Jour</span><Zap size={20} /></div>
-            <div className="admin__kpi-value">{mock.activityStats.actionsPerDay}</div>
-         </div>
+         <KPICard title="Sessions Actives" value={mock.activityStats.activeSessions} icon={<Activity />} color="primary" />
+         <KPICard title="Temps Moyen" value={mock.activityStats.avgSessionTime} icon={<Clock />} color="secondary" />
+         <KPICard title="Actions / Jour" value={mock.activityStats.actionsPerDay} icon={<Zap />} color="tertiary" />
       </div>
       <div className="admin__panel mt-8">
         <h3 className="admin__panel-title">Pics d'utilisation (Dernières 24h)</h3>
@@ -526,18 +537,9 @@ function ContentView() {
         <p className="admin__page-subtitle">Modération et gestion des ressources Mouv'Body.</p>
       </div>
       <div className="admin__kpi-grid">
-         <div className="admin__kpi admin__kpi--neutral">
-            <div className="admin__kpi-header"><span className="admin__kpi-label">Programmes</span><Database size={20} /></div>
-            <div className="admin__kpi-value">{mock.contentStats.totalPrograms}</div>
-         </div>
-         <div className="admin__kpi admin__kpi--neutral">
-            <div className="admin__kpi-header"><span className="admin__kpi-label">Exercices</span><Zap size={20} /></div>
-            <div className="admin__kpi-value">{mock.contentStats.totalExercises}</div>
-         </div>
-         <div className="admin__kpi admin__kpi--warning">
-            <div className="admin__kpi-header"><span className="admin__kpi-label">En attente modération</span><AlertTriangle size={20} /></div>
-            <div className="admin__kpi-value">{mock.contentStats.pendingModeration}</div>
-         </div>
+         <KPICard title="Programmes" value={mock.contentStats.totalPrograms} icon={<Database />} color="neutral" />
+         <KPICard title="Exercices" value={mock.contentStats.totalExercises} icon={<Zap />} color="neutral" />
+         <KPICard title="En attente" value={mock.contentStats.pendingModeration} icon={<AlertTriangle />} color="warning" />
       </div>
       <div className="admin__panel mt-8">
          <p style={{ textAlign: 'center', opacity: 0.6, padding: '4rem 0' }}>Interface de modération avancée en cours de développement.</p>
