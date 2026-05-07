@@ -12,7 +12,7 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../lib/supabase';
 import * as mock from './mockData';
 import './AdminDashboard.css';
 
