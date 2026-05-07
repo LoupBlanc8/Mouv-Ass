@@ -719,31 +719,78 @@
   word-break: break-all;
 }
 
-/* ---- RESPONSIVE ---- */
-@media (max-width: 1024px) {
-  .admin__sidebar { width: 60px; padding: var(--space-2) 0; }
-  .admin__nav-item span, .admin__sidebar-label, .admin__nav-badge { display: none; }
-  .admin__nav-item { justify-content: center; padding: var(--space-3); margin: 0 var(--space-1); }
-  .admin__grid-2, .admin__grid-3 { grid-template-columns: 1fr; }
+/* ---- USER MANAGEMENT SPECIFICS ---- */
+.admin__user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
 }
 
-@media (max-width: 768px) {
-  .admin__body { flex-direction: column; }
-  .admin__sidebar {
-    width: 100%;
-    height: auto;
-    position: static;
-    flex-direction: row;
-    overflow-x: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--outline-variant);
-    padding: var(--space-2) var(--space-3);
-  }
-  .admin__sidebar-section { display: flex; gap: var(--space-1); margin: 0; padding: 0; }
-  .admin__sidebar-label { display: none; }
-  .admin__nav-item { white-space: nowrap; padding: var(--space-2) var(--space-3); font-size: 0.75rem; }
-  .admin__nav-item span { display: inline; }
-  .admin__main { padding: var(--space-4); }
-  .admin__kpi-grid { grid-template-columns: 1fr 1fr; }
-  .admin__topbar-title { display: none; }
+.admin__action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  border: 1px solid var(--outline-variant);
+  background: var(--surface-container-high);
+  color: var(--on-surface-variant);
+}
+
+.admin__action-btn:hover {
+  transform: scale(1.1);
+  color: var(--on-surface);
+}
+
+.admin__action-btn--edit:hover {
+  background: rgba(var(--primary-rgb), 0.1);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.admin__action-btn--danger:hover {
+  background: rgba(var(--error-rgb), 0.1);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.admin__panel-header {
+  margin-bottom: var(--space-4);
+}
+
+/* Fix for chip on dark background */
+.chip--tertiary {
+  background: rgba(var(--tertiary-rgb), 0.2);
+  color: var(--tertiary);
+  border: 1px solid rgba(var(--tertiary-rgb), 0.3);
+}
+
+/* Animations for new content */
+.animate-fade-in {
+  animation: fadeIn 0.4s var(--ease-kinetic);
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s var(--ease-kinetic);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

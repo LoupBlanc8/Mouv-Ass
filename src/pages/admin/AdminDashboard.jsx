@@ -25,6 +25,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     kpis: [],
     recentUsers: [],
+    allUsers: [], // Stockage de tous les utilisateurs pour l'onglet dédié
     programs: [],
     exercises: [],
     auditLogs: [],
@@ -55,6 +56,17 @@ export default function AdminDashboard() {
       setLatency(Date.now() - startTime);
 
       // 2. Format Data for UI
+      const formattedUsers = (profiles.data || []).map(u => ({
+        id: u.user_id, // Important pour les actions
+        profile_id: u.id,
+        name: `${u.prenom || ''} ${u.nom || ''}`.trim() || 'Anonyme',
+        email: u.email || 'Non renseigné',
+        role: u.rank || 'Recrue',
+        status: u.onboarding_complete ? 'actif' : 'en cours',
+        joined: new Date(u.created_at).toLocaleDateString('fr-FR'),
+        xp: u.xp || 0
+      }));
+
       setStats({
         kpis: [
           { id: 'u-t', label: 'Utilisateurs', value: profiles.count || 0, color: 'primary', icon: <Users /> },
@@ -62,13 +74,8 @@ export default function AdminDashboard() {
           { id: 'p-t', label: 'Programmes', value: progs.data?.length || 0, color: 'tertiary', icon: <Database /> },
           { id: 'e-t', label: 'Exercices', value: exers.data?.length || 0, color: 'neutral', icon: <Zap /> },
         ],
-        recentUsers: (profiles.data || []).slice(0, 10).map(u => ({
-          name: `${u.full_name || u.prenom || 'Anonyme'}`,
-          email: u.email || 'Donnée sécurisée',
-          role: u.rank || 'Membre',
-          status: u.onboarding_complete ? 'actif' : 'en cours',
-          joined: new Date(u.created_at).toLocaleDateString('fr-FR')
-        })),
+        recentUsers: formattedUsers.slice(0, 10),
+        allUsers: formattedUsers,
         programs: progs.data || [],
         exercises: exers.data || [],
         auditLogs: audits.data || [],
@@ -96,6 +103,46 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteUser = async (userId, userName) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer définitivement le compte de ${userName} ? Cette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
+      
+      if (error) throw error;
+      
+      alert('Utilisateur supprimé avec succès.');
+      fetchRealStats(); // Rafraîchir la liste
+    } catch (err) {
+      console.error("Delete Error:", err);
+      alert(`Erreur lors de la suppression : ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleRole = async (userId, currentRole) => {
+    const newRole = currentRole === 'Admin' ? 'Recrue' : 'Admin';
+    if (!confirm(`Changer le rôle de l'utilisateur en ${newRole} ?`)) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ rank: newRole })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+      
+      fetchRealStats();
+    } catch (err) {
+      console.error("Role Update Error:", err);
+      alert(`Erreur lors du changement de rôle : ${err.message}`);
+    }
+  };
+
   const renderContent = () => {
     if (loading) return (
       <div className="admin__loading">
@@ -106,7 +153,14 @@ export default function AdminDashboard() {
 
     switch (activeTab) {
       case 'overview': return <OverviewView stats={stats} />;
-      case 'users': return <UsersView stats={stats} />;
+      case 'users': return (
+        <UsersView 
+          users={stats.allUsers} 
+          searchTerm={searchTerm} 
+          onDelete={handleDeleteUser}
+          onToggleRole={handleToggleRole}
+        />
+      );
       case 'activity': return <ActivityView stats={stats} />;
       case 'financial': return <div className="admin__panel p-8 text-center opacity-50">Gestion financière désactivée.</div>;
       case 'system': return <SystemView latency={latency} />;
@@ -325,52 +379,96 @@ function OverviewView({ stats }) {
   );
 }
 
-function UsersView({ stats }) {
+function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
+  const filteredUsers = users.filter(u => 
+    u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className="admin__page-header">
         <h1 className="admin__page-title">Gestion Utilisateurs</h1>
-        <p className="admin__page-subtitle">Visualisez et gérez la base utilisateur réelle.</p>
+        <p className="admin__page-subtitle">Recherchez, modifiez les rôles ou supprimez des comptes.</p>
       </div>
 
       <div className="admin__panel mb-6">
+        <div className="admin__panel-header flex justify-between items-center mb-4">
+          <h3 className="admin__panel-title">{filteredUsers.length} Utilisateurs trouvés</h3>
+          <div className="flex gap-2">
+            <button className="chip chip--sm chip--outline"><Filter size={14} /> Filtres</button>
+          </div>
+        </div>
+
         <div className="admin__table-wrap">
           <table className="admin__table">
             <thead>
               <tr>
                 <th>Utilisateur</th>
+                <th>Contact</th>
                 <th>Rôle / Rang</th>
                 <th>Statut</th>
                 <th>Inscrit le</th>
-                <th>Action</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {stats.recentUsers.map((user, i) => (
-                <tr key={i}>
-                  <td>
-                    <div className="flex flex-col">
-                      <span style={{ fontWeight: 600 }}>{user.name}</span>
-                      <span className="body-sm" style={{ fontSize: 11 }}>Compte Vérifié</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="chip chip--sm">
-                      {user.role}
-                    </span>
-                  </td>
-                  <td>
-                    <div className={`admin__status admin__status--${user.status === 'actif' ? 'ok' : 'neutral'}`}>
-                      <span className="admin__status-dot"></span>
-                      {user.status}
-                    </div>
-                  </td>
-                  <td>{user.joined}</td>
-                  <td>
-                    <button className="admin__topbar-btn"><MoreVertical size={16} /></button>
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center', padding: '3rem', opacity: 0.5 }}>
+                    Aucun utilisateur ne correspond à votre recherche.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="admin__user-avatar">
+                          {user.name.charAt(0)}
+                        </div>
+                        <div className="flex flex-col">
+                          <span style={{ fontWeight: 600 }}>{user.name}</span>
+                          <span className="body-sm" style={{ fontSize: 11, color: 'var(--primary)' }}>XP: {user.xp}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span className="body-sm">{user.email}</span>
+                    </td>
+                    <td>
+                      <span className={`chip chip--sm ${user.role === 'Admin' ? 'chip--tertiary' : ''}`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td>
+                      <div className={`admin__status admin__status--${user.status === 'actif' ? 'ok' : 'neutral'}`}>
+                        <span className="admin__status-dot"></span>
+                        {user.status}
+                      </div>
+                    </td>
+                    <td>{user.joined}</td>
+                    <td>
+                      <div className="flex justify-end gap-2">
+                        <button 
+                          className="admin__action-btn admin__action-btn--edit"
+                          title={user.role === 'Admin' ? "Rétrograder en Recrue" : "Promouvoir en Admin"}
+                          onClick={() => onToggleRole(user.id, user.role)}
+                        >
+                          <Shield size={16} />
+                        </button>
+                        <button 
+                          className="admin__action-btn admin__action-btn--danger"
+                          title="Supprimer définitivement"
+                          onClick={() => onDelete(user.id, user.name)}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
