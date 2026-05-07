@@ -315,7 +315,7 @@ function UsersView() {
           </div>
         </div>
         <div className="admin__panel">
-          <h3 className="admin__panel-title">Taux de Rétention (W1 -> W4)</h3>
+          <h3 className="admin__panel-title">Taux de Rétention (W1 &rarr; W4)</h3>
            <div className="admin__funnel mt-4">
              {mock.funnelData.slice(2).map((step, i) => (
                <div key={i} className="admin__funnel-step">
