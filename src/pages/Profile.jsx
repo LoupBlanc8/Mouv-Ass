@@ -271,23 +271,29 @@ export default function Profile() {
           )}
 
           {/* Admin Access Section */}
-          {user?.email?.toLowerCase().trim() === 'a-bouterfas@outlook.fr' && (
-            <motion.div variants={item} style={{ marginBottom: 'var(--space-6)' }}>
-              <h2 className="title-lg" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>Administration</h2>
-              <button 
-                className="btn btn--primary btn--full" 
-                onClick={() => navigate('/admin')}
-                style={{ 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '0.05em',
-                  background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-                  boxShadow: '0 0 20px rgba(var(--primary-rgb), 0.2)'
-                }}
-              >
-                <ShieldCheck size={18} /> PANEL ADMINISTRATION
-              </button>
-            </motion.div>
-          )}
+          {(() => {
+            const userEmail = (user?.email || user?.user_metadata?.email || "").toLowerCase().trim();
+            if (userEmail === 'a-bouterfas@outlook.fr') {
+              return (
+                <motion.div variants={item} style={{ marginBottom: 'var(--space-6)' }}>
+                  <h2 className="title-lg" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>Administration</h2>
+                  <button 
+                    className="btn btn--primary btn--full" 
+                    onClick={() => navigate('/admin')}
+                    style={{ 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.05em',
+                      background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                      boxShadow: '0 0 20px rgba(var(--primary-rgb), 0.2)'
+                    }}
+                  >
+                    <ShieldCheck size={18} /> PANEL ADMINISTRATION
+                  </button>
+                </motion.div>
+              );
+            }
+            return null;
+          })()}
 
           <button className="btn btn--danger btn--full" onClick={handleLogout} disabled={loggingOut} style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <LogOut size={18} /> {loggingOut ? 'DÉCONNEXION...' : 'SE DÉCONNECTER'}
