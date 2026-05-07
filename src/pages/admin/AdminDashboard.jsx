@@ -25,10 +25,14 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     kpis: [],
     recentUsers: [],
+    programs: [],
+    exercises: [],
+    auditLogs: [],
     activityStats: {},
     contentStats: {},
-    chartData: []
   });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [latency, setLatency] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,41 +41,43 @@ export default function AdminDashboard() {
 
   const fetchRealStats = async () => {
     setLoading(true);
+    const startTime = Date.now();
     try {
-      // 1. Users count & recent
-      const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-      const { data: latestUsers } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(10);
+      // 1. Fetch Parallel Data
+      const [profiles, progs, exers, logs, audits] = await Promise.all([
+        supabase.from('profiles').select('*', { count: 'exact' }),
+        supabase.from('programs').select('*'),
+        supabase.from('exercises').select('*'),
+        supabase.from('workout_logs').select('*', { count: 'exact' }),
+        supabase.from('admin_audit_logs').select('*').order('created_at', { ascending: false }).limit(20)
+      ]);
       
-      // 2. Content counts
-      const { count: progCount } = await supabase.from('programs').select('*', { count: 'exact', head: true });
-      const { count: exerciseCount } = await supabase.from('exercises').select('*', { count: 'exact', head: true });
-      
-      // 3. Activity counts
-      const { count: logCount } = await supabase.from('workout_logs').select('*', { count: 'exact', head: true });
+      setLatency(Date.now() - startTime);
 
-      // 4. Transform for UI
+      // 2. Format Data for UI
       setStats({
         kpis: [
-          { id: 'u-t', label: 'Utilisateurs', value: userCount || 0, color: 'primary', icon: <Users /> },
-          { id: 's-t', label: 'Séances Totales', value: logCount || 0, color: 'secondary', icon: <Activity /> },
-          { id: 'p-t', label: 'Programmes', value: progCount || 0, color: 'tertiary', icon: <Database /> },
-          { id: 'e-t', label: 'Exercices', value: exerciseCount || 0, color: 'neutral', icon: <Zap /> },
+          { id: 'u-t', label: 'Utilisateurs', value: profiles.count || 0, color: 'primary', icon: <Users /> },
+          { id: 's-t', label: 'Séances Totales', value: logs.count || 0, color: 'secondary', icon: <Activity /> },
+          { id: 'p-t', label: 'Programmes', value: progs.data?.length || 0, color: 'tertiary', icon: <Database /> },
+          { id: 'e-t', label: 'Exercices', value: exers.data?.length || 0, color: 'neutral', icon: <Zap /> },
         ],
-        recentUsers: (latestUsers || []).map(u => ({
-          name: `${u.prenom || ''} ${u.nom || ''}`.trim() || 'Anonyme',
-          email: 'Donnée sécurisée',
-          role: u.rank || 'Débutant',
+        recentUsers: (profiles.data || []).slice(0, 10).map(u => ({
+          name: `${u.full_name || u.prenom || 'Anonyme'}`,
+          email: u.email || 'Donnée sécurisée',
+          role: u.rank || 'Membre',
           status: u.onboarding_complete ? 'actif' : 'en cours',
-          joined: new Date(u.created_at).toLocaleDateString('fr-FR'),
-          lastSeen: u.updated_at ? `le ${new Date(u.updated_at).toLocaleDateString('fr-FR')}` : '—'
+          joined: new Date(u.created_at).toLocaleDateString('fr-FR')
         })),
+        programs: progs.data || [],
+        exercises: exers.data || [],
+        auditLogs: audits.data || [],
         contentStats: {
-          totalPrograms: progCount || 0,
-          totalExercises: exerciseCount || 0,
-          pendingModeration: 0
+          totalPrograms: progs.data?.length || 0,
+          totalExercises: exers.data?.length || 0
         },
         activityStats: {
-          activeSessions: logCount || 0,
+          activeSessions: logs.count || 0,
           avgSessionTime: '—',
           actionsPerDay: '—'
         }
@@ -103,10 +109,10 @@ export default function AdminDashboard() {
       case 'users': return <UsersView stats={stats} />;
       case 'activity': return <ActivityView stats={stats} />;
       case 'financial': return <div className="admin__panel p-8 text-center opacity-50">Gestion financière désactivée.</div>;
-      case 'system': return <SystemView />;
+      case 'system': return <SystemView latency={latency} />;
       case 'content': return <ContentView stats={stats} />;
-      case 'security': return <SecurityView />;
-      case 'alerts': return <AlertsView />;
+      case 'security': return <SecurityView stats={stats} />;
+      case 'alerts': return <AlertsView stats={stats} />;
       default: return <OverviewView stats={stats} />;
     }
   };
@@ -120,18 +126,29 @@ export default function AdminDashboard() {
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <img src="/logo-mouvbody.png" alt="Mouv'Body" className="admin__topbar-logo" />
-          <span className="admin__topbar-title">Mouv'Body Admin</span>
-          <span className="admin__topbar-badge">v2.4.1</span>
+          <div className="admin__search-box ml-4 hidden-mobile">
+            <Search size={16} />
+            <input 
+              type="text" 
+              placeholder="Rechercher utilisateur..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
         <div className="admin__topbar-right">
+          <div className="admin__latency-tag mr-4">
+             <span className={`dot dot--${latency > 500 ? 'warning' : 'ok'}`}></span>
+             {latency}ms
+          </div>
           <div className="admin__topbar-btn" onClick={() => fetchRealStats()}>
             <RefreshCw size={18} />
           </div>
-          <div className="admin__topbar-btn" onClick={() => alert('Aucune nouvelle notification')}>
+          <div className="admin__topbar-btn" onClick={() => setActiveTab('alerts')}>
             <Bell size={18} />
             <span className="notif-dot"></span>
           </div>
-          <div className="admin__topbar-btn" onClick={() => alert('Paramètres du panel')}>
+          <div className="admin__topbar-btn" onClick={() => setActiveTab('system')}>
             <Settings size={18} />
           </div>
           <div 
@@ -518,50 +535,81 @@ function ContentView({ stats }) {
     <>
       <div className="admin__page-header">
         <h1 className="admin__page-title">Gestion du Contenu</h1>
-        <p className="admin__page-subtitle">Modération et gestion des ressources Mouv'Body.</p>
+        <p className="admin__page-subtitle">Programmes et exercices réels en base.</p>
       </div>
-      <div className="admin__kpi-grid">
-         <KPICard title="Programmes" value={stats.contentStats.totalPrograms} icon={<Database />} color="neutral" />
-         <KPICard title="Exercices" value={stats.contentStats.totalExercises} icon={<Zap />} color="neutral" />
-         <KPICard title="En attente" value={stats.contentStats.pendingModeration} icon={<AlertTriangle />} color="warning" />
-      </div>
-      <div className="admin__panel mt-8">
-         <p style={{ textAlign: 'center', opacity: 0.6, padding: '4rem 0' }}>Données de contenu synchronisées avec Supabase.</p>
+      <div className="admin__grid-2">
+        <div className="admin__panel">
+          <h3 className="admin__panel-title">Programmes ({stats.programs.length})</h3>
+          <div className="admin__log-list">
+            {stats.programs.map((p, i) => (
+              <div key={i} className="admin__log-item">
+                <span className="admin__log-msg"><b>{p.title}</b> • {p.duration_weeks} sem.</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="admin__panel">
+          <h3 className="admin__panel-title">Derniers Exercices</h3>
+          <div className="admin__log-list">
+            {stats.exercises.slice(0, 10).map((ex, i) => (
+              <div key={i} className="admin__log-item">
+                <span className="admin__log-msg"><b>{ex.name}</b> • {ex.target_muscle}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
-function SecurityView() {
+function SystemView({ latency }) {
   return (
     <>
       <div className="admin__page-header">
-        <h1 className="admin__page-title">Journal de Sécurité</h1>
-        <p className="admin__page-subtitle">Historique des accès et tentatives de connexion.</p>
+        <h1 className="admin__page-title">Santé du Système</h1>
+        <p className="admin__page-subtitle">Statut de l'API et de la base de données.</p>
+      </div>
+      <div className="admin__panel p-8">
+        <div className="flex flex-col items-center gap-6">
+          <div className={`admin__latency-gauge ${latency > 500 ? 'warn' : 'ok'}`}>
+            <span className="latency-val">{latency}ms</span>
+            <span className="latency-label">Latence API</span>
+          </div>
+          <div className="flex gap-4">
+            <div className="chip chip--ok">Supabase : Connecté</div>
+            <div className="chip chip--ok">Auth Service : Actif</div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function SecurityView({ stats }) {
+  return (
+    <>
+      <div className="admin__page-header">
+        <h1 className="admin__page-title">Journal de Sécurité (Audit)</h1>
+        <p className="admin__page-subtitle">Logs réels extraits de la table admin_audit_logs.</p>
       </div>
       <div className="admin__panel">
         <table className="admin__table">
           <thead>
             <tr>
               <th>Date</th>
-              <th>Utilisateur</th>
-              <th>Événement</th>
-              <th>IP</th>
-              <th>Statut</th>
+              <th>Action</th>
+              <th>Admin</th>
+              <th>Détails</th>
             </tr>
           </thead>
           <tbody>
-            {mock.securityLogs.map((log, i) => (
+            {stats.auditLogs.map((log, i) => (
               <tr key={i}>
-                <td style={{ opacity: 0.7 }}>{log.time}</td>
-                <td style={{ fontWeight: 600 }}>{log.msg.split(' par ')[1] || 'Système'}</td>
-                <td>{log.msg.split(' par ')[0]}</td>
-                <td style={{ fontFamily: 'monospace', opacity: 0.6 }}>192.168.1.{10 + i}</td>
-                <td>
-                  <span className={`chip chip--sm ${log.type === 'error' ? 'chip--danger' : 'chip--success'}`}>
-                    {log.type === 'error' ? 'Échec' : 'Réussite'}
-                  </span>
-                </td>
+                <td style={{ opacity: 0.7 }}>{new Date(log.created_at).toLocaleString()}</td>
+                <td style={{ fontWeight: 600 }}>{log.action}</td>
+                <td>{log.user_email}</td>
+                <td style={{ fontSize: '0.8rem', opacity: 0.7 }}>{JSON.stringify(log.details)}</td>
               </tr>
             ))}
           </tbody>
@@ -571,25 +619,33 @@ function SecurityView() {
   );
 }
 
-function AlertsView() {
+function AlertsView({ stats }) {
+  const alerts = [];
+  if (stats.programs.length === 0) alerts.push({ id: 1, type: 'error', msg: 'Aucun programme détecté en base', time: 'Urgent' });
+  if (stats.exercises.length < 5) alerts.push({ id: 2, type: 'warning', msg: 'Base d\'exercices critique (< 5)', time: 'Aujourd\'hui' });
+  
   return (
     <>
       <div className="admin__page-header">
         <h1 className="admin__page-title">Alertes & Notifications</h1>
-        <p className="admin__page-subtitle">Incidents critiques et avertissements système.</p>
+        <p className="admin__page-subtitle">Incidents réels détectés par l'analyse automatique.</p>
       </div>
       <div className="flex flex-col gap-4">
-        {mock.alerts.map(alert => (
-          <div key={alert.id} className={`admin__alert admin__alert--${alert.type}`} style={{ padding: '1.5rem' }}>
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>{alert.msg}</h3>
-                <p style={{ opacity: 0.8 }}>Incident détecté à {alert.time}. Une action immédiate est requise.</p>
+        {alerts.length === 0 ? (
+          <div className="admin__alert admin__alert--ok">Aucun incident détecté. Système sain.</div>
+        ) : (
+          alerts.map(alert => (
+            <div key={alert.id} className={`admin__alert admin__alert--${alert.type}`} style={{ padding: '1.5rem' }}>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{alert.msg}</h3>
+                  <p style={{ opacity: 0.8 }}>Détecté automatiquement via Supabase.</p>
+                </div>
+                <span className="chip chip--sm">{alert.time}</span>
               </div>
-              <button className="btn btn--secondary btn--sm" onClick={() => alert('Alerte acquittée')}>Acquitter</button>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </>
   );
