@@ -271,7 +271,7 @@ export default function Profile() {
           )}
 
           {/* Admin Access Section */}
-          {user?.email === 'a-bouterfas@outlook.fr' && (
+          {user?.email?.toLowerCase().trim() === 'a-bouterfas@outlook.fr' && (
             <motion.div variants={item} style={{ marginBottom: 'var(--space-6)' }}>
               <h2 className="title-lg" style={{ borderLeft: '4px solid var(--primary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>Administration</h2>
               <button 
