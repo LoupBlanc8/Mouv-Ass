@@ -110,13 +110,26 @@ export const systemResources = {
 };
 
 export const contentStats = {
-  programsCreated: 2847,
-  exercisesLogged: 34520,
+  totalPrograms: 2847,
+  totalExercises: 34520,
   mealsTracked: 18940,
   pendingModeration: 3,
   openTickets: 12,
   reports: 5,
 };
+
+export const activityStats = {
+  activeSessions: '47',
+  avgSessionTime: '24min',
+  actionsPerDay: '12 450',
+};
+
+export const activityData = [
+  { time: '00h', users: 12 }, { time: '03h', users: 8 },
+  { time: '06h', users: 45 }, { time: '09h', users: 120 },
+  { time: '12h', users: 210 }, { time: '15h', users: 180 },
+  { time: '18h', users: 290 }, { time: '21h', users: 150 },
+];
 
 export const subscriptionBreakdown = {
   active: 412,
