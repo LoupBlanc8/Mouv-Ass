@@ -23,16 +23,15 @@ export default function AdminDashboard() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'overview':
-        return <OverviewView />;
-      case 'users':
-        return <UsersView />;
-      case 'system':
-        return <SystemView />;
-      case 'financial':
-        return <FinancialView />;
-      default:
-        return <OverviewView />;
+      case 'overview': return <OverviewView />;
+      case 'users': return <UsersView />;
+      case 'activity': return <ActivityView />;
+      case 'financial': return <FinancialView />;
+      case 'system': return <SystemView />;
+      case 'content': return <ContentView />;
+      case 'security': return <SecurityView />;
+      case 'alerts': return <AlertsView />;
+      default: return <OverviewView />;
     }
   };
 
@@ -49,17 +48,21 @@ export default function AdminDashboard() {
           <span className="admin__topbar-badge">v2.4.1</span>
         </div>
         <div className="admin__topbar-right">
-          <div className="admin__topbar-btn">
+          <div className="admin__topbar-btn" onClick={() => alert('Recherche globale bientôt disponible')}>
             <Search size={18} />
           </div>
-          <div className="admin__topbar-btn">
+          <div className="admin__topbar-btn" onClick={() => alert('Aucune nouvelle notification')}>
             <Bell size={18} />
             <span className="notif-dot"></span>
           </div>
-          <div className="admin__topbar-btn">
+          <div className="admin__topbar-btn" onClick={() => alert('Paramètres du panel')}>
             <Settings size={18} />
           </div>
-          <div className="admin__topbar-btn" style={{ marginLeft: 'var(--space-2)', background: 'var(--error)', color: 'white' }}>
+          <div 
+            className="admin__topbar-btn" 
+            style={{ marginLeft: 'var(--space-2)', background: 'var(--error)', color: 'white' }}
+            onClick={() => confirm('Se déconnecter ?') && (window.location.href = '/login')}
+          >
             <LogOut size={18} />
           </div>
         </div>
@@ -86,6 +89,8 @@ export default function AdminDashboard() {
               <SidebarItem 
                 icon={<Activity />} 
                 label="Activité" 
+                active={activeTab === 'activity'}
+                onClick={() => setActiveTab('activity')}
               />
             </div>
 
@@ -100,6 +105,8 @@ export default function AdminDashboard() {
               <SidebarItem 
                 icon={<Database />} 
                 label="Contenu" 
+                active={activeTab === 'content'}
+                onClick={() => setActiveTab('content')}
               />
             </div>
 
@@ -114,10 +121,14 @@ export default function AdminDashboard() {
               <SidebarItem 
                 icon={<ShieldCheck />} 
                 label="Sécurité" 
+                active={activeTab === 'security'}
+                onClick={() => setActiveTab('security')}
               />
               <SidebarItem 
                 icon={<AlertTriangle />} 
                 label="Alertes" 
+                active={activeTab === 'alerts'}
+                onClick={() => setActiveTab('alerts')}
                 badge={4}
               />
             </div>
@@ -464,6 +475,135 @@ function FinancialView() {
             </tbody>
           </table>
         </div>
+      </div>
+    </>
+  );
+}
+
+function ActivityView() {
+  return (
+    <>
+      <div className="admin__page-header">
+        <h1 className="admin__page-title">Analyse d'Activité</h1>
+        <p className="admin__page-subtitle">Suivi des sessions et des interactions utilisateurs.</p>
+      </div>
+      <div className="admin__kpi-grid">
+         <div className="admin__kpi admin__kpi--primary">
+            <div className="admin__kpi-header"><span className="admin__kpi-label">Sessions Actives</span><Activity size={20} /></div>
+            <div className="admin__kpi-value">{mock.activityStats.activeSessions}</div>
+         </div>
+         <div className="admin__kpi admin__kpi--secondary">
+            <div className="admin__kpi-header"><span className="admin__kpi-label">Temps Moyen</span><Clock size={20} /></div>
+            <div className="admin__kpi-value">{mock.activityStats.avgSessionTime}</div>
+         </div>
+         <div className="admin__kpi admin__kpi--tertiary">
+            <div className="admin__kpi-header"><span className="admin__kpi-label">Actions / Jour</span><Zap size={20} /></div>
+            <div className="admin__kpi-value">{mock.activityStats.actionsPerDay}</div>
+         </div>
+      </div>
+      <div className="admin__panel mt-8">
+        <h3 className="admin__panel-title">Pics d'utilisation (Dernières 24h)</h3>
+        <div style={{ height: 300 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={mock.activityData}>
+              <XAxis dataKey="time" stroke="var(--on-surface-variant)" fontSize={12} />
+              <YAxis stroke="var(--on-surface-variant)" fontSize={12} />
+              <Tooltip contentStyle={{ background: 'var(--surface-container-high)', border: 'none' }} />
+              <Area type="monotone" dataKey="users" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.1} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ContentView() {
+  return (
+    <>
+      <div className="admin__page-header">
+        <h1 className="admin__page-title">Gestion du Contenu</h1>
+        <p className="admin__page-subtitle">Modération et gestion des ressources Mouv'Body.</p>
+      </div>
+      <div className="admin__kpi-grid">
+         <div className="admin__kpi admin__kpi--neutral">
+            <div className="admin__kpi-header"><span className="admin__kpi-label">Programmes</span><Database size={20} /></div>
+            <div className="admin__kpi-value">{mock.contentStats.totalPrograms}</div>
+         </div>
+         <div className="admin__kpi admin__kpi--neutral">
+            <div className="admin__kpi-header"><span className="admin__kpi-label">Exercices</span><Zap size={20} /></div>
+            <div className="admin__kpi-value">{mock.contentStats.totalExercises}</div>
+         </div>
+         <div className="admin__kpi admin__kpi--warning">
+            <div className="admin__kpi-header"><span className="admin__kpi-label">En attente modération</span><AlertTriangle size={20} /></div>
+            <div className="admin__kpi-value">{mock.contentStats.pendingModeration}</div>
+         </div>
+      </div>
+      <div className="admin__panel mt-8">
+         <p style={{ textAlign: 'center', opacity: 0.6, padding: '4rem 0' }}>Interface de modération avancée en cours de développement.</p>
+      </div>
+    </>
+  );
+}
+
+function SecurityView() {
+  return (
+    <>
+      <div className="admin__page-header">
+        <h1 className="admin__page-title">Journal de Sécurité</h1>
+        <p className="admin__page-subtitle">Historique des accès et tentatives de connexion.</p>
+      </div>
+      <div className="admin__panel">
+        <table className="admin__table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Utilisateur</th>
+              <th>Événement</th>
+              <th>IP</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mock.securityLogs.map((log, i) => (
+              <tr key={i}>
+                <td style={{ opacity: 0.7 }}>{log.time}</td>
+                <td style={{ fontWeight: 600 }}>{log.msg.split(' par ')[1] || 'Système'}</td>
+                <td>{log.msg.split(' par ')[0]}</td>
+                <td style={{ fontFamily: 'monospace', opacity: 0.6 }}>192.168.1.{10 + i}</td>
+                <td>
+                  <span className={`chip chip--sm ${log.type === 'error' ? 'chip--danger' : 'chip--success'}`}>
+                    {log.type === 'error' ? 'Échec' : 'Réussite'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+function AlertsView() {
+  return (
+    <>
+      <div className="admin__page-header">
+        <h1 className="admin__page-title">Alertes & Notifications</h1>
+        <p className="admin__page-subtitle">Incidents critiques et avertissements système.</p>
+      </div>
+      <div className="flex flex-col gap-4">
+        {mock.alerts.map(alert => (
+          <div key={alert.id} className={`admin__alert admin__alert--${alert.type}`} style={{ padding: '1.5rem' }}>
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>{alert.msg}</h3>
+                <p style={{ opacity: 0.8 }}>Incident détecté à {alert.time}. Une action immédiate est requise.</p>
+              </div>
+              <button className="btn btn--secondary btn--sm" onClick={() => alert('Alerte acquittée')}>Acquitter</button>
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );
