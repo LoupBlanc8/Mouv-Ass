@@ -4,7 +4,7 @@ import {
   Bell, BarChart3, AlertTriangle, Search, Filter, 
   MoreVertical, ArrowUpRight, ArrowDownRight, 
   Settings, LogOut, RefreshCw, Server, Cpu, 
-  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, ShieldCheck, Zap, Trash, CheckCircle, RefreshCcw, Shield
+  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, Zap, Trash, CheckCircle, RefreshCcw, Shield
 } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, 
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     kpis: [],
     recentUsers: [],
-    allUsers: [], // Stockage de tous les utilisateurs pour l'onglet dédié
+    allUsers: [],
     programs: [],
     exercises: [],
     auditLogs: [],
@@ -44,7 +44,6 @@ export default function AdminDashboard() {
     setLoading(true);
     const startTime = Date.now();
     try {
-      // 1. Fetch Parallel Data
       const [profiles, progs, exers, logs, audits] = await Promise.all([
         supabase.from('profiles').select('*', { count: 'exact' }),
         supabase.from('programs').select('*'),
@@ -55,9 +54,8 @@ export default function AdminDashboard() {
       
       setLatency(Date.now() - startTime);
 
-      // 2. Format Data for UI
       const formattedUsers = (profiles.data || []).map(u => ({
-        id: u.user_id, // Important pour les actions
+        id: u.user_id,
         profile_id: u.id,
         name: `${u.prenom || ''} ${u.nom || ''}`.trim() || 'Anonyme',
         email: u.email || 'Non renseigné',
@@ -111,11 +109,9 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
-      
       if (error) throw error;
-      
       alert('Utilisateur supprimé avec succès.');
-      fetchRealStats(); // Rafraîchir la liste
+      fetchRealStats();
     } catch (err) {
       console.error("Delete Error:", err);
       alert(`Erreur lors de la suppression : ${err.message}`);
@@ -135,7 +131,6 @@ export default function AdminDashboard() {
         .eq('user_id', userId);
 
       if (error) throw error;
-      
       fetchRealStats();
     } catch (err) {
       console.error("Role Update Error:", err);
@@ -173,7 +168,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin">
-      {/* Topbar */}
       <header className="admin__topbar">
         <div className="admin__topbar-left">
           <button className="admin__topbar-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -216,7 +210,6 @@ export default function AdminDashboard() {
       </header>
 
       <div className="admin__body">
-        {/* Sidebar */}
         {isSidebarOpen && (
           <aside className="admin__sidebar animate-fade-in">
             <div className="admin__sidebar-section">
@@ -291,7 +284,6 @@ export default function AdminDashboard() {
           </aside>
         )}
 
-        {/* Main Content */}
         <main className="admin__main animate-slide-up">
           {renderContent()}
         </main>
@@ -329,8 +321,6 @@ function KPICard({ title, value, trend, trendDir, icon, color = 'primary' }) {
     </div>
   );
 }
-
-// --- SUB-VIEWS ---
 
 function OverviewView({ stats }) {
   return (
@@ -455,14 +445,14 @@ function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
                           title={user.role === 'Admin' ? "Rétrograder en Recrue" : "Promouvoir en Admin"}
                           onClick={() => onToggleRole(user.id, user.role)}
                         >
-                          <ShieldCheck size={18} strokeWidth={2.5} />
+                          <ShieldCheck size={16} />
                         </button>
                         <button 
                           className="admin__action-btn admin__action-btn--danger"
                           title="Supprimer définitivement"
                           onClick={() => onDelete(user.id, user.name)}
                         >
-                          <Trash size={18} strokeWidth={2.5} />
+                          <Trash size={16} />
                         </button>
                       </div>
                     </td>
@@ -476,7 +466,6 @@ function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
     </>
   );
 }
-
 
 function FinancialView() {
   return (
@@ -514,41 +503,6 @@ function FinancialView() {
             </div>
             <div className="admin__kpi-value">€142.00</div>
          </div>
-      </div>
-
-      <div className="admin__panel mb-6">
-        <h3 className="admin__panel-title">Transactions Récentes</h3>
-        <div className="admin__table-wrap">
-          <table className="admin__table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Client</th>
-                <th>Montant</th>
-                <th>Produit</th>
-                <th>Statut</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mock.recentTransactions.map((tx, i) => (
-                <tr key={i}>
-                  <td style={{ fontFamily: 'monospace' }}>{tx.id}</td>
-                  <td>{tx.user}</td>
-                  <td style={{ fontWeight: 600 }}>{tx.amount}</td>
-                  <td>{tx.type}</td>
-                  <td>
-                    <div className={`admin__status admin__status--${tx.status}`}>
-                       <span className="admin__status-dot"></span>
-                       {tx.status === 'ok' ? 'Payé' : tx.status === 'warn' ? 'En attente' : 'Échoué'}
-                    </div>
-                  </td>
-                  <td>{tx.date}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
     </>
   );
@@ -697,22 +651,5 @@ function AlertsView({ stats }) {
         )}
       </div>
     </>
-  );
-}
-
-function ResourceGauge({ label, value, color }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <span className="body-sm" style={{ fontWeight: 600, color: 'var(--on-surface)' }}>{label}</span>
-        <span className="body-sm">{value}%</span>
-      </div>
-      <div className="admin__progress-mini">
-        <div 
-          className="admin__progress-mini-fill" 
-          style={{ width: `${value}%`, background: color }}
-        ></div>
-      </div>
-    </div>
   );
 }

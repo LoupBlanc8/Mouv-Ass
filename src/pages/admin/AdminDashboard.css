@@ -735,45 +735,49 @@
 }
 
 .admin__action-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--duration-fast);
-  border: 1px solid var(--outline-variant);
-  background: var(--surface-container-high);
-  color: var(--on-surface-variant);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
   flex-shrink: 0;
 }
 
 .admin__action-btn svg {
-  color: inherit;
+  width: 18px;
+  height: 18px;
+  stroke-width: 2px;
   display: block;
 }
 
 .admin__action-btn:hover {
-  transform: scale(1.1);
-  color: var(--on-surface);
-  background: var(--surface-container-highest);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.admin__action-btn--edit {
+  color: #4cc9f0;
 }
 
 .admin__action-btn--edit:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: rgba(142, 202, 230, 0.1); /* Fallback for primary-rgb */
+  background: rgba(76, 201, 240, 0.2);
+  border-color: #4cc9f0;
 }
 
 .admin__action-btn--danger {
-  color: #ff7351; /* Explicit color for Trash icon to ensure visibility */
+  color: #ff5d5d;
 }
 
 .admin__action-btn--danger:hover {
-  border-color: #ff7351;
-  color: #ffffff;
-  background: #ff7351;
+  background: rgba(255, 93, 93, 0.2);
+  border-color: #ff5d5d;
 }
 
 .admin__panel-header {
