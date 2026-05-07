@@ -746,23 +746,34 @@
   border: 1px solid var(--outline-variant);
   background: var(--surface-container-high);
   color: var(--on-surface-variant);
+  flex-shrink: 0;
+}
+
+.admin__action-btn svg {
+  color: inherit;
+  display: block;
 }
 
 .admin__action-btn:hover {
   transform: scale(1.1);
   color: var(--on-surface);
+  background: var(--surface-container-highest);
 }
 
 .admin__action-btn--edit:hover {
-  background: rgba(var(--primary-rgb), 0.1);
   border-color: var(--primary);
   color: var(--primary);
+  background: rgba(142, 202, 230, 0.1); /* Fallback for primary-rgb */
+}
+
+.admin__action-btn--danger {
+  color: #ff7351; /* Explicit color for Trash icon to ensure visibility */
 }
 
 .admin__action-btn--danger:hover {
-  background: rgba(var(--error-rgb), 0.1);
-  border-color: var(--error);
-  color: var(--error);
+  border-color: #ff7351;
+  color: #ffffff;
+  background: #ff7351;
 }
 
 .admin__panel-header {
