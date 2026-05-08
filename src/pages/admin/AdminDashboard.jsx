@@ -206,7 +206,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin">
-      <header className="admin__topbar" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="admin__topbar">
         <div className="admin__topbar-left">
           <div className="admin__topbar-logo-wrap hidden-mobile">
             <img src="/logo-mouvbody.png" alt="Mouv'Body" className="admin__topbar-logo" />
@@ -356,7 +356,7 @@ function KPICard({ title, value, trend, trendDir, icon, color = 'primary' }) {
         </span>
       </div>
       <div className="admin__kpi-value">{value}</div>
-      {trend && (
+      {trend && typeof trend === 'string' && (
         <div className={`admin__kpi-trend admin__kpi-trend--${trendDir || (trend.includes('+') ? 'up' : 'down')}`}>
           { (trendDir === 'up' || trend.includes('+')) ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
           {trend}
