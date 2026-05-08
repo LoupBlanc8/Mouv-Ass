@@ -13,14 +13,16 @@ import {
 } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useTheme } from '../../contexts/ThemeContext';
 import * as mock from './mockData';
 import './AdminDashboard.css';
 
 // --- MAIN DASHBOARD ---
 
 export default function AdminDashboard() {
+  const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('overview');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     kpis: [],
@@ -170,7 +172,7 @@ export default function AdminDashboard() {
     <div className="admin">
       <header className="admin__topbar">
         <div className="admin__topbar-left">
-          <button className="admin__topbar-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          <button className="admin__topbar-btn admin__menu-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <img src="/logo-mouvbody.png" alt="Mouv'Body" className="admin__topbar-logo" />
@@ -196,6 +198,9 @@ export default function AdminDashboard() {
             <Bell size={18} />
             <span className="notif-dot"></span>
           </div>
+          <div className="admin__topbar-btn" onClick={toggleTheme} title="Changer le thème">
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </div>
           <div className="admin__topbar-btn" onClick={() => setActiveTab('system')}>
             <Settings size={18} />
           </div>
@@ -210,27 +215,29 @@ export default function AdminDashboard() {
       </header>
 
       <div className="admin__body">
-        {isSidebarOpen && (
-          <aside className="admin__sidebar animate-fade-in">
+        {isSidebarOpen && <div className="admin__sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+        
+        <aside className={`admin__sidebar ${isSidebarOpen ? 'admin__sidebar--open' : ''}`}>
+          <div className="admin__sidebar-content">
             <div className="admin__sidebar-section">
               <p className="admin__sidebar-label">Principal</p>
               <SidebarItem 
                 icon={<BarChart3 />} 
                 label="Vue d'ensemble" 
                 active={activeTab === 'overview'} 
-                onClick={() => setActiveTab('overview')} 
+                onClick={() => { setActiveTab('overview'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }} 
               />
               <SidebarItem 
                 icon={<Users />} 
                 label="Utilisateurs" 
                 active={activeTab === 'users'} 
-                onClick={() => setActiveTab('users')} 
+                onClick={() => { setActiveTab('users'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }} 
               />
               <SidebarItem 
                 icon={<Activity />} 
                 label="Activité" 
                 active={activeTab === 'activity'}
-                onClick={() => setActiveTab('activity')}
+                onClick={() => { setActiveTab('activity'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }}
               />
             </div>
 
@@ -240,13 +247,13 @@ export default function AdminDashboard() {
                 icon={<DollarSign />} 
                 label="Financier" 
                 active={activeTab === 'financial'} 
-                onClick={() => setActiveTab('financial')} 
+                onClick={() => { setActiveTab('financial'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }} 
               />
               <SidebarItem 
                 icon={<Database />} 
                 label="Contenu" 
                 active={activeTab === 'content'}
-                onClick={() => setActiveTab('content')}
+                onClick={() => { setActiveTab('content'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }}
               />
             </div>
 
@@ -256,19 +263,19 @@ export default function AdminDashboard() {
                 icon={<Server />} 
                 label="Système" 
                 active={activeTab === 'system'} 
-                onClick={() => setActiveTab('system')} 
+                onClick={() => { setActiveTab('system'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }} 
               />
               <SidebarItem 
                 icon={<ShieldCheck />} 
                 label="Sécurité" 
                 active={activeTab === 'security'}
-                onClick={() => setActiveTab('security')}
+                onClick={() => { setActiveTab('security'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }}
               />
               <SidebarItem 
                 icon={<AlertTriangle />} 
                 label="Alertes" 
                 active={activeTab === 'alerts'}
-                onClick={() => setActiveTab('alerts')}
+                onClick={() => { setActiveTab('alerts'); if (window.innerWidth <= 1024) setIsSidebarOpen(false); }}
                 badge={4}
               />
             </div>
@@ -276,12 +283,13 @@ export default function AdminDashboard() {
             <button 
               className="admin__nav-item"
               onClick={() => window.location.href = '/'}
-              style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 'var(--space-4)', color: 'var(--on-surface-variant)' }}
+              style={{ marginTop: 'auto', borderTop: '1px solid rgba(var(--outline-rgb, 118, 117, 117), 0.1)', paddingTop: 'var(--space-4)', color: 'var(--on-surface-variant)' }}
             >
               <ArrowLeft size={18} />
               <span>Retour à l'App</span>
             </button>
-          </aside>
+          </div>
+        </aside>
         )}
 
         <main className="admin__main animate-slide-up">

@@ -155,13 +155,21 @@
   flex-shrink: 0;
   background: var(--surface-container-lowest);
   border-right: 1px solid var(--outline-variant);
-  padding: var(--space-4) 0;
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 57px;
   height: calc(100vh - 57px);
   overflow-y: auto;
+  transition: transform var(--duration-normal) var(--ease-kinetic), visibility var(--duration-normal);
+  z-index: 100;
+}
+
+.admin__sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--space-4) 0;
 }
 
 .admin__sidebar-section {
@@ -804,4 +812,86 @@
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- RESPONSIVE ---- */
+
+@media (max-width: 1024px) {
+  .admin__sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    visibility: hidden;
+    box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+  }
+
+  .admin__sidebar--open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .admin__sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .admin__main {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin__topbar {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .admin__kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin__grid-2, .admin__grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .admin__page-title {
+    font-size: 1.5rem;
+  }
+
+  .admin__topbar-logo {
+    height: 24px;
+  }
+  
+  .admin__latency-tag {
+    display: none;
+  }
+  
+  .admin__table-wrap {
+    margin: 0 -var(--space-4);
+    border-radius: 0;
+  }
+  
+  .admin__table th, .admin__table td {
+    padding: var(--space-3) var(--space-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .admin__topbar-right {
+    gap: var(--space-1);
+  }
+  
+  .admin__topbar-btn {
+    width: 32px;
+    height: 32px;
+  }
 }
