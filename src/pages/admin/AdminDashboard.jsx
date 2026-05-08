@@ -206,12 +206,15 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin">
-      <header className="admin__topbar">
+      <header className="admin__topbar" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="admin__topbar-left">
-          <button className="admin__topbar-btn admin__menu-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-          <img src="/logo-mouvbody.png" alt="Mouv'Body" className="admin__topbar-logo" />
+          <div className="admin__topbar-logo-wrap hidden-mobile">
+            <img src="/logo-mouvbody.png" alt="Mouv'Body" className="admin__topbar-logo" />
+            <span className="admin__topbar-brand">Admin Panel</span>
+          </div>
+          <div className="show-mobile">
+             <img src="/logo-mouvbody.png" alt="Mouv'Body" style={{ height: '28px' }} />
+          </div>
           <div className="admin__search-box ml-4 hidden-mobile">
             <Search size={16} />
             <input 
@@ -251,9 +254,7 @@ export default function AdminDashboard() {
       </header>
 
       <div className="admin__body">
-        {isSidebarOpen && <div className="admin__sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
-        
-        <aside className={`admin__sidebar ${isSidebarOpen ? 'admin__sidebar--open' : ''}`}>
+        <aside className={`admin__sidebar ${isSidebarOpen ? 'admin__sidebar--open' : ''} hidden-mobile`}>
           <div className="admin__sidebar-content">
             <div className="admin__sidebar-section">
               <p className="admin__sidebar-label">Principal</p>

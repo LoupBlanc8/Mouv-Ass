@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-4) var(--space-6);
+  padding: calc(var(--space-4) + env(safe-area-inset-top, 0px)) var(--space-6) var(--space-4);
   background: rgba(14, 14, 14, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -835,44 +835,14 @@
 /* ---- RESPONSIVE ---- */
 
 @media (max-width: 1024px) {
-  .admin__sidebar {
-    position: fixed !important;
-    left: 0 !important;
-    top: 0 !important;
-    height: 100vh !important;
-    width: 280px !important;
-    transform: translateX(-100%) !important;
-    visibility: hidden !important;
-    box-shadow: 20px 0 50px rgba(0,0,0,0.5) !important;
-    z-index: 200 !important;
-    border-right: 1px solid var(--outline-variant) !important;
-  }
-
-  .admin__sidebar--open {
-    transform: translateX(0) !important;
-    visibility: visible !important;
-    width: 280px !important;
-  }
-
-  .admin__sidebar-content {
-    min-width: 280px !important;
-  }
-
-  .admin__sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(4px);
-    z-index: 90;
-    animation: fadeIn 0.3s ease;
+  .admin__sidebar, .admin__sidebar-overlay {
+    display: none !important;
   }
 
   .admin__main {
     padding: var(--space-4);
-  }
-
-  .hidden-mobile {
-    display: none !important;
+    width: 100% !important;
+    max-width: 100vw !important;
   }
 }
 
