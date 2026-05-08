@@ -148,24 +148,60 @@ export default function AdminDashboard() {
       </div>
     );
 
-    switch (activeTab) {
-      case 'overview': return <OverviewView stats={stats} />;
-      case 'users': return (
-        <UsersView 
-          users={stats.allUsers} 
-          searchTerm={searchTerm} 
-          onDelete={handleDeleteUser}
-          onToggleRole={handleToggleRole}
-        />
-      );
-      case 'activity': return <ActivityView stats={stats} />;
-      case 'financial': return <div className="admin__panel p-8 text-center opacity-50">Gestion financière désactivée.</div>;
-      case 'system': return <SystemView latency={latency} />;
-      case 'content': return <ContentView stats={stats} />;
-      case 'security': return <SecurityView stats={stats} />;
-      case 'alerts': return <AlertsView stats={stats} />;
-      default: return <OverviewView stats={stats} />;
-    }
+    const TABS = [
+      { id: 'overview', label: "Vue d'ensemble", icon: <BarChart3 size={16} /> },
+      { id: 'users', label: "Utilisateurs", icon: <Users size={16} /> },
+      { id: 'activity', label: "Activité", icon: <Activity size={16} /> },
+      { id: 'financial', label: "Financier", icon: <DollarSign size={16} /> },
+      { id: 'content', label: "Contenu", icon: <Database size={16} /> },
+      { id: 'system', label: "Système", icon: <Server size={16} /> },
+      { id: 'security', label: "Sécurité", icon: <ShieldCheck size={16} /> },
+      { id: 'alerts', label: "Alertes", icon: <AlertTriangle size={16} /> },
+    ];
+
+    const currentTab = TABS.find(t => t.id === activeTab) || TABS[0];
+
+    return (
+      <>
+        <div className="admin__mobile-tabs show-mobile">
+          <div className="admin__tab-selector-wrap">
+            <select 
+              className="admin__tab-select" 
+              value={activeTab} 
+              onChange={(e) => setActiveTab(e.target.value)}
+            >
+              {TABS.map(tab => (
+                <option key={tab.id} value={tab.id}>{tab.label}</option>
+              ))}
+            </select>
+            <div className="admin__tab-select-icon">
+              {currentTab.icon}
+            </div>
+          </div>
+        </div>
+
+        {(() => {
+          switch (activeTab) {
+            case 'overview': return <OverviewView stats={stats} />;
+            case 'users': return (
+              <UsersView 
+                users={stats.allUsers} 
+                searchTerm={searchTerm} 
+                onDelete={handleDeleteUser}
+                onToggleRole={handleToggleRole}
+              />
+            );
+            case 'activity': return <ActivityView stats={stats} />;
+            case 'financial': return <div className="admin__panel p-8 text-center opacity-50">Gestion financière désactivée.</div>;
+            case 'system': return <SystemView latency={latency} />;
+            case 'content': return <ContentView stats={stats} />;
+            case 'security': return <SecurityView stats={stats} />;
+            case 'alerts': return <AlertsView stats={stats} />;
+            default: return <OverviewView stats={stats} />;
+          }
+        })()}
+      </>
+    );
   };
 
   return (
@@ -398,7 +434,7 @@ function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
           </div>
         </div>
 
-        <div className="admin__table-wrap">
+        <div className="admin__table-wrap hidden-mobile">
           <table className="admin__table">
             <thead>
               <tr>
@@ -471,6 +507,46 @@ function UsersView({ users, searchTerm, onDelete, onToggleRole }) {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* MOBILE CARDS VIEW */}
+        <div className="admin__mobile-cards show-mobile">
+          {filteredUsers.length === 0 ? (
+            <p className="text-center opacity-50 p-8">Aucun utilisateur.</p>
+          ) : (
+            filteredUsers.map(user => (
+              <div key={user.id} className="admin__mobile-card">
+                <div className="admin__mobile-card-header">
+                  <div className="admin__user-avatar">{user.name.charAt(0)}</div>
+                  <div className="flex flex-col flex-1">
+                    <span className="font-bold">{user.name}</span>
+                    <span className="body-sm">{user.email}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="admin__action-btn" onClick={() => onToggleRole(user.id, user.role)}>🛡️</button>
+                    <button className="admin__action-btn admin__action-btn--danger" onClick={() => onDelete(user.id, user.name)}>🗑️</button>
+                  </div>
+                </div>
+                <div className="admin__mobile-card-body">
+                  <div className="flex justify-between items-center">
+                    <span className="label-sm">Rôle</span>
+                    <span className={`chip chip--sm ${user.role === 'Admin' ? 'chip--tertiary' : ''}`}>{user.role}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="label-sm">Statut</span>
+                    <div className={`admin__status admin__status--${user.status === 'actif' ? 'ok' : 'neutral'}`}>
+                      <span className="admin__status-dot"></span>
+                      {user.status}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="label-sm">XP / Inscrit</span>
+                    <span className="body-sm">{user.xp} XP • {user.joined}</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </>
@@ -607,26 +683,41 @@ function SecurityView({ stats }) {
         <div style={{ padding: '10px', color: 'var(--primary)', fontSize: '0.8rem' }}>
           {stats.auditLogs.length} logs chargés depuis Supabase.
         </div>
-        <table className="admin__table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Action</th>
-              <th>Admin</th>
-              <th>Détails</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.auditLogs.map((log, i) => (
-              <tr key={i}>
-                <td style={{ opacity: 0.7 }}>{new Date(log.created_at).toLocaleString()}</td>
-                <td style={{ fontWeight: 600 }}>{log.action}</td>
-                <td>{log.user_email}</td>
-                <td style={{ fontSize: '0.8rem', opacity: 0.7 }}>{JSON.stringify(log.details)}</td>
+        <div className="hidden-mobile">
+          <table className="admin__table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Admin</th>
+                <th>Détails</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {stats.auditLogs.map((log, i) => (
+                <tr key={i}>
+                  <td style={{ opacity: 0.7 }}>{new Date(log.created_at).toLocaleString()}</td>
+                  <td style={{ fontWeight: 600 }}>{log.action}</td>
+                  <td>{log.user_email}</td>
+                  <td style={{ fontSize: '0.8rem', opacity: 0.7 }}>{JSON.stringify(log.details)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="admin__mobile-cards show-mobile">
+          {stats.auditLogs.map((log, i) => (
+            <div key={i} className="admin__mobile-card">
+              <div className="flex justify-between items-start mb-2">
+                <span className="font-bold">{log.action}</span>
+                <span className="body-sm opacity-50">{new Date(log.created_at).toLocaleTimeString()}</span>
+              </div>
+              <div className="body-sm mb-2">{log.user_email}</div>
+              <div className="admin__log-details">{JSON.stringify(log.details)}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

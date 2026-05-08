@@ -818,6 +818,15 @@
   to { opacity: 1; }
 }
 
+/* ---- UTILITIES ---- */
+.show-mobile { display: none !important; }
+.hidden-mobile { display: block !important; }
+
+@media (max-width: 1024px) {
+  .show-mobile { display: block !important; }
+  .hidden-mobile { display: none !important; }
+}
+
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -904,12 +913,89 @@
 }
 
 @media (max-width: 480px) {
-  .admin__topbar-right {
-    gap: var(--space-1);
-  }
-  
   .admin__topbar-btn {
     width: 32px;
     height: 32px;
   }
+}
+
+/* ---- MOBILE DASHBOARD REDESIGN ---- */
+.admin__mobile-tabs {
+  margin-bottom: var(--space-4);
+  position: sticky;
+  top: 57px;
+  z-index: 40;
+  background: var(--surface);
+  padding: var(--space-2) 0;
+}
+
+.admin__tab-selector-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.admin__tab-select {
+  width: 100%;
+  padding: var(--space-4) var(--space-12) var(--space-4) var(--space-12);
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  appearance: none;
+  cursor: pointer;
+}
+
+.admin__tab-select-icon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  pointer-events: none;
+}
+
+.admin__tab-selector-wrap::after {
+  content: '▼';
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6rem;
+  color: var(--on-surface-variant);
+  pointer-events: none;
+}
+
+.admin__mobile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.admin__mobile-card {
+  background: var(--surface-container);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.admin__mobile-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: var(--space-3);
+}
+
+.admin__mobile-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin__mobile-card-body .label-sm {
+  opacity: 0.6;
 }
