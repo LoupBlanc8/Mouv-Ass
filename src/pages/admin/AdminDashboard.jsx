@@ -4,7 +4,7 @@ import {
   Bell, BarChart3, AlertTriangle, Search, Filter, 
   MoreVertical, ArrowUpRight, ArrowDownRight, 
   Settings, LogOut, RefreshCw, Server, Cpu, 
-  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, Zap, Trash, CheckCircle, RefreshCcw, Shield
+  Menu, X, CheckCircle2, AlertCircle, Clock, ArrowLeft, Ban, CreditCard, Zap, Trash, CheckCircle, RefreshCcw, Shield, Sun, Moon
 } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, 
