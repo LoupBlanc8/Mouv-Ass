@@ -327,7 +327,6 @@ export default function AdminDashboard() {
             </button>
           </div>
         </aside>
-        )}
 
         <main className="admin__main animate-slide-up">
           {renderContent()}
