@@ -16,17 +16,22 @@ export default function Nutrition() {
   const [ingredients, setIngredients] = useState('');
   const [generatedRecipe, setGeneratedRecipe] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedMealForRecipe, setSelectedMealForRecipe] = useState(null);
 
   const handleGenerateRecipe = async () => {
     if (!ingredients.trim()) return;
     setIsGenerating(true);
     
-    // Calcul de la cible calorique pour un repas principal (~35% du total)
-    // On utilise l'objet "macros" calculé plus bas dans le composant
+    // Calcul de la cible calorique selon le repas sélectionné
     let targetKcal = 600;
+    let mealContext = 'repas principal';
     try {
       if (macros && macros.calories > 0) {
-        targetKcal = Math.round(macros.calories * 0.35);
+        const ratio = selectedMealForRecipe ? selectedMealForRecipe.ratio : 0.35;
+        targetKcal = Math.round(macros.calories * ratio);
+      }
+      if (selectedMealForRecipe) {
+        mealContext = selectedMealForRecipe.type.toLowerCase();
       }
     } catch (e) {
       console.error("Erreur calcul macros", e);
@@ -34,7 +39,7 @@ export default function Nutrition() {
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-recipe', {
-        body: { ingredients, targetKcal }
+        body: { ingredients, targetKcal, mealContext }
       });
       
       if (error) throw error;
@@ -325,6 +330,42 @@ export default function Nutrition() {
               </div>
             </div>
             
+            {/* Meal selector */}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 'var(--space-4)' }}>
+              {meals.map(meal => {
+                const isSelected = selectedMealForRecipe?.id === meal.id;
+                const mealKcal = Math.round(macros.calories * meal.ratio);
+                return (
+                  <button
+                    key={meal.id}
+                    onClick={() => setSelectedMealForRecipe(isSelected ? null : meal)}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: 999,
+                      border: '1px solid',
+                      borderColor: isSelected ? 'rgba(var(--primary-rgb), 0.5)' : 'rgba(var(--outline-variant), 0.2)',
+                      background: isSelected ? 'rgba(var(--primary-rgb), 0.15)' : 'var(--surface-container-high)',
+                      color: isSelected ? 'var(--primary)' : 'var(--on-surface-variant)',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {meal.type}
+                    <span style={{
+                      fontSize: '0.7rem',
+                      opacity: 0.7,
+                      fontWeight: 'bold',
+                    }}>{mealKcal} kcal</span>
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="flex gap-3 mb-4" style={{ flexWrap: 'wrap' }}>
               <input 
                 type="text" 
