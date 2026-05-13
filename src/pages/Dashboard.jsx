@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
 import { Flame, Droplets, Dumbbell, ChevronRight, Trophy, Plus, Minus } from 'lucide-react';
 import { calculateMacros, calculateTDEE, calculateHydratation } from '../utils/calculations';
-import { getRankProgress } from '../utils/gamification';
+import { getRankProgress, addXP } from '../utils/gamification';
 
 const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
@@ -31,6 +31,7 @@ export default function Dashboard() {
   const [hydration, setHydration] = useState({ eau_ml: 0, objectif_ml: 2500 });
   const [workoutCount, setWorkoutCount] = useState(0);
   const [nutritionLogs, setNutritionLogs] = useState([]);
+  const [hydrationXpGiven, setHydrationXpGiven] = useState(false);
 
   const today = new Date();
   const jourSemaine = today.getDay();
@@ -66,9 +67,16 @@ export default function Dashboard() {
 
   async function addWater(ml) {
     const newMl = Math.max(0, hydration.eau_ml + ml);
+    const wasBelow = hydration.eau_ml < hydration.objectif_ml;
     setHydration(prev => ({ ...prev, eau_ml: newMl }));
     const todayStr = today.toISOString().split('T')[0];
     await supabase.from('hydration_logs').upsert({ user_id: user.id, date: todayStr, eau_ml: newMl, objectif_ml: hydration.objectif_ml }, { onConflict: 'user_id,date' });
+
+    // Award 100 XP when hydration goal is reached for the first time today
+    if (wasBelow && newMl >= hydration.objectif_ml && !hydrationXpGiven) {
+      setHydrationXpGiven(true);
+      await addXP(user.id, 100);
+    }
   }
 
   // Macros calculation

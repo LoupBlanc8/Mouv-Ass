@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
-import { Home, Dumbbell, UtensilsCrossed, BarChart3, User, Trophy, Users } from 'lucide-react';
+import { Home, Dumbbell, UtensilsCrossed, BarChart3, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
@@ -7,8 +7,6 @@ const navItems = [
   { path: '/workout', icon: Dumbbell, label: 'Sport' },
   { path: '/nutrition', icon: UtensilsCrossed, label: 'Nutrition' },
   { path: '/academy', icon: BarChart3, label: 'Académie' },
-  { path: '/rank', icon: Trophy, label: 'Rank' },
-  { path: '/social', icon: Users, label: 'Social' },
   { path: '/profile', icon: User, label: 'Profil' },
 ];
 

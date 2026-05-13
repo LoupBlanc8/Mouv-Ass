@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogOut, Activity, Flame, Moon, Sun, Camera, Palette, ShieldCheck } from 'lucide-react';
+import { LogOut, Activity, Flame, Moon, Sun, Camera, Palette, ShieldCheck, Trophy, Users, ChevronRight, Undo2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 const MORPHOTYPE_LABEL = { ectomorphe: '🏃 Ectomorphe', mesomorphe: '💪 Mésomorphe', endomorphe: '🐻 Endomorphe' };
@@ -20,7 +20,7 @@ const PRESET_THEMES = [
 
 export default function Profile() {
   const { profile, user, signOut, updateProfile } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, revertTheme, hasPreviousTheme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
   const [showColors, setShowColors] = useState(false);
   const [colors, setColors] = useState({
@@ -188,6 +188,32 @@ export default function Profile() {
             </div>
           </div>
 
+          {/* Revert theme button */}
+          {hasPreviousTheme && (
+            <button
+              onClick={revertTheme}
+              className="card"
+              style={{
+                marginBottom: 'var(--space-4)',
+                padding: 'var(--space-3) var(--space-6)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-4)',
+                width: '100%',
+                background: 'rgba(var(--primary-rgb), 0.08)',
+                border: '1px solid rgba(var(--primary-rgb), 0.2)',
+                color: 'var(--primary)',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                fontSize: '0.85rem',
+              }}
+            >
+              <Undo2 size={18} />
+              Revenir au thème précédent
+            </button>
+          )}
+
           {/* Color customizer toggle */}
           <div className="card" style={{ marginBottom: 'var(--space-4)', padding: 'var(--space-4) var(--space-6)' }}>
             <button onClick={() => setShowColors(!showColors)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'none', border: 'none', color: 'var(--on-surface)', cursor: 'pointer', padding: 0 }}>
@@ -269,6 +295,51 @@ export default function Profile() {
               </div>
             </motion.div>
           )}
+
+          {/* Rank & Social Navigation */}
+          <motion.div variants={item} style={{ marginBottom: 'var(--space-6)' }}>
+            <h2 className="title-lg" style={{ borderLeft: '4px solid var(--secondary)', paddingLeft: 'var(--space-4)', textTransform: 'uppercase', marginBottom: 'var(--space-6)' }}>COMMUNAUTÉ</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+              <button
+                className="card"
+                onClick={() => navigate('/rank')}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: 'var(--space-4) var(--space-6)', cursor: 'pointer',
+                  background: 'var(--surface-container-low)', border: '1px solid rgba(var(--outline-variant), 0.1)',
+                  color: 'var(--on-surface)', width: '100%',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                  <Trophy size={20} style={{ color: 'var(--secondary)' }} />
+                  <div style={{ textAlign: 'left' }}>
+                    <span className="body-md" style={{ fontWeight: 'bold', textTransform: 'uppercase', display: 'block' }}>Classement</span>
+                    <span className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>Voir le leaderboard global</span>
+                  </div>
+                </div>
+                <ChevronRight size={20} style={{ color: 'var(--on-surface-variant)' }} />
+              </button>
+              <button
+                className="card"
+                onClick={() => navigate('/social')}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: 'var(--space-4) var(--space-6)', cursor: 'pointer',
+                  background: 'var(--surface-container-low)', border: '1px solid rgba(var(--outline-variant), 0.1)',
+                  color: 'var(--on-surface)', width: '100%',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+                  <Users size={20} style={{ color: 'var(--primary)' }} />
+                  <div style={{ textAlign: 'left' }}>
+                    <span className="body-md" style={{ fontWeight: 'bold', textTransform: 'uppercase', display: 'block' }}>Réseau Social</span>
+                    <span className="label-sm" style={{ color: 'var(--on-surface-variant)' }}>Gérer tes amis athlètes</span>
+                  </div>
+                </div>
+                <ChevronRight size={20} style={{ color: 'var(--on-surface-variant)' }} />
+              </button>
+            </div>
+          </motion.div>
 
           {/* Admin Access Section */}
           {(() => {
