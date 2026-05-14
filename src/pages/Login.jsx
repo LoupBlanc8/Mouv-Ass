@@ -37,11 +37,15 @@ export default function Login() {
         }
       }
     } catch (err) {
-      const msg = err.message;
+      console.error("Signup error:", err);
+      const msg = err.message || JSON.stringify(err);
+      
       if (msg === 'Invalid login credentials') {
         setError('Email ou mot de passe incorrect.');
       } else if (msg.includes('Email not confirmed')) {
         setError('Ton email n\'est pas encore confirmé. Vérifie ta boîte mail (et les spams).');
+      } else if (msg.includes('timeout') || msg === '{}' || msg.includes('504')) {
+        setError('Le serveur de mail met trop de temps à répondre. Vérifie tes réglages SMTP dans Supabase (Host, Port, Password).');
       } else {
         setError(msg);
       }
